@@ -1,0 +1,28 @@
+Version: 0.1
+
+RestoreWorkspace: No
+SaveWorkspace: No
+AlwaysSaveHistory: No
+
+EnableCodeIndexing: Yes
+UseSpacesForTab: Yes
+NumSpacesForTab: 2
+Encoding: UTF-8
+
+RnwWeave: Sweave
+LaTeX: pdfLaTeX
+
+AutoAppendNewline: Yes
+StripTrailingWhitespace: Yes
+
+BuildType: Package
+PackageUseDevtools: Yes
+PackageInstallArgs: --no-multiarch --with-keep.source
+
+UseNativePipeOperator: Yes
+
+QuitChildProcessesOnExit: Yes
+DisableExecuteRprofile: Yes
+
+BuildTools:
+    BuildTool1: Name: 'run roxygenize'; Path: './pre-build.R'; Enabled: yes

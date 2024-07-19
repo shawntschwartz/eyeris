@@ -1,0 +1,23 @@
+Package: eyeris
+Type: Package
+Title: Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines
+Version: 0.0.1
+Authors@R:
+  person("Shawn", "Schwartz", email = "stschwartz@stanford.edu", 
+         role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6444-8451"))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: `use_mit_license()`
+Encoding: UTF-8
+LazyData: true
+Depends:
+  R (>= 4.1)
+Imports:
+  eyelinker,
+  dplR,
+  dplyr,
+  purrr,
+  tidyr,
+  zoo
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
