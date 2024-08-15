@@ -1,4 +1,4 @@
-Version: 0.1
+Version: 1.0
 
 RestoreWorkspace: No
 SaveWorkspace: No
@@ -20,9 +20,4 @@ PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
 
 UseNativePipeOperator: Yes
-
-QuitChildProcessesOnExit: Yes
 DisableExecuteRprofile: Yes
-
-BuildTools:
-    BuildTool1: Name: 'run roxygenize'; Path: './pre-build.R'; Enabled: yes
