@@ -3,7 +3,11 @@ PACKAGE_NAME := eyeris
 R_CMD := Rscript -e
 
 # default target
-all: build install roxygenize renv clean
+all: install_deps build install roxygenize renv clean
+
+# restore renv packages
+install_deps:
+	R -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv'); renv::restore()"
 
 # build package
 build:
@@ -39,4 +43,4 @@ clean:
 	rm -rf build
 	@echo "[ OK ] - eyeris build directory cleaned!"
 
-.PHONY: all build install check roxygenize renv clean
+.PHONY: all install_deps build install check roxygenize renv clean
