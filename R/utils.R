@@ -1,3 +1,15 @@
+alert <- function(type = c('warning', 'info', 'success'), msg, ...) {
+  type <- match.arg(type)
+
+  if (type == 'warning') {
+    cli::cli_alert_warning(sprintf(msg, ...))
+  } else if (type == 'info') {
+    cli::cli_alert_info(sprintf(msg, ...))
+  } else if (type == 'success') {
+    cli::cli_alert_success(sprintf(msg, ...))
+  }
+}
+
 check_and_create_dir <- function(basedir, dir = NULL) {
   if (!is.null(dir)) {
     dir <- file.path(basedir, dir)
@@ -38,27 +50,26 @@ epochs_to_single_tibble <- function(epochs) {
   return(dplyr::bind_rows(epochs, .id = 'epoch_id'))
 }
 
-find_epochs <- function(eyeris, epochs) {
-  x <- list()
+filter_epochs <- function(eyeris, epochs) {
+  epoch_ids <- names(eyeris)[grepl('^epoch_', names(eyeris))]
+  return(epoch_ids)
+}
 
-  if (length(epochs) == 1) {
-    if (tolower(epochs) == 'all') {
-      x[[1]] <- eyeris[grep('^epoch_', names(eyeris))]
-      # return(x)
+make_bids_fname <- function(sub = sub, task = task, run = run,
+                            desc = '', ses = NULL, epoch = NULL) {
+  if (!is.null(ses)) {
+    if (!is.null(epoch)) {
+      f <- paste0('sub-', sub, '_ses-', ses, '_task-', task, '_run-', run, '_epoch-', epoch, '_desc-', desc, '.csv')
     } else {
-      x[[1]] <- eyeris[grep(paste0('^epoch_', epochs), tolower(names(eyeris)))]
-      # return(x)
+      f <- paste0('sub-', sub, '_ses-', ses, '_task-', task, '_run-', run, '_desc-', desc, '.csv')
     }
-  } else if (length(epochs) > 1) {
-    # x <- list()
-    for (i in seq_along(epochs)) {
-      x[[i]] <- eyeris[grep(paste0('^epoch_', epochs[i]), tolower(names(x)))]
-    }
-    # return(x)
   } else {
-    x[[1]] <- eyeris[grep('^epoch_', names(eyeris))]
-    # return()
+    if (!is.null(epoch)) {
+      f <- paste0('sub-', sub, '_task-', task, '_run-', run, '_epoch-', epoch, '_desc-', desc, '.csv')
+    } else {
+      f <- paste0('sub-', sub, '_task-', task, '_run-', run, '_desc-', desc, '.csv')
+    }
   }
 
-  return(x)
+  return(f)
 }
