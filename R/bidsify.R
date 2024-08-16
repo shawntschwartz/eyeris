@@ -26,19 +26,19 @@ bidsify <- function(eyeris, save.all = TRUE, epochs.list = NULL, merge.epochs = 
   })
 
   tryCatch({
-    check_input(arg = sub)
+    check_input(arg = bids.subid)
   }, error = function(e) {
     error_handler(e, 'input_arg_missing_error')
   })
 
   tryCatch({
-    check_input(arg = task)
+    check_input(arg = bids.taskid)
   }, error = function(e) {
     error_handler(e, 'input_arg_missing_error')
   })
 
   tryCatch({
-    check_input(arg = run)
+    check_input(arg = bids.runid)
   }, error = function(e) {
     error_handler(e, 'input_arg_missing_error')
   })

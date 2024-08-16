@@ -27,9 +27,9 @@ check_and_create_dir <- function(basedir, dir = NULL) {
 }
 
 check_input <- function(arg) {
-  err <- "a value for ('%s') must be provided to `eyeris::bidsify()` if (save == TRUE); call = "
+  err <- "a value for ('%s') must be provided; call = "
   if (is.null(arg)) {
-    stop(structure(list(message = sprintf(err, deparse(substitute(arg))), call = match.call()), class = 'bidsify_input_arg_missing_error'))
+    stop(structure(list(message = sprintf(err, deparse(substitute(arg))), call = match.call()), class = 'input_arg_missing_error'))
   }
 }
 
