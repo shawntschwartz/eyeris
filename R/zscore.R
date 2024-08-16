@@ -23,21 +23,21 @@ zscore.pupil <- function(x, prev_op, grouping_columns) {
   }
 
   # within-group(s) z-score
-  z <- x |> 
-    dplyr::group_by(across(all_of(grouping_cols))) |> 
-    dplyr::mutate(zscore = get_zscores(!!pupil_col)) |> 
-    dplyr::ungroup() |> 
+  z <- x |>
+    dplyr::group_by(across(all_of(grouping_cols))) |>
+    dplyr::mutate(zscore = get_zscores(!!pupil_col)) |>
+    dplyr::ungroup() |>
     dplyr::pull(zscore)
 
   # across-group(s) z-score
-  z <- x |> 
-    dplyr::mutate(zscore = get_zscores(!!pupil_col)) |> 
-    dplyr::ungroup() |> 
+  z <- x |>
+    dplyr::mutate(zscore = get_zscores(!!pupil_col)) |>
+    dplyr::ungroup() |>
     dplyr::pull(zscore)
 
   return(z)
 }
-  
+
 get_zscores <- function(x) {
   means <- mean(x, na.rm = TRUE)
   sds <- sd(x, na.rm = TRUE)
