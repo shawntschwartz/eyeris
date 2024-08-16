@@ -46,13 +46,8 @@ count_epochs <- function(epochs) {
   }
 }
 
-epochs_to_single_tibble <- function(epochs) {
-  return(dplyr::bind_rows(epochs, .id = 'epoch_id'))
-}
-
 filter_epochs <- function(eyeris, epochs) {
-  epoch_ids <- names(eyeris)[grepl('^epoch_', names(eyeris))]
-  return(epoch_ids)
+  return(names(eyeris)[grepl('^epoch_', names(eyeris))])
 }
 
 make_bids_fname <- function(sub = sub, task = task, run = run,
