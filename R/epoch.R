@@ -17,12 +17,12 @@ epoch.pupil <- function(x, prev_op, msg, dur, type = c('boundary', 'contains'), 
   if (is.null(hz)) {
     hz <- x$info$sample.rate
   }
-  
+
   num_samples <- dur / (1 / hz)
 
   type <- tolower(type)
   type <- match.arg(type)
-  
+
   if (type == 'contains') {
     msg_regex <- msg
   } else if (type == 'boundary') {
@@ -31,14 +31,14 @@ epoch.pupil <- function(x, prev_op, msg, dur, type = c('boundary', 'contains'), 
 
   pupil_col <- dplyr::sym(prev_op)
 
-  timestamps <- x |> 
+  timestamps <- x |>
     purrr::pluck('events')
 
-  timestamps <- timestamps |> 
+  timestamps <- timestamps |>
     parse_event_markers(msg, msg_regex, template)
 
-  epochs <- x |> 
-    get_epoched_timeseries(prev_op, timestamps, num_samples, dur) |> 
+  epochs <- x |>
+    get_epoched_timeseries(prev_op, timestamps, num_samples, dur) |>
     dplyr::mutate(event_marker = msg,
                   .before = event)
 
@@ -49,14 +49,17 @@ epoch.pupil <- function(x, prev_op, msg, dur, type = c('boundary', 'contains'), 
 }
 
 parse_event_markers <- function(x, msg, msg_regex, template = NULL) {
-  matched_events <- x |> 
+  matched_events <- x |>
     dplyr::filter(stringr::str_detect(text, msg_regex))
 
   if (!is.null(template)) {
-    metadata_values <- matched_events |> 
-      dplyr::pull(text) |> 
-      stringr::str_replace(paste0('^', msg, ' '), '') |> 
-      stringr::str_split(' ') |> 
+    metadata_values <- matched_events |>
+      dplyr::pull(text) |>
+      # test: more flexible parsing of event tags ending with underscores
+      # stringr::str_replace(paste0('^', msg, ' '), '') |>
+      stringr::str_replace(paste0('^', msg, '[ _]*'), '') |>
+      # stringr::str_split(' ') |>
+      stringr::str_split('[ _]+') |>
       lapply(function(x) c(x, rep(NA, length(template) - length(x))))
 
     metadata_df <- data.frame(do.call(rbind, metadata_values), stringsAsFactors = FALSE)
@@ -66,8 +69,8 @@ parse_event_markers <- function(x, msg, msg_regex, template = NULL) {
     df_out <- matched_events
   }
 
-  df_out <- df_out |> 
-    dplyr::rename(msg = text) |> 
+  df_out <- df_out |>
+    dplyr::rename(msg = text) |>
     dplyr::select(-block)
 
   return(df_out)
@@ -80,7 +83,7 @@ get_epoched_timeseries <- function(x, prev_op, msg_timestamps, n_samps, dur) {
   data <- x$timeseries
   time <- data$time_orig
   timestamps <- msg_timestamps$time
-  
+
   metadata <- parse_metadata(msg_timestamps)
 
   for (t in seq_along(timestamps)) {
@@ -88,12 +91,12 @@ get_epoched_timeseries <- function(x, prev_op, msg_timestamps, n_samps, dur) {
 
     metadata_vals <- index_metadata(metadata, t)
 
-    list.epochs[[t]] <- data |> 
-      dplyr::slice(i : (i + n_samps - 1)) |> 
+    list.epochs[[t]] <- data |>
+      dplyr::slice(i : (i + n_samps - 1)) |>
       dplyr::mutate(timebin = seq(from = 0.001,
                                   to = dur,
                                   length.out = n_samps),
-                    .after = time_orig) |> 
+                    .after = time_orig) |>
       dplyr::mutate(!!!metadata_vals)
   }
 
@@ -125,14 +128,14 @@ index_metadata <- function(x, i) {
 }
 
 normalize_event_tag <- function(string) {
-  string <- string |> 
-    stringr::str_to_lower() |> 
-    stringr::str_replace_all('[^[:alnum:] ]', ' ') |> 
+  string <- string |>
+    stringr::str_to_lower() |>
+    stringr::str_replace_all('[^[:alnum:] ]', ' ') |>
     stringr::str_split('\\s+')
 
   words <- string[[1]]
   words[-1] <- stringr::str_to_title(words[-1])
-  
+
   camel_case_str <- paste0(words, collapse = '')
   normed_str <- paste0('epoch_', camel_case_str)
 
