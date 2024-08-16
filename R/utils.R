@@ -39,19 +39,26 @@ epochs_to_single_tibble <- function(epochs) {
 }
 
 find_epochs <- function(eyeris, epochs) {
+  x <- list()
+
   if (length(epochs) == 1) {
     if (tolower(epochs) == 'all') {
-      return(eyeris[grep('^epoch_', names(eyeris))])
+      x[[1]] <- eyeris[grep('^epoch_', names(eyeris))]
+      # return(x)
     } else {
-      return(eyeris[grep(paste0('^epoch_', epochs), tolower(names(eyeris)))])
+      x[[1]] <- eyeris[grep(paste0('^epoch_', epochs), tolower(names(eyeris)))]
+      # return(x)
     }
   } else if (length(epochs) > 1) {
-    x <- list()
+    # x <- list()
     for (i in seq_along(epochs)) {
-      x[[i]] <- eyeris[grep(paste0('^epoch_', y[i]), tolower(names(x)))]
+      x[[i]] <- eyeris[grep(paste0('^epoch_', epochs[i]), tolower(names(x)))]
     }
-    return(x)
+    # return(x)
   } else {
-    return(eyeris[grep('^epoch_', names(eyeris))])
+    x[[1]] <- eyeris[grep('^epoch_', names(eyeris))]
+    # return()
   }
+
+  return(x)
 }
