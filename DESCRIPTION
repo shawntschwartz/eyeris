@@ -17,6 +17,7 @@ Imports:
   dplR,
   dplyr,
   purrr,
+  signal,
   tidyr,
   zoo
 Roxygen: list(markdown = TRUE)

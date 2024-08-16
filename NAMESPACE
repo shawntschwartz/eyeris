@@ -2,6 +2,7 @@
 
 export(baseline)
 export(bidsify)
+export(butterfilt)
 export(deblink)
 export(despeed)
 export(detrend)
