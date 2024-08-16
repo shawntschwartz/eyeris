@@ -10,15 +10,12 @@
 #' @examples
 #' str_length(letters)
 smooth <- function(eyeris, type = 'hanning', n = NULL, window = NULL, hz = NULL) {
+  if (is.null(hz)) hz <- eyeris$info$sample.rate
   return(pipeline_handler(eyeris, smooth.pupil, 'smooth', type, n, window, hz))
 }
 
 # based on https://github.com/dr-JT/pupillometry/blob/main/R/pupil_smooth.R
 smooth.pupil <- function(x, prev_op, type, n, window, hz) {
-  if (is.null(hz)) {
-    hz <- x$info$sample.rate
-  }
-
   if (!is.null(window)) {
     n <- round(window / (1000 / hz))
   }
@@ -36,7 +33,7 @@ smooth_signal <- function(x, n, type) {
 
   # apply hanning filter of length n to x
   if (type == 'hanning') {
-    pupil <- pupil |> 
+    pupil <- pupil |>
       dplyr::mutate(
         hold = dplR::hanning(pupil_smooth, n = n),
         hold = zoo::na.approx(hold, rule = 2),
@@ -44,7 +41,7 @@ smooth_signal <- function(x, n, type) {
       )
   }
 
-  pupil <- pupil |> 
+  pupil <- pupil |>
     dplyr::pull(pupil_smooth)
 
   return(pupil)
