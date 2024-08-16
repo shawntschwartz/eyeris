@@ -6,14 +6,15 @@
 \usage{
 bidsify(
   eyeris,
-  epochs = "all",
-  merge = TRUE,
-  save = TRUE,
-  dir = NULL,
-  sub = NULL,
-  ses = NULL,
-  task = NULL,
-  run = NULL
+  save.all = TRUE,
+  epochs.list = NULL,
+  merge.epochs = FALSE,
+  bids.dir = NULL,
+  bids.subid = NULL,
+  bids.sessionid = NULL,
+  bids.taskid = NULL,
+  bids.runid = NULL,
+  save.raw = TRUE
 )
 }
 \arguments{
