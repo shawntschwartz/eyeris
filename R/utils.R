@@ -40,6 +40,19 @@ check_data <- function(eyeris, fun) {
   }
 }
 
+check_pupil_cols <- function(eyeris, fun) {
+  err <- "the provided object to `eyeris::%s()` doesn't include the expected `pupil_raw` column; call ="
+  if (!'pupil_raw' %in% colnames(eyeris$timeseries)) {
+    stop(structure(list(message = sprintf(err, fun, class(eyeris)), call = match.call()), class = 'missing_pupil_raw_error'))
+  }
+}
+
+check_epoch_input <- function(epochs) {
+  if (length(epochs) != 1) {
+    stop(structure(list(message = 'eyeris::plot() requires that exactly 1 set of epoched data is provided -- please ensure the string you pass in `epoch` only matches to 1 epoch; call = ', call = match.call()), class = 'too_many_epochs_error'))
+  }
+}
+
 count_epochs <- function(epochs) {
   if (length(epochs) == 0) {
     stop(structure(list(message = 'data must be epoched; call = ', call = match.call()), class = 'epoch_count_error'))
