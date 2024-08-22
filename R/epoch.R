@@ -56,10 +56,10 @@ parse_event_markers <- function(x, msg, msg_regex, template = NULL) {
     metadata_values <- matched_events |>
       dplyr::pull(text) |>
       # test: more flexible parsing of event tags ending with underscores
-      # stringr::str_replace(paste0('^', msg, ' '), '') |>
-      stringr::str_replace(paste0('^', msg, '[ _]*'), '') |>
-      # stringr::str_split(' ') |>
-      stringr::str_split('[ _]+') |>
+      stringr::str_replace(paste0('^', msg, ' '), '') |>
+      # stringr::str_replace(paste0('^', msg, '[ _]*'), '') |>
+      stringr::str_split(' ') |>
+      # stringr::str_split('[ _]+') |>
       lapply(function(x) c(x, rep(NA, length(template) - length(x))))
 
     metadata_df <- data.frame(do.call(rbind, metadata_values), stringsAsFactors = FALSE)
