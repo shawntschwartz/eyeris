@@ -12,7 +12,7 @@
 #' @param rs Required minimal attenuation within stopband in Hz.
 #' @param plot_freqz Boolean flag for displaying filter frequency response.
 #'
-#' @return An `eyeris` object with a new column: `pupil_lpfilt`.
+#' @return An `eyeris` object with a new column in `timeseries`: `pupil_lpfilt`.
 #'
 #' @examples
 #' eyeris_data |> eyeris::lpfilt()
