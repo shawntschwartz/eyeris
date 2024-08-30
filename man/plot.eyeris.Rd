@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.eyeris}
 \alias{plot.eyeris}
-\title{this is a test}
+\title{Plot pre-processed pupil data from \code{eyeris}}
 \usage{
 \method{plot}{eyeris}(
   eyeris,
@@ -23,10 +23,9 @@
 The sum of \code{x} and \code{y}
 }
 \description{
-Add together two numbers
+todo: description goes here...
 }
 \examples{
-add(1, 1)
-add(10, 1)
+plot(eyeris_data)
 
 }

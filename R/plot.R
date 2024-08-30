@@ -1,14 +1,17 @@
-#' Add together two numbers
+#' Plot pre-processed pupil data from `eyeris`
 #'
-#' @title this is a test
+#' todo: description goes here...
+#' 
 #' @param x A number
 #' @param y A number
+#' 
 #' @return The sum of \code{x} and \code{y}
+#' 
 #' @examples
-#' add(1, 1)
-#' add(10, 1)
-#'
+#' plot(eyeris_data)
+#' 
 #' @rdname plot.eyeris
+#' 
 #' @export
 plot.eyeris <- function(eyeris, trial.id, trial.col = NULL, event.label = NULL, steps = NULL, time.range = NULL, ...) {
   # tests
