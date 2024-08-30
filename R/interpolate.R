@@ -1,5 +1,5 @@
-#' interpolate 
-#'
+#' Interpolate missing pupil samples
+#' 
 #' Linear interpolation of time series data. The intended use of this method
 #' is for filling in missing pupil samples (NAs) in the time series.
 #'
@@ -8,7 +8,8 @@
 #' @return An `eyeris` object with a new column in `timeseries`: `pupil_interpolate`.
 #'
 #' @examples
-#' eyeris_data |> eyeris::interpolate()
+#' eyeris_data |> 
+#'   eyeris::interpolate()
 #' 
 #' @export
 interpolate <- function(eyeris) {

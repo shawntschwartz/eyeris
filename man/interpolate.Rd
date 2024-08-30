@@ -2,7 +2,7 @@
 % Please edit documentation in R/interpolate.R
 \name{interpolate}
 \alias{interpolate}
-\title{interpolate}
+\title{Interpolate missing pupil samples}
 \usage{
 interpolate(eyeris)
 }
@@ -17,6 +17,7 @@ Linear interpolation of time series data. The intended use of this method
 is for filling in missing pupil samples (NAs) in the time series.
 }
 \examples{
-eyeris_data |> eyeris::interpolate()
+eyeris_data |> 
+  eyeris::interpolate()
 
 }
