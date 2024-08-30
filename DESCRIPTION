@@ -7,9 +7,7 @@ Authors@R:
          role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6444-8451"))
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: `use_mit_license()`
 Encoding: UTF-8
-LazyData: true
 Depends:
   R (>= 4.1)
 Imports:
@@ -25,3 +23,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+License: MIT + file LICENSE
