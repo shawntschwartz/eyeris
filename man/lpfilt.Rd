@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpfilt.R
 \name{lpfilt}
 \alias{lpfilt}
-\title{lpfilt}
+\title{Lowpass filtering of time series data}
 \usage{
 lpfilt(eyeris, wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = FALSE)
 }
@@ -23,12 +23,13 @@ lpfilt(eyeris, wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = FALSE)
 An \code{eyeris} object with a new column in \code{timeseries}: \code{pupil_lpfilt}.
 }
 \description{
-Lowpass filtering of time series data. The intended use of this method
+The intended use of this method
 is for smoothing, although by specifying wp and ws differently one can
 achieve highpass or bandpass filtering as well. However, only lowpass
 filtering should be done on pupillometry data.
 }
 \examples{
-eyeris_data |> eyeris::lpfilt()
+eyeris_data |> 
+  eyeris::lpfilt()
 
 }

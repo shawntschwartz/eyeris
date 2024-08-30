@@ -1,6 +1,6 @@
-#' lpfilt
-#'
-#' Lowpass filtering of time series data. The intended use of this method
+#' Lowpass filtering of time series data
+#' 
+#' The intended use of this method
 #' is for smoothing, although by specifying wp and ws differently one can
 #' achieve highpass or bandpass filtering as well. However, only lowpass
 #' filtering should be done on pupillometry data.
@@ -15,7 +15,8 @@
 #' @return An `eyeris` object with a new column in `timeseries`: `pupil_lpfilt`.
 #'
 #' @examples
-#' eyeris_data |> eyeris::lpfilt()
+#' eyeris_data |> 
+#'   eyeris::lpfilt()
 #' 
 #' @export
 lpfilt <- function(eyeris, wp = 4, ws = 8,
