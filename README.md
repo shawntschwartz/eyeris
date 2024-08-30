@@ -1,3 +1,1 @@
 # eyeris
-
-![](src/demo.png)
