@@ -16,9 +16,15 @@ forward/backward around each missing sample.}
 An \code{eyeris} object with a new column: \code{pupil_deblink}.
 }
 \description{
-todo: description goes here...
+Deblinking (a.k.a. NA-padding) of time series data. The intended use of
+this method is to remove blink-related artifacts surrounding periods of
+missing data. For instance, when an individual blinks, there are usually
+rapid decreases followed by increases in pupil size, with a chunk of data
+missing in-between these 'spike'-looking events. The deblinking procedure
+here will NA-pad each missing data point by your specified number of ms.
 }
 \examples{
-eyeris_data |> eyeris::deblink(extend = 250)
+eyeris_data |> 
+  eyeris::deblink(extend = 250)
 
 }

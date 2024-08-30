@@ -1,6 +1,11 @@
 #' NA-pad blink events / missing data
 #'
-#' todo: description goes here...
+#' Deblinking (a.k.a. NA-padding) of time series data. The intended use of
+#' this method is to remove blink-related artifacts surrounding periods of
+#' missing data. For instance, when an individual blinks, there are usually
+#' rapid decreases followed by increases in pupil size, with a chunk of data
+#' missing in-between these 'spike'-looking events. The deblinking procedure
+#' here will NA-pad each missing data point by your specified number of ms.
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #' @param extend A number indicating the number of milliseconds to pad 
@@ -9,7 +14,8 @@
 #' @return An `eyeris` object with a new column: `pupil_deblink`.
 #' 
 #' @examples
-#' eyeris_data |> eyeris::deblink(extend = 250)
+#' eyeris_data |> 
+#'   eyeris::deblink(extend = 250)
 #' 
 #' @export
 deblink <- function(eyeris, extend = 0) {
