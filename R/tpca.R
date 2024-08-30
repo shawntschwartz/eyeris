@@ -1,4 +1,4 @@
-#' The length of a string
+#' Temporal PCA
 #'
 #' todo: description goes here...
 #'
@@ -6,9 +6,6 @@
 #'
 #' @return A numeric vector giving number of characters (code points) in each
 #'    element of the character vector. Missing string have missing length.
-#' @export
-#' @examples
-#' str_length(letters)
-pca <- function(eyeris) {
+tpca <- function(eyeris) {
   ## TODO
 }

@@ -2,9 +2,9 @@
 % Please edit documentation in R/baseline.R
 \name{baseline}
 \alias{baseline}
-\title{The length of a string}
+\title{Subtractive / divisive baselining of pupil data}
 \usage{
-baseline(eyeris, extend = 0)
+baseline(eyeris)
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
@@ -15,7 +15,4 @@ element of the character vector. Missing string have missing length.
 }
 \description{
 todo: description goes here...
-}
-\examples{
-str_length(letters)
 }
