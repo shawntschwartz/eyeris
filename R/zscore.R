@@ -1,14 +1,17 @@
-#' The length of a string
-#'
+#' Z-Score pupil timeseries data
+#' 
 #' todo: description goes here...
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
 #' @return A numeric vector giving number of characters (code points) in each
 #'    element of the character vector. Missing string have missing length.
-#' @export
+#' 
 #' @examples
-#' str_length(letters)
+#' eyeris_data |>
+#'   eyeris::zscore()
+#' 
+#' @export
 zscore <- function(eyeris, groups = NULL) {
   return(pipeline_handler(eyeris, zscore.pupil, 'z', groups))
 }

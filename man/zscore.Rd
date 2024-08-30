@@ -2,7 +2,7 @@
 % Please edit documentation in R/zscore.R
 \name{zscore}
 \alias{zscore}
-\title{The length of a string}
+\title{Z-Score pupil timeseries data}
 \usage{
 zscore(eyeris, groups = NULL)
 }
@@ -17,5 +17,7 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
-str_length(letters)
+eyeris_data |>
+  eyeris::zscore()
+
 }
