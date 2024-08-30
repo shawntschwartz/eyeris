@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.R
 \name{load}
 \alias{load}
-\title{The length of a string}
+\title{Load and parse eyelink \code{.asc} file}
 \usage{
 load(file)
 }
@@ -17,7 +17,9 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
-str_length(letters)
+path_to_asc_file |>
+  eyeris::load()
+
 }
 \seealso{
 \code{\link[eyelinker:read.asc]{eyelinker::read.asc()}} which this function wraps.

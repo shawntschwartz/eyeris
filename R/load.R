@@ -1,15 +1,19 @@
-#' The length of a string
-#'
+#' Load and parse eyelink `.asc` file
+#' 
 #' todo: description goes here...
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
 #' @return A numeric vector giving number of characters (code points) in each
 #'    element of the character vector. Missing string have missing length.
+#' 
 #' @seealso [eyelinker::read.asc()] which this function wraps.
-#' @export
+#' 
 #' @examples
-#' str_length(letters)
+#' path_to_asc_file |>
+#'   eyeris::load()
+#' 
+#' @export
 load <- function(file) {
   if (!tools::file_ext(file) %in% c('asc', 'gz')) {
     stop(sprintf("Error: The file '%s' is not a .asc file.", file))
