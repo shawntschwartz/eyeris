@@ -2,7 +2,7 @@
 % Please edit documentation in R/epoch.R
 \name{epoch}
 \alias{epoch}
-\title{The length of a string}
+\title{Epoch pupil data based on custom event message structure}
 \usage{
 epoch(
   eyeris,
@@ -24,5 +24,10 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
-str_length(letters)
+eyeris_data |>
+  eyeris::epoch(event.marker = "ITI",
+                dur.secs = 3,
+                matching.type = "boundary",
+                metadata.template = "trial stim")
+
 }

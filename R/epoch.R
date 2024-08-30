@@ -1,14 +1,20 @@
-#' The length of a string
-#'
+#' Epoch pupil data based on custom event message structure
+#' 
 #' todo: description goes here...
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
 #' @return A numeric vector giving number of characters (code points) in each
 #'    element of the character vector. Missing string have missing length.
-#' @export
+#' 
 #' @examples
-#' str_length(letters)
+#' eyeris_data |>
+#'   eyeris::epoch(event.marker = "ITI",
+#'                 dur.secs = 3,
+#'                 matching.type = "boundary",
+#'                 metadata.template = "trial stim")
+#' 
+#' @export
 epoch <- function(eyeris, event.marker, dur.secs, matching.type = c('boundary', 'contains'), hz = NULL, metadata.template = NULL) {
   return(pipeline_handler(eyeris, epoch.pupil, 'epoch', event.marker, dur.secs, matching.type, hz, metadata.template))
 }
