@@ -2,7 +2,7 @@
 % Please edit documentation in R/despeed.R
 \name{despeed}
 \alias{despeed}
-\title{The length of a string}
+\title{Remove pupil samples that are physiologically unlikely}
 \usage{
 despeed(eyeris, n = 16)
 }
@@ -17,5 +17,7 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
-str_length(letters)
+eyeris_data |>
+  eyeris::despeed()
+
 }

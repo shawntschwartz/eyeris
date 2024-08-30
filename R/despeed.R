@@ -1,14 +1,17 @@
-#' The length of a string
-#'
+#' Remove pupil samples that are physiologically unlikely
+#' 
 #' todo: description goes here...
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
 #' @return A numeric vector giving number of characters (code points) in each
 #'    element of the character vector. Missing string have missing length.
-#' @export
+#' 
 #' @examples
-#' str_length(letters)
+#' eyeris_data |>
+#'   eyeris::despeed()
+#' 
+#' @export
 despeed <- function(eyeris, n = 16) {
   return(pipeline_handler(eyeris, despeed.pupil, 'despeed', n))
 }
