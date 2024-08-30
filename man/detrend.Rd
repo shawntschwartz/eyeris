@@ -2,7 +2,7 @@
 % Please edit documentation in R/detrend.R
 \name{detrend}
 \alias{detrend}
-\title{The length of a string}
+\title{Detrend the pupil time series}
 \usage{
 detrend(eyeris)
 }
@@ -17,5 +17,7 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
-str_length(letters)
+eyeris_data |>
+  eyeris::detrend()
+
 }
