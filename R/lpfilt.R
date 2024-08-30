@@ -16,6 +16,8 @@
 #'
 #' @examples
 #' eyeris_data |> eyeris::lpfilt()
+#' 
+#' @export
 lpfilt <- function(eyeris, wp = 4, ws = 8,
                    rp = 1, rs = 35, plot_freqz = FALSE) {
   fs <- eyeris$info$sample.rate
