@@ -14,10 +14,9 @@ Depends:
   R (>= 4.1)
 Imports:
   eyelinker,
-  dplR,
   dplyr,
+  gsignal,
   purrr,
-  signal,
   tidyr,
   zoo
 Roxygen: list(markdown = TRUE)
