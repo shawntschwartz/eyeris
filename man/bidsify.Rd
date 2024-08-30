@@ -2,7 +2,7 @@
 % Please edit documentation in R/bidsify.R
 \name{bidsify}
 \alias{bidsify}
-\title{The length of a string}
+\title{Save out pupil timeseries data in a BIDS-like structure}
 \usage{
 bidsify(
   eyeris,
@@ -28,5 +28,11 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
-str_length(letters)
+eyeris_data |> 
+  eyeris::bidsify(bids.dir = 'path/to/derivatives',
+                  bids.subid = '001',
+                  bids.sessionid = '01',
+                  bids.taskid = 'funexp',
+                  bids.runid = '01')
+
 }

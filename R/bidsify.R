@@ -1,14 +1,21 @@
-#' The length of a string
-#'
+#' Save out pupil timeseries data in a BIDS-like structure
+#' 
 #' todo: description goes here...
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
 #' @return A numeric vector giving number of characters (code points) in each
 #'    element of the character vector. Missing string have missing length.
-#' @export
+#' 
 #' @examples
-#' str_length(letters)
+#' eyeris_data |> 
+#'   eyeris::bidsify(bids.dir = 'path/to/derivatives',
+#'                   bids.subid = '001',
+#'                   bids.sessionid = '01',
+#'                   bids.taskid = 'funexp',
+#'                   bids.runid = '01')
+#' 
+#' @export
 bidsify <- function(eyeris, save.all = TRUE, epochs.list = NULL, merge.epochs = FALSE,
                     bids.dir = NULL, bids.subid = NULL, bids.sessionid = NULL,
                     bids.taskid = NULL, bids.runid = NULL, save.raw = TRUE) {
