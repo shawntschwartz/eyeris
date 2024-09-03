@@ -19,16 +19,42 @@ bidsify(
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
-}
-\value{
-A numeric vector giving number of characters (code points) in each
-element of the character vector. Missing string have missing length.
+
+\item{save.all}{Logical flag indicating whether all epochs are to be saved
+or only a subset of them. Defaults to TRUE.}
+
+\item{merge.epochs}{Logical flag indicating whether epochs should be saved
+as one file or as separate files. Defaults to FLASE (no merge).}
+
+\item{bids.dir}{Base BIDS directory.}
+
+\item{bids.subid}{BIDS subject ID.}
+
+\item{bids.sessionid}{BIDS session ID.}
+
+\item{bids.taskid}{BIDS task ID.}
+
+\item{bids.runid}{BIDS run ID.}
+
+\item{save.raw}{Logical flag indicating whether to save raw pupil data in
+addition to epoched data. Defaults to TRUE.}
+
+\item{epoch.list}{List of epochs to be saved. Defaults to NULL.}
 }
 \description{
-todo: description goes here...
+This method provides a structured way to save out pupil data in a BIDS-like
+structure. The method saves out epoched data as well as the raw pupil
+timeseries, and formats the directory and filename structures based on the
+metadata you provide.
+}
+\details{
+In the future, we intend for this function to save out the data in an
+official BIDS format for eyetracking data (see \href{https://github.com/bids-standard/bids-specification/pull/1128}{the proposal currently under review here}).
+At this time, however, this function instead takes a more BIDS-inspired
+approach to organizing the output files for preprocessed pupil data.
 }
 \examples{
-eyeris_data |> 
+eyeris_data |>
   eyeris::bidsify(bids.dir = 'path/to/derivatives',
                   bids.subid = '001',
                   bids.sessionid = '01',
