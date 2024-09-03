@@ -10,11 +10,11 @@ detrend(eyeris)
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
 }
 \value{
-A numeric vector giving number of characters (code points) in each
-element of the character vector. Missing string have missing length.
+An \code{eyeris} object with a new column in \code{timeseries}: \code{pupil_detrend}.
 }
 \description{
-todo: description goes here...
+Linearly detrend pupil data by fitting a linear model of \code{pupil_data ~ time},
+and return the residuals (\code{pupil_data - fitted_values}).
 }
 \examples{
 eyeris_data |>

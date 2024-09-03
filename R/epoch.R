@@ -1,19 +1,42 @@
 #' Epoch pupil data based on custom event message structure
-#' 
-#' todo: description goes here...
 #'
-#' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
+#' Intended to be used as the final preprocessing step.
+#' This function creates data epochs of fixed duration with respect to
+#' your provided `event.markers` (str), and also sanitizes (i.e., remove
+#' characters from the provided event messages that are not alphanumeric
+#' (or spaces) and convert the message to a camelCase format.
 #'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
-#' 
+#' @param eyeris An object of class `eyeris` derived from [eyeris::load()].
+#' @param event.marker A single string representing the event marker based on
+#' when to epoch the continuous pupil timeseries data.
+#' @param dur.secs Duration of epochs (in seconds).
+#' @param matching.type Indicates which regular expression method will be used
+#' to perform pattern matching with the provided event maker string and the
+#' events messages contained within the raw data.
+#' Use 'boundary' for exact matching, and 'contains' for partial matching.
+#' @param hz Data sampling rate. If not specified, will use the value contained
+#' within the tracker's metadata.
+#' @param metadata.template A space-separated string as a template for parsing
+#' the full event message into parts. The event.marker string that is matched
+#' with the event messages contained in the raw pupil data will be removed, and
+#' the remaining string will be separated based on where space(s) occur within
+#' the event.marker string. These element strings will be placed into separate
+#' columns of the epoched outputs (i.e., dataframes within the `eyeris` object
+#' that begin with `epoch_`), where rows contain the specific text matched
+#' to the indices of the strings provided in the template string (and the string
+#' from each index of the template string becomes the column name(s) containing
+#' these metadata values in the epoched data).
+#'
+#' @return Updated `eyeris` object with dataframes containing the epoched data
+#' (`epoch_`).
+#'
 #' @examples
 #' eyeris_data |>
 #'   eyeris::epoch(event.marker = "ITI",
 #'                 dur.secs = 3,
 #'                 matching.type = "boundary",
 #'                 metadata.template = "trial stim")
-#' 
+#'
 #' @export
 epoch <- function(eyeris, event.marker, dur.secs, matching.type = c('boundary', 'contains'), hz = NULL, metadata.template = NULL) {
   return(pipeline_handler(eyeris, epoch.pupil, 'epoch', event.marker, dur.secs, matching.type, hz, metadata.template))

@@ -1,20 +1,38 @@
 #' Save out pupil timeseries data in a BIDS-like structure
-#' 
-#' todo: description goes here...
+#'
+#' This method provides a structured way to save out pupil data in a BIDS-like
+#' structure. The method saves out epoched data as well as the raw pupil
+#' timeseries, and formats the directory and filename structures based on the
+#' metadata you provide.
+#'
+#' In the future, we intend for this function to save out the data in an
+#' official BIDS format for eyetracking data (see [the proposal currently under
+#' review here](https://github.com/bids-standard/bids-specification/pull/1128)).
+#' At this time, however, this function instead takes a more BIDS-inspired
+#' approach to organizing the output files for preprocessed pupil data.
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
+#' @param save.all Logical flag indicating whether all epochs are to be saved
+#' or only a subset of them. Defaults to TRUE.
+#' @param epoch.list List of epochs to be saved. Defaults to NULL.
+#' @param merge.epochs Logical flag indicating whether epochs should be saved
+#' as one file or as separate files. Defaults to FLASE (no merge).
+#' @param bids.dir Base BIDS directory.
+#' @param bids.subid BIDS subject ID.
+#' @param bids.sessionid BIDS session ID.
+#' @param bids.taskid BIDS task ID.
+#' @param bids.runid BIDS run ID.
+#' @param save.raw Logical flag indicating whether to save raw pupil data in
+#' addition to epoched data. Defaults to TRUE.
 #'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
-#' 
 #' @examples
-#' eyeris_data |> 
+#' eyeris_data |>
 #'   eyeris::bidsify(bids.dir = 'path/to/derivatives',
 #'                   bids.subid = '001',
 #'                   bids.sessionid = '01',
 #'                   bids.taskid = 'funexp',
 #'                   bids.runid = '01')
-#' 
+#'
 #' @export
 bidsify <- function(eyeris, save.all = TRUE, epochs.list = NULL, merge.epochs = FALSE,
                     bids.dir = NULL, bids.subid = NULL, bids.sessionid = NULL,
@@ -129,3 +147,4 @@ bidsify <- function(eyeris, save.all = TRUE, epochs.list = NULL, merge.epochs = 
           file.path(dir, p, f))
   }
 }
+
