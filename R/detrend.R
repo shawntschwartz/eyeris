@@ -1,11 +1,10 @@
 #' Detrend the pupil time series
 #' 
-#' todo: description goes here...
+#' Linearly detrend pupil data by fitting a linear model of pupil_data ~ time, then take the residuals.
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
+#' @return Updated `eyeris` object with linearly detrended data.
 #' 
 #' @examples
 #' eyeris_data |>

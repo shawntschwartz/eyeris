@@ -1,11 +1,18 @@
 #' Epoch pupil data based on custom event message structure
 #' 
-#' todo: description goes here...
+#' Intended to be used as the last step of preprocessing.This function creates data epochs
+#' of fixed duration with respect to event.markers (str). 
+#' Also remove characters in the event messages that are not alphanumeric or space, 
+#' and convert the message to a camelCase format.
+#' 
+#' @param eyeris An object of class `eyeris` derived from [eyeris::load()].
+#' @param event.marker A single string representing the event marker based on which to epoch data
+#' @param dur.secs Duration of epochs in seconds.
+#' @param matching.type Regular expression method to match provided event maker string with events in the data. Use 'boundary' for exact match, and 'contains' for partial match.
+#' @param hz Data sampling rate. If not specified, will use the value in metadata.
+#' @param metadata.template A space-separated string as a template for separating the full event message into parts. The event.marker sting in the event message in the data will be removed, and the remaining string will be separated based on space. These element strings will be put in separate columns of the output with column names being the template.
 #'
-#' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
-#'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
+#' @return Updated `eyeris` object with epoched data.
 #' 
 #' @examples
 #' eyeris_data |>

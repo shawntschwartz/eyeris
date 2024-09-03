@@ -1,11 +1,11 @@
 #' Subtractive / divisive baselining of pupil data
 #' 
-#' todo: description goes here...
+#' This function is intended for event-related analyses where one would like to control for different pupil size before the event of interest. This may be a suitable replacement of linear detrend in some cases, such as when one still wants to analyze the baseline pupil, or when baseline pupil changes in a severly nonlinear fashion.
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
+#' @return Updated `eyeris` object with baseline removed.
+#' 
 baseline <- function(eyeris) {
   ## TODO
 }

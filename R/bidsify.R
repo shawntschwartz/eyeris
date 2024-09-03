@@ -1,11 +1,17 @@
 #' Save out pupil timeseries data in a BIDS-like structure
-#' 
-#' todo: description goes here...
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
+#' @param save.all Whether all epochs are to be saved or only a subset of them. Default set to TRUE
+#' @param epoch.list List of epochs to be saved. Default set to NULL.
+#' @param merge.epochs Logical flag indicating whether epochs should be saved as one file or as separate files. Default set to FLASE (no merge).
+#' @param bids.dir Base BIDS directory.
+#' @param bids.subid BIDS subject ID.
+#' @param bids.sessionid BIDS session ID.
+#' @param bids.taskid BIDS task ID.
+#' @param bids.runid BIDS run ID.
+#' @param save.raw Logical flag indicating whether to save raw pupil data in addition to epoched data. Default set to TRUE.
 #'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
+#' @return NULL
 #' 
 #' @examples
 #' eyeris_data |> 
