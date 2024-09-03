@@ -14,14 +14,42 @@ epoch(
 )
 }
 \arguments{
-\item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
+\item{eyeris}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
+
+\item{event.marker}{A single string representing the event marker based on
+when to epoch the continuous pupil timeseries data.}
+
+\item{dur.secs}{Duration of epochs (in seconds).}
+
+\item{matching.type}{Indicates which regular expression method will be used
+to perform pattern matching with the provided event maker string and the
+events messages contained within the raw data.
+Use 'boundary' for exact matching, and 'contains' for partial matching.}
+
+\item{hz}{Data sampling rate. If not specified, will use the value contained
+within the tracker's metadata.}
+
+\item{metadata.template}{A space-separated string as a template for parsing
+the full event message into parts. The event.marker string that is matched
+with the event messages contained in the raw pupil data will be removed, and
+the remaining string will be separated based on where space(s) occur within
+the event.marker string. These element strings will be placed into separate
+columns of the epoched outputs (i.e., dataframes within the \code{eyeris} object
+that begin with \code{epoch_}), where rows contain the specific text matched
+to the indices of the strings provided in the template string (and the string
+from each index of the template string becomes the column name(s) containing
+these metadata values in the epoched data).}
 }
 \value{
-A numeric vector giving number of characters (code points) in each
-element of the character vector. Missing string have missing length.
+Updated \code{eyeris} object with dataframes containing the epoched data
+(\code{epoch_}).
 }
 \description{
-todo: description goes here...
+Intended to be used as the final preprocessing step.
+This function creates data epochs of fixed duration with respect to
+your provided \code{event.markers} (str), and also sanitizes (i.e., remove
+characters from the provided event messages that are not alphanumeric
+(or spaces) and convert the message to a camelCase format.
 }
 \examples{
 eyeris_data |>
