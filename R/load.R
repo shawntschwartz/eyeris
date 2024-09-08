@@ -10,7 +10,7 @@
 #' @seealso [eyelinker::read.asc()] which this function wraps.
 #' 
 #' @examples
-#' path_to_asc_file |>
+#' system.file("extdata", "assocret.asc", package = "eyeris") |>
 #'   eyeris::load()
 #' 
 #' @export
