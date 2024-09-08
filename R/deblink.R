@@ -14,8 +14,9 @@
 #' @return An `eyeris` object with a new column: `pupil_deblink`.
 #' 
 #' @examples
-#' eyeris_data |> 
-#'   eyeris::deblink(extend = 250)
+#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#'   eyeris::load() |>
+#'   eyeris::deblink(extend = 50)  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
 #' 
 #' @export
 deblink <- function(eyeris, extend = 0) {
