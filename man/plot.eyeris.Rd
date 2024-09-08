@@ -25,7 +25,3 @@ The sum of \code{x} and \code{y}
 \description{
 todo: description goes here...
 }
-\examples{
-plot(eyeris_data)
-
-}
