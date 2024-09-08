@@ -3,12 +3,17 @@ PACKAGE_NAME := eyeris
 R_CMD := Rscript -e
 
 # default target
-all: uninstall build install roxygenize clean
+all: uninstall getdeps build install roxygenize clean
 
-# uninstal dev version of package if loaded
+# uninstall dev version of package if loaded
 uninstall:
-	Rscript -e "if (requireNamespace('eyeris', quietly = TRUE)) devtools::unload('${PACKAGE_NAME}')"
-	Rscript -e "if (requireNamespace('eyeris', quietly = TRUE)) remove.packages('${PACKAGE_NAME}')"
+	$(R_CMD) "if (!requireNamespace('devtools', quietly = TRUE)) install.packages('devtools')"
+	$(R_CMD) "if (requireNamespace('eyeris', quietly = TRUE)) devtools::unload('${PACKAGE_NAME}')"
+	$(R_CMD) "if (requireNamespace('eyeris', quietly = TRUE)) remove.packages('${PACKAGE_NAME}')"
+
+# install deps
+getdeps:
+	$(R_CMD) "install.packages(c('eyelinker', 'dplyr', 'gsignal', 'tidyr', 'zoo'))"
 
 # build package
 build:
@@ -37,4 +42,4 @@ clean:
 	rm -rf build
 	@echo "[ OK ] - eyeris build directory cleaned!"
 
-.PHONY: all uninstall build install check roxygenize clean
+.PHONY: all uninstall getdeps build install check roxygenize clean
