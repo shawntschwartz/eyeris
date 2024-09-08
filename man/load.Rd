@@ -17,7 +17,7 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
-path_to_asc_file |>
+system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load()
 
 }
