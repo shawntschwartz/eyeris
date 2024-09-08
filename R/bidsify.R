@@ -26,11 +26,21 @@
 #' addition to epoched data. Defaults to TRUE.
 #'
 #' @examples
-#' eyeris_data |>
+#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#'   eyeris::load() |>
+#'   eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+#'   eyeris::despeed() |>
+#'   eyeris::interpolate() |>
+#'   eyeris::lpfilt(plot_freqz = TRUE) |>
+#'   eyeris::zscore() |>
+#'   eyeris::epoch(event.marker = "CUE_START_", 
+#'                 dur.secs = 1,
+#'                 matching.type = "contains",
+#'                 metadata.template = "trial") |>
 #'   eyeris::bidsify(bids.dir = 'path/to/derivatives',
 #'                   bids.subid = '001',
 #'                   bids.sessionid = '01',
-#'                   bids.taskid = 'funexp',
+#'                   bids.taskid = 'assocret',
 #'                   bids.runid = '01')
 #'
 #' @export
