@@ -8,7 +8,9 @@
 #'    element of the character vector. Missing string have missing length.
 #' 
 #' @examples
-#' eyeris_data |>
+#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#'   eyeris::load() |>
+#'   eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
 #'   eyeris::despeed()
 #' 
 #' @export
