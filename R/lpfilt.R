@@ -15,8 +15,12 @@
 #' @return An `eyeris` object with a new column in `timeseries`: `pupil_lpfilt`.
 #'
 #' @examples
-#' eyeris_data |> 
-#'   eyeris::lpfilt()
+#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#'   eyeris::load() |>
+#'   eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+#'   eyeris::despeed() |>
+#'   eyeris::interpolate() |>
+#'   eyeris::lpfilt(plot_freqz = TRUE)
 #' 
 #' @export
 lpfilt <- function(eyeris, wp = 4, ws = 8,
