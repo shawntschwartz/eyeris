@@ -37,7 +37,7 @@
 #'                 dur.secs = 1,
 #'                 matching.type = "contains",
 #'                 metadata.template = "trial") |>
-#'   eyeris::bidsify(bids.dir = 'path/to/derivatives',
+#'   eyeris::bidsify(bids.dir = 'derivatives',
 #'                   bids.subid = '001',
 #'                   bids.sessionid = '01',
 #'                   bids.taskid = 'assocret',
