@@ -11,9 +11,6 @@
 #' @return An `eyeris` object with a new dataframe containing the pupil
 #' timeseries after baseline removal.
 #'
-#' @examples
-#' eyeris_data |>
-#'  eyeris::baseline()
 baseline <- function(eyeris) {
   ## TODO
 }
