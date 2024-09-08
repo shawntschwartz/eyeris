@@ -8,3 +8,4 @@
 ^\.github$          # GitHub Actions workflows
 ^Makefile$          # Makefile for local builds
 ^LICENSE\.md$       # Full text of the license
+^baseline\.R$
