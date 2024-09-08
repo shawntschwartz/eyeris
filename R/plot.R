@@ -7,16 +7,6 @@
 #' 
 #' @return The sum of \code{x} and \code{y}
 #' 
-#' @examples
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
-#'   eyeris::load() |>
-#'   eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
-#'   eyeris::despeed() |>
-#'   eyeris::interpolate() |>
-#'   eyeris::lpfilt(plot_freqz = TRUE) |>
-#'   eyeris::zscore() |>
-#'   plot()
-#' 
 #' @rdname plot.eyeris
 #' 
 #' @export
