@@ -28,5 +28,5 @@ interpolate.pupil <- function(x, prev_op) {
 
   interp_pupil <- zoo::na.approx(prev_pupil, na.rm = FALSE, maxgap = Inf)
 
-  return(pupil)
+  return(interp_pupil)
 }

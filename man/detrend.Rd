@@ -17,7 +17,11 @@ Linearly detrend pupil data by fitting a linear model of \code{pupil_data ~ time
 and return the residuals (\code{pupil_data - fitted_values}).
 }
 \examples{
-eyeris_data |>
+system.file("extdata", "assocret.asc", package = "eyeris") |>
+  eyeris::load() |>
+  eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+  eyeris::despeed() |>
+  eyeris::interpolate() |>
   eyeris::detrend()
 
 }
