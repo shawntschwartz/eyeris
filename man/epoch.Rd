@@ -52,10 +52,16 @@ characters from the provided event messages that are not alphanumeric
 (or spaces) and convert the message to a camelCase format.
 }
 \examples{
-eyeris_data |>
-  eyeris::epoch(event.marker = "ITI",
-                dur.secs = 3,
-                matching.type = "boundary",
-                metadata.template = "trial stim")
+system.file("extdata", "assocret.asc", package = "eyeris") |>
+  eyeris::load() |>
+  eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+  eyeris::despeed() |>
+  eyeris::interpolate() |>
+  eyeris::lpfilt(plot_freqz = TRUE) |>
+  eyeris::zscore() |>
+  eyeris::epoch(event.marker = "CUE_START_", 
+                dur.secs = 1,
+                matching.type = "contains",
+                metadata.template = "trial")
 
 }
