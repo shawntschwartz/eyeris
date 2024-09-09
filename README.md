@@ -5,3 +5,6 @@
 
 ![Linter]
 (https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg)
+
+![License]
+(https://badgen.net/#static/license/MIT/blue?icon=github)
