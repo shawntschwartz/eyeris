@@ -11,12 +11,19 @@ Encoding: UTF-8
 Depends:
   R (>= 4.1)
 Imports:
-  eyelinker,
-  dplyr,
-  gsignal,
-  purrr,
-  tidyr,
-  zoo
+    eyelinker,
+    dplyr,
+    gsignal,
+    purrr,
+    tidyr,
+    zoo,
+    ggplot2,
+    cli,
+    rlang,
+    stringr,
+    utils,
+    stats,
+    graphics
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
