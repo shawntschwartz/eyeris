@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ dev, release ]
 
-name: R-pkg-linter
+name: linter
 
 permissions: read-all
 
