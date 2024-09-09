@@ -6,22 +6,22 @@
 \usage{
 epoch(
   eyeris,
-  event.marker,
-  dur.secs,
-  matching.type = c("boundary", "contains"),
+  event_marker,
+  duration,
+  matching_type = c("boundary", "contains"),
   hz = NULL,
-  metadata.template = NULL
+  metadata_template = NULL
 )
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
 
-\item{event.marker}{A single string representing the event marker based on
+\item{event_marker}{A single string representing the event_marker based on
 when to epoch the continuous pupil timeseries data.}
 
-\item{dur.secs}{Duration of epochs (in seconds).}
+\item{duration}{Duration of epochs (in seconds).}
 
-\item{matching.type}{Indicates which regular expression method will be used
+\item{matching_type}{Indicates which regular expression method will be used
 to perform pattern matching with the provided event maker string and the
 events messages contained within the raw data.
 Use 'boundary' for exact matching, and 'contains' for partial matching.}
@@ -29,11 +29,11 @@ Use 'boundary' for exact matching, and 'contains' for partial matching.}
 \item{hz}{Data sampling rate. If not specified, will use the value contained
 within the tracker's metadata.}
 
-\item{metadata.template}{A space-separated string as a template for parsing
-the full event message into parts. The event.marker string that is matched
+\item{metadata_template}{A space-separated string as a template for parsing
+the full event message into parts. The event_marker string that is matched
 with the event messages contained in the raw pupil data will be removed, and
 the remaining string will be separated based on where space(s) occur within
-the event.marker string. These element strings will be placed into separate
+the event_marker string. These element strings will be placed into separate
 columns of the epoched outputs (i.e., dataframes within the \code{eyeris} object
 that begin with \code{epoch_}), where rows contain the specific text matched
 to the indices of the strings provided in the template string (and the string
@@ -47,21 +47,25 @@ Updated \code{eyeris} object with dataframes containing the epoched data
 \description{
 Intended to be used as the final preprocessing step.
 This function creates data epochs of fixed duration with respect to
-your provided \code{event.markers} (str), and also sanitizes (i.e., remove
+your provided \code{event_markers} (str), and also sanitizes (i.e., remove
 characters from the provided event messages that are not alphanumeric
 (or spaces) and convert the message to a camelCase format.
 }
 \examples{
+\dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load() |>
-  eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+  eyeris::deblink(extend = 50) |>
   eyeris::despeed() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE) |>
   eyeris::zscore() |>
-  eyeris::epoch(event.marker = "CUE_START_", 
-                dur.secs = 1,
-                matching.type = "contains",
-                metadata.template = "trial")
+  eyeris::epoch(
+    event_marker = "CUE_START_",
+    duration = 1,
+    matching_type = "contains",
+    metadata_template = "trial"
+  )
+}
 
 }
