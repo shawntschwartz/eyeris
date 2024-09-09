@@ -6,40 +6,40 @@
 \usage{
 bidsify(
   eyeris,
-  save.all = TRUE,
-  epochs.list = NULL,
-  merge.epochs = FALSE,
-  bids.dir = NULL,
-  bids.subid = NULL,
-  bids.sessionid = NULL,
-  bids.taskid = NULL,
-  bids.runid = NULL,
-  save.raw = TRUE
+  save_all = TRUE,
+  epochs_list = NULL,
+  merge_epochs = FALSE,
+  bids_dir = NULL,
+  participant_id = NULL,
+  session_num = NULL,
+  task_name = NULL,
+  run_num = NULL,
+  save_raw = TRUE
 )
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
 
-\item{save.all}{Logical flag indicating whether all epochs are to be saved
+\item{save_all}{Logical flag indicating whether all epochs are to be saved
 or only a subset of them. Defaults to TRUE.}
 
-\item{merge.epochs}{Logical flag indicating whether epochs should be saved
+\item{epochs_list}{List of epochs to be saved. Defaults to NULL.}
+
+\item{merge_epochs}{Logical flag indicating whether epochs should be saved
 as one file or as separate files. Defaults to FLASE (no merge).}
 
-\item{bids.dir}{Base BIDS directory.}
+\item{bids_dir}{Base bids_directory.}
 
-\item{bids.subid}{BIDS subject ID.}
+\item{participant_id}{BIDS subject ID.}
 
-\item{bids.sessionid}{BIDS session ID.}
+\item{session_num}{BIDS session ID.}
 
-\item{bids.taskid}{BIDS task ID.}
+\item{task_name}{BIDS task ID.}
 
-\item{bids.runid}{BIDS run ID.}
+\item{run_num}{BIDS run ID.}
 
-\item{save.raw}{Logical flag indicating whether to save raw pupil data in
+\item{save_raw}{Logical flag indicating whether to save_raw pupil data in
 addition to epoched data. Defaults to TRUE.}
-
-\item{epoch.list}{List of epochs to be saved. Defaults to NULL.}
 }
 \description{
 This method provides a structured way to save out pupil data in a BIDS-like
@@ -54,21 +54,29 @@ At this time, however, this function instead takes a more BIDS-inspired
 approach to organizing the output files for preprocessed pupil data.
 }
 \examples{
+# Bleed around blink periods just long enough to remove majority of
+#  deflections due to eyelid movements
+\dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load() |>
-  eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+  eyeris::deblink(extend = 50) |>
   eyeris::despeed() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE) |>
   eyeris::zscore() |>
-  eyeris::epoch(event.marker = "CUE_START_", 
-                dur.secs = 1,
-                matching.type = "contains",
-                metadata.template = "trial") |>
-  eyeris::bidsify(bids.dir = 'derivatives',
-                  bids.subid = '001',
-                  bids.sessionid = '01',
-                  bids.taskid = 'assocret',
-                  bids.runid = '01')
+  eyeris::epoch(
+    event_marker = "CUE_START_",
+    duration = 1,
+    matching_type = "contains",
+    metadata_template = "trial"
+  ) |>
+  eyeris::bidsify(
+    bids_dir = "derivatives",
+    participant_id = "001",
+    session_num = "01",
+    task_name = "assocret",
+    run_num = "01"
+  )
+}
 
 }
