@@ -1,7 +1,7 @@
 Package: eyeris
 Type: Package
 Title: Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines
-Version: 0.0.1
+Version: 0.0.0.9000
 Authors@R:
   person("Shawn", "Schwartz", email = "stschwartz@stanford.edu", 
          role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6444-8451"))
