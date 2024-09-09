@@ -1,10 +1,1 @@
-# eyeris
-
-![Build]
-(https://github.com/shawntschwartz/eyeris/actions/workflows/r.yml/badge.svg)
-
-![Linter]
-(https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg)
-
-![License]
-(https://badgen.net/#static/license/MIT/blue?icon=github)
+# eyeris ![License](https://badgen.net/static/license/MIT/blue?icon=github) ![Build](https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg) ![Linter](https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg)
