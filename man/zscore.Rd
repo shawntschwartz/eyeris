@@ -8,6 +8,8 @@ zscore(eyeris, groups = NULL)
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
+
+\item{groups}{A value}
 }
 \value{
 A numeric vector giving number of characters (code points) in each
@@ -17,12 +19,14 @@ element of the character vector. Missing string have missing length.
 todo: description goes here...
 }
 \examples{
+\dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load() |>
-  eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+  eyeris::deblink(extend = 50) |>
   eyeris::despeed() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE) |>
   eyeris::zscore()
+}
 
 }
