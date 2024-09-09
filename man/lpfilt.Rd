@@ -23,17 +23,18 @@ lpfilt(eyeris, wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = FALSE)
 An \code{eyeris} object with a new column in \code{timeseries}: \code{pupil_lpfilt}.
 }
 \description{
-The intended use of this method
-is for smoothing, although by specifying wp and ws differently one can
-achieve highpass or bandpass filtering as well. However, only lowpass
-filtering should be done on pupillometry data.
+The intended use of this method is for smoothing, although by specifying
+\code{wp} and \code{ws} differently one can achieve highpass or bandpass filtering
+as well. However, only lowpass filtering should be done on pupillometry data.
 }
 \examples{
+\dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load() |>
-  eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+  eyeris::deblink(extend = 50) |>
   eyeris::despeed() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE)
+}
 
 }
