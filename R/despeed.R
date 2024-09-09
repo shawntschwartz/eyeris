@@ -1,29 +1,32 @@
 #' Remove pupil samples that are physiologically unlikely
-#' 
+#'
 #' todo: description goes here...
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
+#' @param n A value
 #'
 #' @return A numeric vector giving number of characters (code points) in each
 #'    element of the character vector. Missing string have missing length.
-#' 
+#'
 #' @examples
+#' \dontrun{
 #' system.file("extdata", "assocret.asc", package = "eyeris") |>
 #'   eyeris::load() |>
-#'   eyeris::deblink(extend = 50) |>  # Bleed around blink periods just long enough to remove majority of deflections due to eyelid movements
+#'   eyeris::deblink(extend = 50) |>
 #'   eyeris::despeed()
-#' 
+#' }
+#'
 #' @export
 despeed <- function(eyeris, n = 16) {
-  return(pipeline_handler(eyeris, despeed.pupil, 'despeed', n))
+  return(pipeline_handler(eyeris, despeed_pupil, "despeed", n))
 }
 
 # based on https://github.com/dr-JT/pupillometry/blob/main/R/pupil_artifact.R
-despeed.pupil <- function(x, prev_op, n) {
+despeed_pupil <- function(x, prev_op, n) {
   pupil <- x[[prev_op]]
-  time <- x[['time_orig']]
+  timeseries <- x[["time_orig"]]
 
-  pupil_speed <- speed(pupil, time)
+  pupil_speed <- speed(pupil, timeseries)
   median_speed <- median(pupil_speed, na.rm = TRUE)
   mad_val <- median(abs(pupil_speed - median_speed), na.rm = TRUE)
   mad_thresh <- median_speed + (n * mad_val)
