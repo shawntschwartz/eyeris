@@ -22,7 +22,7 @@ is for filling in missing pupil samples (NAs) in the time series.
 system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load() |>
   eyeris::deblink(extend = 50) |>
-  eyeris::despeed() |>
+  eyeris::detransient() |>
   eyeris::interpolate()
 }
 

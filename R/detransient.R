@@ -1,28 +1,33 @@
 #' Remove pupil samples that are physiologically unlikely
 #'
-#' todo: description goes here...
+#' The intended use of this method is for removing pupil samples that emerge
+#' more quickly than would be physiologically expected. This is accomplished by
+#' rejecting samples that exceed a "speed"-based threshold (i.e., median
+#' absolute deviation from sample-to-sample). This threshold is computed based
+#' on the constant `n`, which defaults to the value `16`.
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
-#' @param n A value
+#' @param n A constant used to compute the median absolute deviation (MAD)
+#' threshold.
 #'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
+#' @return An `eyeris` object with a new column in `timeseries`:
+#' `pupil_detransient`.
 #'
 #' @examples
 #' \dontrun{
 #' system.file("extdata", "assocret.asc", package = "eyeris") |>
 #'   eyeris::load() |>
 #'   eyeris::deblink(extend = 50) |>
-#'   eyeris::despeed()
+#'   eyeris::detransient()
 #' }
 #'
 #' @export
-despeed <- function(eyeris, n = 16) {
-  return(pipeline_handler(eyeris, despeed_pupil, "despeed", n))
+detransient <- function(eyeris, n = 16) {
+  return(pipeline_handler(eyeris, despeed_pupil, "detransient", n))
 }
 
 # based on https://github.com/dr-JT/pupillometry/blob/main/R/pupil_artifact.R
-despeed_pupil <- function(x, prev_op, n) {
+detransient_pupil <- function(x, prev_op, n) {
   pupil <- x[[prev_op]]
   timeseries <- x[["time_orig"]]
 
