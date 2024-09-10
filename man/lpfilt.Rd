@@ -32,7 +32,7 @@ as well. However, only lowpass filtering should be done on pupillometry data.
 system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load() |>
   eyeris::deblink(extend = 50) |>
-  eyeris::despeed() |>
+  eyeris::detransient() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE)
 }
