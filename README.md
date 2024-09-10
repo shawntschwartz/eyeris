@@ -2,7 +2,7 @@
     <h1 align="center">eyeris</h1>
 </p>
 <p align="center">
-    <a href="https://badgen.net/#static/license/MIT/blue?icon=github" alt="MIT License">
+    <a href="LICENSE.md" alt="MIT License">
         <img src="https://badgen.net/static/license/MIT/blue?icon=github" /></a>
     <a href="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="R Package Build Status">
         <img src="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" /></a>
