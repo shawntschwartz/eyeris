@@ -23,7 +23,7 @@
 #'
 #' @export
 detransient <- function(eyeris, n = 16) {
-  return(pipeline_handler(eyeris, despeed_pupil, "detransient", n))
+  return(pipeline_handler(eyeris, detransient_pupil, "detransient", n))
 }
 
 # based on https://github.com/dr-JT/pupillometry/blob/main/R/pupil_artifact.R
