@@ -29,7 +29,10 @@ interpolate_pupil <- function(x, prev_op) {
     prev_pupil <- x[[prev_op]]
   }
 
-  interp_pupil <- zoo::na.approx(prev_pupil, na.rm = FALSE, maxgap = Inf)
+  interp_pupil <- zoo::na.approx(prev_pupil,
+    na.rm = FALSE, maxgap = Inf,
+    rule = 2
+  )
 
   return(interp_pupil)
 }
