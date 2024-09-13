@@ -24,7 +24,10 @@ missing in-between these 'spike'-looking events. The deblinking procedure
 here will NA-pad each missing data point by your specified number of ms.
 }
 \examples{
-eyeris_data |> 
-  eyeris::deblink(extend = 250)
+\dontrun{
+system.file("extdata", "assocret.asc", package = "eyeris") |>
+  eyeris::load() |>
+  eyeris::deblink(extend = 50)
+}
 
 }

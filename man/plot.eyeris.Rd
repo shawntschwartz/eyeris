@@ -5,19 +5,29 @@
 \title{Plot pre-processed pupil data from \code{eyeris}}
 \usage{
 \method{plot}{eyeris}(
-  eyeris,
-  trial.id,
-  trial.col = NULL,
-  event.label = NULL,
+  x,
+  trial_id,
+  trial_col_name = NULL,
+  event_name = NULL,
   steps = NULL,
-  time.range = NULL,
+  time_range = NULL,
   ...
 )
 }
 \arguments{
-\item{x}{A number}
+\item{x}{A value}
 
-\item{y}{A number}
+\item{trial_id}{A value}
+
+\item{trial_col_name}{A value}
+
+\item{event_name}{A value}
+
+\item{steps}{A value}
+
+\item{time_range}{A value}
+
+\item{...}{Additional args}
 }
 \value{
 The sum of \code{x} and \code{y}
@@ -26,6 +36,8 @@ The sum of \code{x} and \code{y}
 todo: description goes here...
 }
 \examples{
+\dontrun{
 plot(eyeris_data)
+}
 
 }

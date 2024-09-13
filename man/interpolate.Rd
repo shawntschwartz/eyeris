@@ -10,14 +10,20 @@ interpolate(eyeris)
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
 }
 \value{
-An \code{eyeris} object with a new column in \code{timeseries}: \code{pupil_interpolate}.
+An \code{eyeris} object with a new column in \code{timeseries}:
+\code{pupil_interpolate}.
 }
 \description{
 Linear interpolation of time series data. The intended use of this method
 is for filling in missing pupil samples (NAs) in the time series.
 }
 \examples{
-eyeris_data |> 
+\dontrun{
+system.file("extdata", "assocret.asc", package = "eyeris") |>
+  eyeris::load() |>
+  eyeris::deblink(extend = 50) |>
+  eyeris::detransient() |>
   eyeris::interpolate()
+}
 
 }
