@@ -5,7 +5,8 @@
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
-#' @return An `eyeris` object with a new column in `timeseries`: `pupil_detrend`.
+#' @return An `eyeris` object with two new columns in `timeseries`:
+#' `detrend_fitted_betas`, and `pupil_detrend`.
 #'
 #' @examples
 #' eyeris_data |>
@@ -13,15 +14,20 @@
 #'
 #' @export
 detrend <- function(eyeris) {
-  return(pipeline_handler(eyeris, detrend.pupil, 'detrend'))
+  return(pipeline_handler(eyeris, detrend_pupil, "detrend"))
 }
 
-detrend.pupil <- function(x, prev_op) {
+detrend_pupil <- function(x, prev_op) {
   pupil <- x[[prev_op]]
-  time <- x[['time_orig']]
+  time <- x[["time_orig"]]
 
   fit <- lm(pupil ~ time)
   trend <- fit$fitted.values
 
-  return(pupil - trend)
+  list_out <- list(
+    betas = trend,
+    detrend = (pupil - trend)
+  )
+
+  return(list_out)
 }
