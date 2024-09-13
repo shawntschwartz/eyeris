@@ -15,15 +15,14 @@ Imports:
     dplyr,
     gsignal,
     purrr,
-    tidyr,
     zoo,
-    ggplot2,
     cli,
     rlang,
     stringr,
     utils,
     stats,
-    graphics
+    graphics,
+    grDevices
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
