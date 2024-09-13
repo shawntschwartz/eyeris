@@ -8,3 +8,4 @@
 ^Makefile$
 ^\.lintr$
 ^LICENSE\.md$
+^\.Rproj\.user$
