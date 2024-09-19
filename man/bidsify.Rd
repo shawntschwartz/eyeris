@@ -58,17 +58,16 @@ approach to organizing the output files for preprocessed pupil data.
 #  deflections due to eyelid movements
 \dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
-  eyeris::load() |>
+  eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE) |>
   eyeris::zscore() |>
   eyeris::epoch(
-    event_marker = "CUE_START_",
-    duration = 1,
-    matching_type = "contains",
-    metadata_template = "trial"
+    events = "PROBE_{type}_{trial}",
+    limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+    label = "prePostProbe" # custom epoch label name
   ) |>
   eyeris::bidsify(
     bids_dir = "derivatives",
