@@ -25,7 +25,7 @@ values on either end, respectively, using the "rule = 2" argument in the
 \examples{
 \dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
-  eyeris::load() |>
+  eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
   eyeris::interpolate()
