@@ -62,7 +62,10 @@ lpfilt_pupil <- function(x, prev_op, wp, ws, rp, rs, fs, plot_freqz) {
     plot_width <- par("pin")[1]
     scaling_factor <- 7
     cex_val <- plot_width / scaling_factor
-    graphics::mtext(side = 2, line = 2, at = 0, adj = 0.95, cex = cex_val, subtitle)
+    graphics::mtext(
+      side = 2, line = 2, at = 0, adj = 0.95,
+      cex = cex_val, subtitle
+    )
   }
 
   # filter twice (forward and backward) to preserve phase information
