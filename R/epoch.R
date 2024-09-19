@@ -55,7 +55,7 @@
 #' @examples
 #' \dontrun{
 #' eye_preproc <- system.file("extdata", "assocret.asc", package = "eyeris") |>
-#'   eyeris::load() |>
+#'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
 #'   eyeris::interpolate() |>
