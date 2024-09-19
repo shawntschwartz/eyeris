@@ -366,17 +366,41 @@ epoch_start_msg_and_limits <- function(eyeris, start, lims, hz) {
   return(epochs_df)
 }
 
-normalize_event_tag <- function(string) {
-  string <- string |>
-    stringr::str_to_lower() |>
-    stringr::str_replace_all("[^[:alnum:] ]", " ") |>
-    stringr::str_split("\\s+")
+epoch_start_end_msg <- function(eyeris, start, end, hz) {
+  check_start_end_timestamps(start, end)
 
-  words <- string[[1]]
-  words[-1] <- stringr::str_to_title(words[-1])
+  epochs <- vector(mode = "list", length = nrow(start)) # pre-alloc list
 
-  camel_case_str <- paste0(words, collapse = "")
-  normed_str <- paste0("epoch_", camel_case_str)
+  for (i in seq_len(nrow(start))) {
+    i_start <- start$time[i]
+    i_end <- end$time[i]
 
-  return(normed_str)
+    start_metadata_vals <- index_metadata(start, i) |>
+      dplyr::rename_with(~ paste0("start_", .x))
+
+    end_metadata_vals <- index_metadata(end, i) |>
+      dplyr::rename_with(~ paste0("end_", .x))
+
+    metadata_vals <- dplyr::bind_cols(start_metadata_vals, end_metadata_vals)
+
+    duration <- (i_end - i_start) / hz
+    n_samples <- duration * hz
+
+    epochs[[i]] <- eyeris |>
+      purrr::pluck("timeseries") |>
+      dplyr::filter(time_orig >= i_start & time_orig < i_end) |>
+      dplyr::mutate(
+        timebin = seq(
+          from = 0,
+          to = duration,
+          length.out = n_samples
+        ),
+        .after = time_orig
+      ) |>
+      dplyr::mutate(!!!metadata_vals)
+  }
+
+  epochs_df <- do.call(rbind.data.frame, epochs)
+
+  return(epochs_df)
 }
