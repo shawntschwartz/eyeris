@@ -33,8 +33,7 @@ lpfilt <- function(eyeris, wp = 4, ws = 8,
   ))
 }
 
-lpfilt_pupil <- function(x, prev_op,
-                         wp, ws, rp, rs, fs, plot_freqz) {
+lpfilt_pupil <- function(x, prev_op, wp, ws, rp, rs, fs, plot_freqz) {
   if (any(is.na(x[[prev_op]]))) {
     cli::cli_abort("NAs detected in pupil data. Need to interpolate first.")
   } else {
@@ -54,6 +53,12 @@ lpfilt_pupil <- function(x, prev_op,
       freq_response$w[xlim_sel],
       freq_response$h[xlim_sel]
     )
+    subtitle <- paste0(
+      "*frequency response for the low-pass filter* - ",
+      "cutoff freq (", wp, "Hz),
+                       stopping freq (", ws, "Hz)\n\n"
+    )
+    graphics::mtext(side = 2, line = 2, at = -1.5, adj = 1, cex = 0.6, subtitle)
   }
 
   # filter twice (forward and backward) to preserve phase information
