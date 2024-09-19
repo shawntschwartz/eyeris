@@ -8,11 +8,9 @@
 <a href="LICENSE.md" alt="MIT License">
 <img src="https://badgen.net/static/license/MIT/blue?icon=github" />
 </a>
-
 <a href="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="R Package Build Status">
 <img src="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" />
 </a>
-
 <a href="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" alt="R Package Linter Status">
 <img src="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" />
 </a> <!-- badges: end -->
@@ -54,6 +52,8 @@ We hope you enjoy! -shawn
 ``` r
 library(eyeris)
 
+set.seed(1)
+
 demo_data <- system.file("extdata", "assocret.asc", package = "eyeris")
 
 eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
@@ -70,9 +70,6 @@ eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
 <img src="man/figures/README-example-1.png" width="100%" />
 
 <img src="man/figures/README-plot-1.png" width="100%" /><img src="man/figures/README-plot-2.png" width="100%" /><img src="man/figures/README-plot-3.png" width="100%" /><img src="man/figures/README-plot-4.png" width="100%" /><img src="man/figures/README-plot-5.png" width="100%" /><img src="man/figures/README-plot-6.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
 
 # Comments, suggestions, questions, issues
 
