@@ -85,9 +85,6 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
 
         main_panel <- ceiling(n_epochs / 2)
 
-        print(n)
-        print(main_panel)
-
         if (n == main_panel) {
           title <- paste0(pupil_steps[i], "\n[", st, " - ", et, "]")
         } else {
