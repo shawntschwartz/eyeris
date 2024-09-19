@@ -20,7 +20,7 @@ and return the fitted betas and the residuals (\code{pupil_data - fitted_values}
 \examples{
 \dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
-  eyeris::load() |>
+  eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
   eyeris::interpolate() |>
