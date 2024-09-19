@@ -301,14 +301,35 @@ epoch_manually <- function(eyeris, ts_list, hz) {
   return(epochs_df)
 }
 
+epoch_only_start_msg <- function(eyeris, start, hz) {
+  epochs <- vector(mode = "list", length = nrow(start)) # pre-alloc list
 
-  for (i in 3:ncol(t)) {
-    metadata_vecs[[names(t)[i]]] <- t[[i]]
+  all_epochs <- slice_epochs_no_limits(eyeris$timeseries, start)
+
+  for (i in seq_len(nrow(start))) {
+    metadata_vals <- index_metadata(start, i)
+    current_epoch <- all_epochs[[i]]
+    duration <- nrow(current_epoch) / hz
+    n_samples <- duration * hz
+
+    current_epoch <- current_epoch |>
+      dplyr::mutate(
+        timebin = seq(
+          from = 0,
+          to = duration,
+          length.out = n_samples
+        ),
+        .after = time_orig
+      ) |>
+      dplyr::mutate(!!!metadata_vals) |>
+      dplyr::select(-time)
+
+    epochs[[i]] <- current_epoch
   }
 
-  metadata_vecs <- c(list(event = t$msg), metadata_vecs)
+  epochs_df <- do.call(rbind.data.frame, epochs)
 
-  return(metadata_vecs)
+  return(epochs_df)
 }
 
 index_metadata <- function(x, i) {
