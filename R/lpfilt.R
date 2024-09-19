@@ -54,11 +54,15 @@ lpfilt_pupil <- function(x, prev_op, wp, ws, rp, rs, fs, plot_freqz) {
       freq_response$h[xlim_sel]
     )
     subtitle <- paste0(
-      "*frequency response for the low-pass filter* - ",
-      "cutoff freq (", wp, "Hz),
-                       stopping freq (", ws, "Hz)"
+      "*freq response for the low-pass filter* - ",
+      "cutoff (", wp, "Hz), stopping (", ws, "Hz)\n"
     )
-    graphics::mtext(side = 2, line = 2, at = -1.5, adj = 1, cex = 0.3, subtitle)
+
+    # calculate cex
+    plot_width <- par("pin")[1]
+    scaling_factor <- 7
+    cex_val <- plot_width / scaling_factor
+    graphics::mtext(side = 2, line = 2, at = 0, adj = 0.95, cex = cex_val, subtitle)
   }
 
   # filter twice (forward and backward) to preserve phase information
