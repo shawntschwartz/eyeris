@@ -82,10 +82,21 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
       for (n in 1:n_epochs) {
         st <- min(random_epochs[[n]]$time_orig)
         et <- max(random_epochs[[n]]$time_orig)
+
+        main_panel <- ceiling(n_epochs / 2)
+
+        print(n)
+        print(main_panel)
+
+        if (n == main_panel) {
+          title <- paste0(pupil_steps[i], "\n[", st, " - ", et, "]")
+        } else {
+          title <- paste0("\n[", st, " - ", et, "]")
+        }
+
         plot(random_epochs[[n]][[pupil_steps[i]]],
           type = "l", col = colors[i], lwd = 2,
-          main = paste0(pupil_steps[i], "\n[", st, " - ", et, "]"),
-          xlab = "Time", ylab = "Pupil Size"
+          main = title, xlab = "Time", ylab = "Pupil Size"
         )
       }
     }
