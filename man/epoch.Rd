@@ -4,67 +4,99 @@
 \alias{epoch}
 \title{Epoch pupil data based on custom event message structure}
 \usage{
-epoch(
-  eyeris,
-  event_marker,
-  duration,
-  matching_type = c("boundary", "contains"),
-  hz = NULL,
-  metadata_template = NULL
-)
+epoch(eyeris, events, limits = NULL, label = NULL, hz = NULL)
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
 
-\item{event_marker}{A single string representing the event_marker based on
-when to epoch the continuous pupil timeseries data.}
+\item{events}{Either (1) a single string representing the event message to
+perform trial extraction around, using specified \code{limits} to center the epoch
+around or no \code{limits} (which then just grabs the data epochs between each
+subsequent event string of the same type); (2) a vector containing both
+\code{start} and \code{end} event message strings -- here, \code{limits} will be ignored and
+the duration of each trial epoch will be the number of samples between each
+matched \code{start} and \code{end} event message pair; or (3) a list of 2 dataframes
+that manually specify start/end event timestamp-message pairs to pull out of
+the raw timeseries data -- here, it is required that each raw timestamp and
+event message be provided in the following format:
 
-\item{duration}{Duration of epochs (in seconds).}
+\verb{list(data.frame(time = c(...), msg = c(...)),}
+\verb{data.frame(time = c(...), msg = c(...)))}
 
-\item{matching_type}{Indicates which regular expression method will be used
-to perform pattern matching with the provided event maker string and the
-events messages contained within the raw data.
-Use 'boundary' for exact matching, and 'contains' for partial matching.}
+where the first data.frame indicates the \code{start} event timestamp and message
+string pairs, and the second data.frame indicates the \code{end} event timestamp
+and message string pairs.
+
+For event-modes \code{1} and \code{2}, the way in which you pass in the event message
+string must conform to a standarized protocol so that \code{eyeris} knows how to
+find your events and (optionally) parse any included metadata into the tidy
+epoch data outputs. You have two primary choices: either (a) specify a string
+followed by a \code{*} wildcard expression (e.g., \verb{"PROBE_START*}), which will
+match any messages that have "PROBE_START ..." (... referring to potential
+metadata, such as trial number, stim file, etc.); or (b) specify a string
+using the \code{eyeris} syntax: (e.g., \code{"PROBE_{type}_{trial}"}), which will match
+the messages that follow a structure like this "PROBE_START_1" and
+"PROBE_STOP_1", and generate two additional metadata columns: \code{type} and
+\code{trial}, which would contain the following values based on these two example
+strings: \code{type}: \verb{('START', 'STOP')}, and \code{trial}: \verb{(1, 1)}.}
+
+\item{limits}{A vector of 2 values (start, end) in seconds, indicating where
+trial extraction should occur centered around any given \code{start} message
+string in the \code{events} parameter.}
+
+\item{label}{An (optional) string you can provide to customize the name of
+the resulting \code{eyeris} class object containing the epoched data frame. If
+left as \code{NULL} (default), then list item will be called \code{epoch_xyz}, where
+\code{xyz} will be a sanitized version of the original \code{start} event string you
+provided for matching. If you choose to specify a \code{label} here, then the
+resulting list object name will take the form: \code{epoch_label}.}
 
 \item{hz}{Data sampling rate. If not specified, will use the value contained
 within the tracker's metadata.}
-
-\item{metadata_template}{A space-separated string as a template for parsing
-the full event message into parts. The event_marker string that is matched
-with the event messages contained in the raw pupil data will be removed, and
-the remaining string will be separated based on where space(s) occur within
-the event_marker string. These element strings will be placed into separate
-columns of the epoched outputs (i.e., dataframes within the \code{eyeris} object
-that begin with \code{epoch_}), where rows contain the specific text matched
-to the indices of the strings provided in the template string (and the string
-from each index of the template string becomes the column name(s) containing
-these metadata values in the epoched data).}
 }
 \value{
 Updated \code{eyeris} object with dataframes containing the epoched data
 (\code{epoch_}).
 }
 \description{
-Intended to be used as the final preprocessing step.
-This function creates data epochs of fixed duration with respect to
-your provided \code{event_markers} (str), and also sanitizes (i.e., remove
-characters from the provided event messages that are not alphanumeric
-(or spaces) and convert the message to a camelCase format.
+Intended to be used as the final preprocessing step. This function creates
+data epochs of either fixed or dynamic durations with respect to provided
+\code{events} and time \code{limits}, and also includes an intuitive metadata parsing
+feature where additional trial data embedded within event messages can easily
+be identified and joined into the resulting epoched data frames.
 }
 \examples{
 \dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+eye_preproc <- system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE) |>
-  eyeris::zscore() |>
+  eyeris::zscore()
+
+eye_preproc |>
+  eyeris::epoch(events = "PROBE*")
+
+eye_preproc |>
   eyeris::epoch(
-    event_marker = "CUE_START_",
-    duration = 1,
-    matching_type = "contains",
-    metadata_template = "trial"
+    events = "PROBE_{type}_{trial}",
+    limits = c(0, 1) # grab the 1 second post event
+  )
+
+eye_preproc |>
+  eyeris::epoch(
+    events = "PROBE_{type}_{trial}",
+    limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+    label = "prePostProbe" # custom epoch label name
+  )
+
+eye_prepoc |>
+  eyeris::epoch(
+    events = list(
+      data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
+      data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
+    )
   )
 }
 

@@ -1,31 +1,53 @@
 #' Epoch pupil data based on custom event message structure
 #'
-#' Intended to be used as the final preprocessing step.
-#' This function creates data epochs of fixed duration with respect to
-#' your provided `event_markers` (str), and also sanitizes (i.e., remove
-#' characters from the provided event messages that are not alphanumeric
-#' (or spaces) and convert the message to a camelCase format.
+#' Intended to be used as the final preprocessing step. This function creates
+#' data epochs of either fixed or dynamic durations with respect to provided
+#' `events` and time `limits`, and also includes an intuitive metadata parsing
+#' feature where additional trial data embedded within event messages can easily
+#' be identified and joined into the resulting epoched data frames.
 #'
 #' @param eyeris An object of class `eyeris` derived from [eyeris::load()].
-#' @param event_marker A single string representing the event_marker based on
-#' when to epoch the continuous pupil timeseries data.
-#' @param duration Duration of epochs (in seconds).
-#' @param matching_type Indicates which regular expression method will be used
-#' to perform pattern matching with the provided event maker string and the
-#' events messages contained within the raw data.
-#' Use 'boundary' for exact matching, and 'contains' for partial matching.
+#' @param events Either (1) a single string representing the event message to
+#' perform trial extraction around, using specified `limits` to center the epoch
+#' around or no `limits` (which then just grabs the data epochs between each
+#' subsequent event string of the same type); (2) a vector containing both
+#' `start` and `end` event message strings -- here, `limits` will be ignored and
+#' the duration of each trial epoch will be the number of samples between each
+#' matched `start` and `end` event message pair; or (3) a list of 2 dataframes
+#' that manually specify start/end event timestamp-message pairs to pull out of
+#' the raw timeseries data -- here, it is required that each raw timestamp and
+#' event message be provided in the following format:
+#'
+#' `list(data.frame(time = c(...), msg = c(...)),`
+#' `data.frame(time = c(...), msg = c(...)))`
+#'
+#' where the first data.frame indicates the `start` event timestamp and message
+#' string pairs, and the second data.frame indicates the `end` event timestamp
+#' and message string pairs.
+#'
+#' For event-modes `1` and `2`, the way in which you pass in the event message
+#' string must conform to a standarized protocol so that `eyeris` knows how to
+#' find your events and (optionally) parse any included metadata into the tidy
+#' epoch data outputs. You have two primary choices: either (a) specify a string
+#' followed by a `*` wildcard expression (e.g., `"PROBE_START*`), which will
+#' match any messages that have "PROBE_START ..." (... referring to potential
+#' metadata, such as trial number, stim file, etc.); or (b) specify a string
+#' using the `eyeris` syntax: (e.g., `"PROBE_{type}_{trial}"`), which will match
+#' the messages that follow a structure like this "PROBE_START_1" and
+#' "PROBE_STOP_1", and generate two additional metadata columns: `type` and
+#' `trial`, which would contain the following values based on these two example
+#' strings: `type`: `('START', 'STOP')`, and `trial`: `(1, 1)`.
+#' @param limits A vector of 2 values (start, end) in seconds, indicating where
+#' trial extraction should occur centered around any given `start` message
+#' string in the `events` parameter.
+#' @param label An (optional) string you can provide to customize the name of
+#' the resulting `eyeris` class object containing the epoched data frame. If
+#' left as `NULL` (default), then list item will be called `epoch_xyz`, where
+#' `xyz` will be a sanitized version of the original `start` event string you
+#' provided for matching. If you choose to specify a `label` here, then the
+#' resulting list object name will take the form: `epoch_label`.
 #' @param hz Data sampling rate. If not specified, will use the value contained
 #' within the tracker's metadata.
-#' @param metadata_template A space-separated string as a template for parsing
-#' the full event message into parts. The event_marker string that is matched
-#' with the event messages contained in the raw pupil data will be removed, and
-#' the remaining string will be separated based on where space(s) occur within
-#' the event_marker string. These element strings will be placed into separate
-#' columns of the epoched outputs (i.e., dataframes within the `eyeris` object
-#' that begin with `epoch_`), where rows contain the specific text matched
-#' to the indices of the strings provided in the template string (and the string
-#' from each index of the template string becomes the column name(s) containing
-#' these metadata values in the epoched data).
 #'
 #' @return Updated `eyeris` object with dataframes containing the epoched data
 #' (`epoch_`).
