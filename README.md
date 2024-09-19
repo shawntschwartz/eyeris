@@ -62,66 +62,15 @@ eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
 #> → Running zscore ...
 ```
 
-<img src="man/figures/README-example-1.png" width="50%" style="display: block; margin: auto auto auto 0;" />
+<img src="man/figures/README-glassbox-example-1.png" width="100%" />
 
 ### step-wise correction of pupillary signal
 
 ``` r
 plot(eyeris_preproc)
-#> [1] 1
-#> [1] 2
-#> [1] 2
-#> [1] 2
-#> [1] 3
-#> [1] 2
 ```
 
-<img src="man/figures/README-glassbox-plot-1.png" width="100%" />
-
-    #> [1] 1
-    #> [1] 2
-    #> [1] 2
-    #> [1] 2
-    #> [1] 3
-    #> [1] 2
-
-<img src="man/figures/README-glassbox-plot-2.png" width="100%" />
-
-    #> [1] 1
-    #> [1] 2
-    #> [1] 2
-    #> [1] 2
-    #> [1] 3
-    #> [1] 2
-
-<img src="man/figures/README-glassbox-plot-3.png" width="100%" />
-
-    #> [1] 1
-    #> [1] 2
-    #> [1] 2
-    #> [1] 2
-    #> [1] 3
-    #> [1] 2
-
-<img src="man/figures/README-glassbox-plot-4.png" width="100%" />
-
-    #> [1] 1
-    #> [1] 2
-    #> [1] 2
-    #> [1] 2
-    #> [1] 3
-    #> [1] 2
-
-<img src="man/figures/README-glassbox-plot-5.png" width="100%" />
-
-    #> [1] 1
-    #> [1] 2
-    #> [1] 2
-    #> [1] 2
-    #> [1] 3
-    #> [1] 2
-
-<img src="man/figures/README-glassbox-plot-6.png" width="100%" />
+<img src="man/figures/README-glassbox-plot-1.png" width="100%" /><img src="man/figures/README-glassbox-plot-2.png" width="100%" /><img src="man/figures/README-glassbox-plot-3.png" width="100%" /><img src="man/figures/README-glassbox-plot-4.png" width="100%" /><img src="man/figures/README-glassbox-plot-5.png" width="100%" /><img src="man/figures/README-glassbox-plot-6.png" width="100%" />
 
 ### final pre-post correction of pupillary signal (raw -\> preprocessed)
 
