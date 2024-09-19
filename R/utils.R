@@ -82,6 +82,31 @@ check_epoch_input <- function(epochs) {
   }
 }
 
+
+check_start_end_timestamps <- function(start, end) {
+  s_len <- length(start$time)
+  e_len <- length(end$time)
+
+  if (s_len != e_len) {
+    if (s_len > e_len) {
+      m <- paste(
+        "There are more epoch start times than end times.",
+        "Each start time must have a corresponding end time!"
+      )
+    } else {
+      m <- paste(
+        "There are more epoch end times than start times",
+        "Each start time must have a corresponding end time!"
+      )
+    }
+
+    stop(structure(list(
+      message = m,
+      call = match.call()
+    ), class = "unbalanced_start_stop_epoch_timestamps_error"))
+  }
+}
+
 count_epochs <- function(epochs) {
   if (length(epochs) == 0) {
     stop(structure(list(
