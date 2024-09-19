@@ -26,7 +26,7 @@ here will NA-pad each missing data point by your specified number of ms.
 \examples{
 \dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
-  eyeris::load() |>
+  eyeris::load_asc() |>
   eyeris::deblink(extend = 50)
 }
 
