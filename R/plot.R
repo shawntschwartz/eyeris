@@ -26,7 +26,7 @@
 #' @rdname plot.eyeris
 #'
 #' @export
-plot.eyeris <- function(x, ..., time_range = c(10000, 20000)) {
+plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, time_range = NULL) {
   # tests
   tryCatch(
     {
@@ -48,22 +48,66 @@ plot.eyeris <- function(x, ..., time_range = c(10000, 20000)) {
 
   pupil_data <- x$timeseries
   pupil_steps <- grep("^pupil_", names(pupil_data), value = TRUE)
-
-  start_index <- time_range[1]
-  end_index <- min(time_range[2], nrow(pupil_data))
-  sliced_pupil_data <- pupil_data[start_index:end_index, ]
-
   colors <- c("black", rainbow(length(pupil_steps) - 1))
 
-  par(mfrow = c(1, 1))
+  if (is.null(time_range)) {
+    hz <- x$info$sample.rate
+    random_epochs <- draw_random_epochs(pupil_data, n_epochs, duration, hz)
+    par(mfrow = c(1, n_epochs))
+    for (i in seq_along(pupil_steps)) {
+      for (n in 1:n_epochs) {
+        st <- min(random_epochs[[n]]$time_orig)
+        et <- max(random_epochs[[n]]$time_orig)
+        plot(random_epochs[[n]][[pupil_steps[i]]],
+          type = "l", col = colors[i], lwd = 2,
+          main = paste0(pupil_steps[i], "\n[", st, " - ", et, "]"),
+          xlab = "Time", ylab = "Pupil Size"
+        )
+      }
+    }
 
-  for (i in seq_along(pupil_steps)) {
-    plot(sliced_pupil_data[[pupil_steps[i]]],
-      type = "l", col = colors[i], lwd = 2,
-      main = pupil_steps[i], xlab = "Time",
-      ylab = "Pupil Size"
-    )
+    par(mfrow = c(1, n_epochs))
+  } else {
+    start_index <- time_range[1]
+    end_index <- min(time_range[2], nrow(pupil_data))
+    sliced_pupil_data <- pupil_data[start_index:end_index, ]
+    par(mfrow = c(1, 1))
+    for (i in seq_along(pupil_steps)) {
+      st <- min(sliced_pupil_data$time_orig)
+      et <- max(sliced_pupil_data$time_orig)
+      plot(sliced_pupil_data[[pupil_steps[i]]],
+        type = "l", col = colors[i], lwd = 2,
+        main = paste0(
+          pupil_steps[i], "\n[", st, " - ", et, "] | ",
+          "[", time_range[1], " - ", time_range[2], "]"
+        ),
+        xlab = "Time", ylab = "Pupil Size"
+      )
+    }
+
+    par(mfrow = c(1, 1))
   }
 
   par(mfrow = c(1, 1))
+}
+
+draw_random_epochs <- function(x, n, d, hz) {
+  n_samples <- d * hz
+  min_timestamp <- min(x$time_orig)
+  max_timestamp <- max(x$time_orig)
+
+  if ((max_timestamp - min_timestamp) < d) {
+    cli::cli_abort("Epoch duration is longer than available duration of data.")
+  }
+
+  drawn_epochs <- list()
+
+  for (i in 1:n) {
+    rand_start <- sample(min_timestamp:(max_timestamp - n_samples), 1)
+    rand_end <- rand_start + n_samples
+    drawn_epochs[[i]] <- x |>
+      dplyr::filter(time_orig >= rand_start & time_orig < rand_end)
+  }
+
+  return(drawn_epochs)
 }
