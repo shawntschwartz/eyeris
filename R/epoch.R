@@ -1,184 +1,253 @@
 #' Epoch pupil data based on custom event message structure
 #'
-#' Intended to be used as the final preprocessing step.
-#' This function creates data epochs of fixed duration with respect to
-#' your provided `event_markers` (str), and also sanitizes (i.e., remove
-#' characters from the provided event messages that are not alphanumeric
-#' (or spaces) and convert the message to a camelCase format.
+#' Intended to be used as the final preprocessing step. This function creates
+#' data epochs of either fixed or dynamic durations with respect to provided
+#' `events` and time `limits`, and also includes an intuitive metadata parsing
+#' feature where additional trial data embedded within event messages can easily
+#' be identified and joined into the resulting epoched data frames.
 #'
 #' @param eyeris An object of class `eyeris` derived from [eyeris::load()].
-#' @param event_marker A single string representing the event_marker based on
-#' when to epoch the continuous pupil timeseries data.
-#' @param duration Duration of epochs (in seconds).
-#' @param matching_type Indicates which regular expression method will be used
-#' to perform pattern matching with the provided event maker string and the
-#' events messages contained within the raw data.
-#' Use 'boundary' for exact matching, and 'contains' for partial matching.
+#' @param events Either (1) a single string representing the event message to
+#' perform trial extraction around, using specified `limits` to center the epoch
+#' around or no `limits` (which then just grabs the data epochs between each
+#' subsequent event string of the same type); (2) a vector containing both
+#' `start` and `end` event message strings -- here, `limits` will be ignored and
+#' the duration of each trial epoch will be the number of samples between each
+#' matched `start` and `end` event message pair; or (3) a list of 2 dataframes
+#' that manually specify start/end event timestamp-message pairs to pull out of
+#' the raw timeseries data -- here, it is required that each raw timestamp and
+#' event message be provided in the following format:
+#'
+#' `list(data.frame(time = c(...), msg = c(...)),`
+#' `data.frame(time = c(...), msg = c(...)))`
+#'
+#' where the first data.frame indicates the `start` event timestamp and message
+#' string pairs, and the second data.frame indicates the `end` event timestamp
+#' and message string pairs.
+#'
+#' For event-modes `1` and `2`, the way in which you pass in the event message
+#' string must conform to a standarized protocol so that `eyeris` knows how to
+#' find your events and (optionally) parse any included metadata into the tidy
+#' epoch data outputs. You have two primary choices: either (a) specify a string
+#' followed by a `*` wildcard expression (e.g., `"PROBE_START*`), which will
+#' match any messages that have "PROBE_START ..." (... referring to potential
+#' metadata, such as trial number, stim file, etc.); or (b) specify a string
+#' using the `eyeris` syntax: (e.g., `"PROBE_{type}_{trial}"`), which will match
+#' the messages that follow a structure like this "PROBE_START_1" and
+#' "PROBE_STOP_1", and generate two additional metadata columns: `type` and
+#' `trial`, which would contain the following values based on these two example
+#' strings: `type`: `('START', 'STOP')`, and `trial`: `(1, 1)`.
+#' @param limits A vector of 2 values (start, end) in seconds, indicating where
+#' trial extraction should occur centered around any given `start` message
+#' string in the `events` parameter.
+#' @param label An (optional) string you can provide to customize the name of
+#' the resulting `eyeris` class object containing the epoched data frame. If
+#' left as `NULL` (default), then list item will be called `epoch_xyz`, where
+#' `xyz` will be a sanitized version of the original `start` event string you
+#' provided for matching. If you choose to specify a `label` here, then the
+#' resulting list object name will take the form: `epoch_label`.
 #' @param hz Data sampling rate. If not specified, will use the value contained
 #' within the tracker's metadata.
-#' @param metadata_template A space-separated string as a template for parsing
-#' the full event message into parts. The event_marker string that is matched
-#' with the event messages contained in the raw pupil data will be removed, and
-#' the remaining string will be separated based on where space(s) occur within
-#' the event_marker string. These element strings will be placed into separate
-#' columns of the epoched outputs (i.e., dataframes within the `eyeris` object
-#' that begin with `epoch_`), where rows contain the specific text matched
-#' to the indices of the strings provided in the template string (and the string
-#' from each index of the template string becomes the column name(s) containing
-#' these metadata values in the epoched data).
 #'
 #' @return Updated `eyeris` object with dataframes containing the epoched data
 #' (`epoch_`).
 #'
 #' @examples
 #' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' eye_preproc <- system.file("extdata", "assocret.asc", package = "eyeris") |>
 #'   eyeris::load() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
 #'   eyeris::interpolate() |>
 #'   eyeris::lpfilt(plot_freqz = TRUE) |>
-#'   eyeris::zscore() |>
+#'   eyeris::zscore()
+#'
+#' eye_preproc |>
+#'   eyeris::epoch(events = "PROBE*")
+#'
+#' eye_preproc |>
 #'   eyeris::epoch(
-#'     event_marker = "CUE_START_",
-#'     duration = 1,
-#'     matching_type = "contains",
-#'     metadata_template = "trial"
+#'     events = "PROBE_{type}_{trial}",
+#'     limits = c(0, 1) # grab the 1 second post event
+#'   )
+#'
+#' eye_preproc |>
+#'   eyeris::epoch(
+#'     events = "PROBE_{type}_{trial}",
+#'     limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+#'     label = "prePostProbe" # custom epoch label name
+#'   )
+#'
+#' eye_prepoc |>
+#'   eyeris::epoch(
+#'     events = list(
+#'       data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
+#'       data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
+#'     )
 #'   )
 #' }
 #'
 #' @export
-epoch <- function(eyeris, event_marker, duration,
-                  matching_type = c("boundary", "contains"), hz = NULL,
-                  metadata_template = NULL) {
+epoch <- function(eyeris, events, limits = NULL, label = NULL, hz = NULL) {
   return(pipeline_handler(
-    eyeris, epoch_pupil, "epoch", event_marker, duration,
-    matching_type, hz, metadata_template
+    eyeris, epoch_pupil, "epoch", events,
+    limits, label, hz
   ))
 }
 
-epoch_pupil <- function(x, prev_op, msg, dur, type = c("boundary", "contains"),
-                        hz, template) {
+epoch_pupil <- function(x, prev_op, evs, lims, label, hz) {
   if (is.null(hz)) {
     hz <- x$info$sample.rate
   }
 
-  num_samples <- dur / (1 / hz)
+  msg_s <- evs[1]
+  msg_e <- evs[2]
 
-  type <- tolower(type)
-  type <- match.arg(type)
-
-  if (type == "contains") {
-    msg_regex <- msg
-  } else if (type == "boundary") {
-    msg_regex <- paste0("\\b", msg, "\\b")
-  }
-
-  timestamps <- x |>
+  timestamped_events <- x |>
     purrr::pluck("events")
 
-  timestamps <- timestamps |>
-    parse_event_markers(msg, msg_regex, template)
+  timestamps <- get_timestamps(evs, timestamped_events, msg_s, msg_e)
 
-  epochs <- x |>
-    get_epoched_timeseries(prev_op, timestamps, num_samples, dur) |>
-    dplyr::mutate(
-      event_marker = msg,
-      .before = event
-    )
+  timestamps_s <- timestamps$start
+  timestamps_e <- timestamps$end
 
-  epoch_id <- normalize_event_tag(msg)
-  x[[epoch_id]] <- epochs
+  # run 1 of 4 possible epoch modes
+  if (is.character(evs) && length(evs) == 1) {
+    if (is.null(lims)) {
+      # events == "(start) regex pattern string" & limits is NULL =>
+      # defaults to grabbing event string of the next, matching event string
+      epoched_data <- epoch_only_start_msg(x, timestamps_s, hz)
+    } else if (is.numeric(lims) && length(lims) == 2) {
+      # events == "(start) regex pattern string" & limits == (start, end) =>
+      # returns data slice from limits, centered on the event string
+      epoched_data <- epoch_start_msg_and_limits(x, timestamps_s, lims, hz)
+    }
+  } else if (is.character(evs) && length(evs) == 2) {
+    # events == ("start_regex_string", "end_regex_string") & limits is NULL =>
+    # grabs everything in between the two messages
+    # (warn if limits isn't NULL that it will be ignored)
+    if (!is.null(lims)) cli::cli_alert_warning("`limits` are being ignored!")
+    epoched_data <- epoch_start_end_msg(x, timestamps_s, timestamps_e, hz)
+  } else if (is.list(evs)) {
+    # events == list of 2 (n x 2) dataframes of timestamps to manually select =>
+    # (warn if limits isn't NULL that it will be ignored)
+    # (throw error if any messages + timestamp combos don't exist in the
+    # eyeris$events object)
+    if (!is.null(lims)) cli::cli_alert_warning("`limits` are being ignored!")
+    epoched_data <- epoch_manually(x, evs, hz)
+  }
+
+  epoch_id <- make_epoch_labels(evs, label, epoched_data)
+
+  x[[epoch_id]] <- epoched_data
 
   return(x)
 }
 
-parse_event_markers <- function(x, msg, msg_regex, template = NULL) {
-  matched_events <- x |>
-    dplyr::filter(stringr::str_detect(text, msg_regex))
+get_timestamps <- function(evs, timestamped_events, msg_s, msg_e) {
+  if (!is.list(evs)) {
+    start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
 
-  if (!is.null(template)) {
-    metadata_values <- matched_events |>
-      dplyr::pull(text) |>
-      # test: more flexible parsing of event tags ending with underscores
-      stringr::str_replace(paste0("^", msg, " "), "") |>
-      # stringr::str_replace(paste0('^', msg, '[ _]*'), '') |>
-      stringr::str_split(" ") |>
-      # stringr::str_split('[ _]+') |>
-      lapply(function(x) c(x, rep(NA, length(template) - length(x))))
+    if (!is.null(evs[2])) {
+      end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
+    }
 
-    metadata_df <- data.frame(do.call(rbind, metadata_values),
-      stringsAsFactors = FALSE
+    out_list <- list(
+      start = start_ts,
+      end = end_ts
     )
-    colnames(metadata_df) <- template
-    df_out <- cbind(matched_events, metadata_df)
+
+    return(out_list)
+  }
+}
+
+parse_timestamps <- function(evs, timestamped_events, msg) {
+  timestamps <- timestamped_events |>
+    parse_events_and_metadata(msg)
+
+  return(timestamps)
+}
+
+make_epoch_labels <- function(evs, label, epoched_data) {
+  if (is.null(label) && !is.list(evs)) {
+    epoch_id <- sanitize_event_tag(evs[1])
+  } else if (is.null(label) && is.list(evs)) {
+    epoch_id <- sanitize_event_tag(paste0(
+      epoched_data$start_msg[1], epoched_data$end_msg[1]
+    ))
   } else {
-    df_out <- matched_events
+    epoch_id <- paste0("epoch_", label)
   }
 
-  df_out <- df_out |>
-    dplyr::rename(msg = text) |>
-    dplyr::select(-block)
-
-  return(df_out)
-}
-
-get_epoched_timeseries <- function(x, prev_op, msg_timestamps, n_samps, dur) {
-  n <- length(msg_timestamps)
-  list_epochs <- vector("list", n)
-
-  data <- x$timeseries
-  timeseries <- data$time_orig
-  timestamps <- msg_timestamps$time
-
-  metadata <- parse_metadata(msg_timestamps)
-
-  for (t in seq_along(timestamps)) {
-    i <- which.min(abs(timeseries - timestamps[t]))
-
-    metadata_vals <- index_metadata(metadata, t)
-
-    list_epochs[[t]] <- data |>
-      dplyr::slice(i:(i + n_samps - 1)) |>
-      dplyr::mutate(
-        timebin = seq(
-          from = 0.001,
-          to = dur,
-          length.out = n_samps
-        ),
-        .after = time_orig
-      ) |>
-      dplyr::mutate(!!!metadata_vals)
-  }
-
-  merged_epochs <- dplyr::bind_rows(list_epochs)
-
-  return(merged_epochs)
-}
-
-parse_metadata <- function(t) {
-  metadata_vecs <- list()
-
-  for (i in 3:ncol(t)) {
-    metadata_vecs[[names(t)[i]]] <- t[[i]]
-  }
-
-  metadata_vecs <- c(list(event = t$msg), metadata_vecs)
-
-  return(metadata_vecs)
+  return(epoch_id)
 }
 
 index_metadata <- function(x, i) {
-  indexed_list <- list()
-
-  for (name in names(x)) {
-    indexed_list[[name]] <- x[[name]][i]
-  }
-
-  return(indexed_list)
+  return(x[i, ])
 }
 
-normalize_event_tag <- function(string) {
+parse_events_and_metadata <- function(events, metadata_template) {
+  special_chars <- c(
+    "\\", ".", "+", "*", "?", "^", "$", "(", ")", "[", "]",
+    "{", "}", "|"
+  )
+
+  event_messages <- events |>
+    dplyr::pull(text)
+
+  if (endsWith(metadata_template, "*")) { # wildcard mode
+    prefix <- substr(metadata_template, 1, nchar(metadata_template) - 1)
+
+    for (char in special_chars) { # escape special chars
+      prefix <- stringr::str_replace_all(
+        prefix, stringr::fixed(char),
+        paste0("\\", char)
+      )
+    }
+
+    regex_pattern <- paste0("^", prefix, ".*$")
+    matches <- stringr::str_detect(event_messages, regex_pattern)
+
+    result <- dplyr::tibble(
+      template = metadata_template,
+      matching_pattern = regex_pattern,
+      event_message = event_messages,
+      matched_event = ifelse(matches, event_messages, NA_character_)
+    ) |>
+      tidyr::drop_na("matched_event")
+  } else { # template (non-wildcard) mode
+    template <- metadata_template
+    placeholders <- unlist(stringr::str_extract_all(template, "\\{[^{}]+\\}"))
+    placeholder_names <- gsub("[{}]", "", placeholders)
+
+    for (i in placeholder_names) {
+      placeholder <- paste0("\\{", i, "\\}")
+      template <- stringr::str_replace(template, placeholder, "(.*?)")
+    }
+
+    regex_pattern <- paste0("^", template, "$")
+    matches <- stringr::str_match(event_messages, regex_pattern) |>
+      as.data.frame()
+    colnames(matches) <- c("matched_event", placeholder_names)
+
+    result <- dplyr::tibble(
+      template = metadata_template,
+      matching_pattern = regex_pattern
+    ) |>
+      dplyr::bind_cols(matches) |>
+      tidyr::drop_na("matched_event")
+  }
+
+  epoched_timeseries <- events |>
+    dplyr::mutate(matched_event = text) |>
+    dplyr::right_join(result, by = "matched_event") |>
+    dplyr::select(-block, -text) |>
+    dplyr::relocate(matched_event, .after = matching_pattern)
+
+  return(epoched_timeseries)
+}
+
+sanitize_event_tag <- function(string) {
   string <- string |>
     stringr::str_to_lower() |>
     stringr::str_replace_all("[^[:alnum:] ]", " ") |>
@@ -188,7 +257,190 @@ normalize_event_tag <- function(string) {
   words[-1] <- stringr::str_to_title(words[-1])
 
   camel_case_str <- paste0(words, collapse = "")
-  normed_str <- paste0("epoch_", camel_case_str)
+  sanitized_str <- paste0("epoch_", camel_case_str)
+  sanitized_str <- gsub("\\d", "", sanitized_str)
 
-  return(normed_str)
+  return(sanitized_str)
+}
+
+slice_epoch <- function(x_raw, s, e) {
+  epoch_df <- x_raw |>
+    dplyr::filter(time_orig >= s & time_orig < e)
+
+  return(epoch_df)
+}
+
+slice_epochs_no_limits <- function(x_raw, all_ts) {
+  epochs <- vector(mode = "list", length = length(all_ts)) # pre-alloc list
+
+  for (i in seq_along(all_ts$time)) {
+    current_time <- all_ts$time[i]
+
+    if (i < length(all_ts$time)) {
+      next_time <- all_ts$time[i + 1]
+    } else {
+      # for final trial with no explicit end timestamp,
+      # infer from duration of the penultimate trial
+      penult_dur <- all_ts$time[i] - all_ts$time[i - 1]
+      next_time <- current_time + penult_dur
+    }
+
+    epochs[[i]] <- slice_epoch(x_raw, current_time, next_time)
+  }
+
+  return(epochs)
+}
+
+slice_epochs_with_limits <- function(x_raw, cur_ts, lims, hz) {
+  s_time <- cur_ts + (lims[1] * hz)
+  e_time <- cur_ts + (lims[2] * hz)
+
+  return(slice_epoch(x_raw, s_time, e_time))
+}
+
+epoch_manually <- function(eyeris, ts_list, hz) {
+  check_epoch_manual_input_data(ts_list)
+  check_epoch_manual_input_dfs(ts_list)
+
+  s_df <- ts_list[[1]]
+  e_df <- ts_list[[2]]
+
+  epochs <- vector(mode = "list", length = nrow(s_df)) # pre-alloc list
+
+  for (i in seq_along(s_df$time)) {
+    i_start <- s_df$time[i]
+    i_end <- e_df$time[i]
+    current_epoch <- slice_epoch(eyeris$timeseries, i_start, i_end)
+    duration <- nrow(current_epoch) / hz
+    n_samples <- duration * hz
+
+    start_metadata_vals <- s_df |>
+      dplyr::rename_with(~ paste0("start_", .x))
+
+    end_metadata_vals <- e_df |>
+      dplyr::rename_with(~ paste0("end_", .x))
+
+    metadata_vals <- dplyr::bind_cols(start_metadata_vals, end_metadata_vals)
+
+    current_epoch <- current_epoch |>
+      dplyr::mutate(
+        timebin = seq(
+          from = 0,
+          to = duration,
+          length.out = n_samples
+        ),
+        .after = time_orig
+      ) |>
+      dplyr::mutate(!!!metadata_vals)
+
+    epochs[[i]] <- current_epoch
+  }
+
+  epochs_df <- do.call(rbind.data.frame, epochs)
+
+  return(epochs_df)
+}
+
+epoch_only_start_msg <- function(eyeris, start, hz) {
+  epochs <- vector(mode = "list", length = nrow(start)) # pre-alloc list
+
+  all_epochs <- slice_epochs_no_limits(eyeris$timeseries, start)
+
+  for (i in seq_len(nrow(start))) {
+    metadata_vals <- index_metadata(start, i)
+    current_epoch <- all_epochs[[i]]
+    duration <- nrow(current_epoch) / hz
+    n_samples <- duration * hz
+
+    current_epoch <- current_epoch |>
+      dplyr::mutate(
+        timebin = seq(
+          from = 0,
+          to = duration,
+          length.out = n_samples
+        ),
+        .after = time_orig
+      ) |>
+      dplyr::mutate(!!!metadata_vals) |>
+      dplyr::select(-time)
+
+    epochs[[i]] <- current_epoch
+  }
+
+  epochs_df <- do.call(rbind.data.frame, epochs)
+
+  return(epochs_df)
+}
+
+epoch_start_msg_and_limits <- function(eyeris, start, lims, hz) {
+  epochs <- vector(mode = "list", length = nrow(start)) # pre-alloc list
+
+  for (i in seq_len(nrow(start))) {
+    metadata_vals <- index_metadata(start, i)
+
+    current_epoch <- slice_epochs_with_limits(
+      eyeris$timeseries,
+      start$time[i], lims, hz
+    )
+
+    duration <- sum(abs(lims[1]), abs(lims[2]))
+    n_samples <- duration / (1 / hz)
+
+    current_epoch <- current_epoch |>
+      dplyr::mutate(
+        timebin = seq(
+          from = 0,
+          to = duration,
+          length.out = n_samples
+        ),
+        .after = time_orig
+      ) |>
+      dplyr::mutate(!!!metadata_vals) |>
+      dplyr::select(-time)
+
+    epochs[[i]] <- current_epoch
+  }
+
+  epochs_df <- do.call(rbind.data.frame, epochs)
+
+  return(epochs_df)
+}
+
+epoch_start_end_msg <- function(eyeris, start, end, hz) {
+  check_start_end_timestamps(start, end)
+
+  epochs <- vector(mode = "list", length = nrow(start)) # pre-alloc list
+
+  for (i in seq_len(nrow(start))) {
+    i_start <- start$time[i]
+    i_end <- end$time[i]
+
+    start_metadata_vals <- index_metadata(start, i) |>
+      dplyr::rename_with(~ paste0("start_", .x))
+
+    end_metadata_vals <- index_metadata(end, i) |>
+      dplyr::rename_with(~ paste0("end_", .x))
+
+    metadata_vals <- dplyr::bind_cols(start_metadata_vals, end_metadata_vals)
+
+    duration <- (i_end - i_start) / hz
+    n_samples <- duration * hz
+
+    epochs[[i]] <- eyeris |>
+      purrr::pluck("timeseries") |>
+      dplyr::filter(time_orig >= i_start & time_orig < i_end) |>
+      dplyr::mutate(
+        timebin = seq(
+          from = 0,
+          to = duration,
+          length.out = n_samples
+        ),
+        .after = time_orig
+      ) |>
+      dplyr::mutate(!!!metadata_vals)
+  }
+
+  epochs_df <- do.call(rbind.data.frame, epochs)
+
+  return(epochs_df)
 }
