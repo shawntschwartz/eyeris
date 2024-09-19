@@ -332,14 +332,38 @@ epoch_only_start_msg <- function(eyeris, start, hz) {
   return(epochs_df)
 }
 
-index_metadata <- function(x, i) {
-  indexed_list <- list()
+epoch_start_msg_and_limits <- function(eyeris, start, lims, hz) {
+  epochs <- vector(mode = "list", length = nrow(start)) # pre-alloc list
 
-  for (name in names(x)) {
-    indexed_list[[name]] <- x[[name]][i]
+  for (i in seq_len(nrow(start))) {
+    metadata_vals <- index_metadata(start, i)
+
+    current_epoch <- slice_epochs_with_limits(
+      eyeris$timeseries,
+      start$time[i], lims, hz
+    )
+
+    duration <- sum(abs(lims[1]), abs(lims[2]))
+    n_samples <- duration / (1 / hz)
+
+    current_epoch <- current_epoch |>
+      dplyr::mutate(
+        timebin = seq(
+          from = 0,
+          to = duration,
+          length.out = n_samples
+        ),
+        .after = time_orig
+      ) |>
+      dplyr::mutate(!!!metadata_vals) |>
+      dplyr::select(-time)
+
+    epochs[[i]] <- current_epoch
   }
 
-  return(indexed_list)
+  epochs_df <- do.call(rbind.data.frame, epochs)
+
+  return(epochs_df)
 }
 
 normalize_event_tag <- function(string) {
