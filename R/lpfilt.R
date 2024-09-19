@@ -56,9 +56,9 @@ lpfilt_pupil <- function(x, prev_op, wp, ws, rp, rs, fs, plot_freqz) {
     subtitle <- paste0(
       "*frequency response for the low-pass filter* - ",
       "cutoff freq (", wp, "Hz),
-                       stopping freq (", ws, "Hz)\n\n"
+                       stopping freq (", ws, "Hz)"
     )
-    graphics::mtext(side = 2, line = 2, at = -1.5, adj = 1, cex = 0.6, subtitle)
+    graphics::mtext(side = 2, line = 2, at = -1.5, adj = 1, cex = 0.3, subtitle)
   }
 
   # filter twice (forward and backward) to preserve phase information
