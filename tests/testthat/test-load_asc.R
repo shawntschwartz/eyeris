@@ -1,6 +1,6 @@
-testthat::test_that("load function returns list with expected objects", {
+testthat::test_that("load_asc function returns list with expected objects", {
   eye_file <- system.file("extdata", "assocret.asc", package = "eyeris")
-  result <- eyeris::load(eye_file)
+  result <- eyeris::load_asc(eye_file)
 
   expected_objects <- c(
     "file",
