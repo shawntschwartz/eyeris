@@ -1,15 +1,18 @@
 # default target
 all: uninstall getdeps build install roxygenize clean
 
+# debugging target
+debug: uninstall build install clean
+
 # uninstall dev version of package if loaded
 uninstall:
-	Rscript -e "if (!requireNamespace('devtools', quietly = TRUE)) install.packages('devtools')"
+	Rscript -e "if (!requireNamespace('devtools', quietly = TRUE)) install.packages('devtools', repos = 'http://cran.us.r-project.org')"
 	Rscript -e "if (requireNamespace('eyeris', quietly = TRUE)) devtools::unload('eyeris')"
 	Rscript -e "if (requireNamespace('eyeris', quietly = TRUE)) remove.packages('eyeris')"
 
 # install deps
 getdeps:
-	Rscript -e "install.packages(c('eyelinker', 'dplyr', 'gsignal', 'tidyr', 'zoo'))"
+	Rscript -e "install.packages(c('eyelinker', 'dplyr', 'gsignal', 'tidyr', 'zoo'), repos = 'http://cran.us.r-project.org')"
 
 # build package
 build:
