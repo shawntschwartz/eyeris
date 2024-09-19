@@ -33,8 +33,15 @@
 #' interactively provide a visualization after each pipeline step, where you
 #' must also indicate "(y)es" or "(n)o" to either proceed or cancel the
 #' current `glassbox` pipeline operation (set to `TRUE`).
+#' @param n_epochs Number of random epochs to generate for visualization.
+#' @param duration Time in seconds of each randomly selected epoch.
 #' @param time_range The start and stop raw timestamps used to subset the
 #' preprocessed data from each step of the `eyeris` pipeline for visualization.
+#' Defaults to NULL, meaning random epochs as defined by `n_epochs` and
+#' `duration` will be plotted. To override the random epochs, set `time_range`
+#' here to a vector with relative start and stop times (e.g., `c(5000, 6000)`
+#' to indicate the raw data from 5-6 seconds on data that were recorded at
+#' 1000 Hz).
 #' @param ... Additional arguments to override the default, prescribed settings.
 #'
 #' @examples
@@ -57,9 +64,8 @@
 #' }
 #'
 #' @export
-glassbox <- function(
-    file, interactive = FALSE, time_range = c(10000, 20000),
-    ...) {
+glassbox <- function(file, interactive = FALSE, n_epochs = 3, duration = 5,
+                     time_range = NULL, ...) {
   params <- list(
     deblink = list(extend = 50),
     detransient = list(n = 16),
@@ -71,7 +77,7 @@ glassbox <- function(
 
   pipeline <- list(
     load = function(data, params) {
-      return(eyeris::load(data))
+      return(eyeris::load_asc(data))
     },
     deblink = function(data, params) {
       return(eyeris::deblink(data, extend = params$deblink$extend))
