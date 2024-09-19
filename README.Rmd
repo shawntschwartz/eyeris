@@ -63,7 +63,7 @@ demo_data <- system.file("extdata", "assocret.asc", package = "eyeris")
 eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
 ```
 
-```{r plot, echo = FALSE, fig.width=3, fig.height=3}
+```{r plot, echo = FALSE, fig.width=10, fig.height=10, out.width="50%"}
 plot(eyeris_preproc)
 ```
 
