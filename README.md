@@ -45,13 +45,13 @@ compare different pipelines.
 We hope you enjoy! -shawn
 
 ``` r
-library(eyeris)
-
 set.seed(1)
+
+library(eyeris)
 
 demo_data <- system.file("extdata", "assocret.asc", package = "eyeris")
 
-eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
+eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
 #> → Running load ...
 #> → Running deblink ...
 #> → Running detransient ...
@@ -62,13 +62,72 @@ eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
 #> → Running zscore ...
 ```
 
-<img src="man/figures/README-example-1.png" width="25%" style="display: block; margin: auto auto auto 0;" />
+<img src="man/figures/README-example-1.png" width="50%" style="display: block; margin: auto auto auto 0;" />
 
 ### step-wise correction of pupillary signal
 
-<img src="man/figures/README-glassbox-plot-1.png" width="50%" /><img src="man/figures/README-glassbox-plot-2.png" width="50%" /><img src="man/figures/README-glassbox-plot-3.png" width="50%" /><img src="man/figures/README-glassbox-plot-4.png" width="50%" /><img src="man/figures/README-glassbox-plot-5.png" width="50%" /><img src="man/figures/README-glassbox-plot-6.png" width="50%" />
+``` r
+plot(eyeris_preproc)
+#> [1] 1
+#> [1] 2
+#> [1] 2
+#> [1] 2
+#> [1] 3
+#> [1] 2
+```
+
+<img src="man/figures/README-glassbox-plot-1.png" width="100%" />
+
+    #> [1] 1
+    #> [1] 2
+    #> [1] 2
+    #> [1] 2
+    #> [1] 3
+    #> [1] 2
+
+<img src="man/figures/README-glassbox-plot-2.png" width="100%" />
+
+    #> [1] 1
+    #> [1] 2
+    #> [1] 2
+    #> [1] 2
+    #> [1] 3
+    #> [1] 2
+
+<img src="man/figures/README-glassbox-plot-3.png" width="100%" />
+
+    #> [1] 1
+    #> [1] 2
+    #> [1] 2
+    #> [1] 2
+    #> [1] 3
+    #> [1] 2
+
+<img src="man/figures/README-glassbox-plot-4.png" width="100%" />
+
+    #> [1] 1
+    #> [1] 2
+    #> [1] 2
+    #> [1] 2
+    #> [1] 3
+    #> [1] 2
+
+<img src="man/figures/README-glassbox-plot-5.png" width="100%" />
+
+    #> [1] 1
+    #> [1] 2
+    #> [1] 2
+    #> [1] 2
+    #> [1] 3
+    #> [1] 2
+
+<img src="man/figures/README-glassbox-plot-6.png" width="100%" />
 
 ### final pre-post correction of pupillary signal (raw -\> preprocessed)
+
+``` r
+plot(eyeris_preproc, steps = c(1, 6), time_range = c(0, 100000))
+```
 
 <img src="man/figures/README-timeseries-plot-1.png" width="100%" /><img src="man/figures/README-timeseries-plot-2.png" width="100%" />
 

@@ -53,25 +53,25 @@ to flexibly construct and compare different pipelines.
 
 We hope you enjoy! -shawn
 
-```{r example, fig.width=2.5, fig.height=5, out.width='25%', fig.align='left'}
-library(eyeris)
-
+```{r example, fig.width=2.5, fig.height=5, out.width='50%', fig.align='left'}
 set.seed(1)
+
+library(eyeris)
 
 demo_data <- system.file("extdata", "assocret.asc", package = "eyeris")
 
-eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
+eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
 ```
 
 ### step-wise correction of pupillary signal
 
-```{r glassbox-plot, echo = FALSE, fig.width=12, fig.height=4, out.width="50%"}
+```{r glassbox-plot, echo=TRUE, fig.width=12, fig.height=4, out.width="100%"}
 plot(eyeris_preproc)
 ```
 
 ### final pre-post correction of pupillary signal (raw -> preprocessed)
 
-```{r timeseries-plot, echo = FALSE, fig.width=8, fig.height=5}
+```{r timeseries-plot, echo=TRUE, fig.width=8, fig.height=5}
 plot(eyeris_preproc, steps = c(1, 6), time_range = c(0, 100000))
 ```
 
