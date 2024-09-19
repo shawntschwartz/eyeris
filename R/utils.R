@@ -83,6 +83,23 @@ check_epoch_input <- function(epochs) {
 }
 
 
+check_epoch_msg_values <- function(eyeris, events) {
+  invalid <- setdiff(eyeris$events$text, events$msg)
+
+  if (length(invalid) > 0) {
+    m <- paste(
+      "Invalid event messages specified in manual input.",
+      "The following event messages do not exist within the raw data:",
+      paste(invalid, collapse = ", ")
+    )
+
+    stop(structure(list(
+      message = m,
+      call = match.call()
+    ), class = "invalid_event_messages_error"))
+  }
+}
+
 check_start_end_timestamps <- function(start, end) {
   s_len <- length(start$time)
   e_len <- length(end$time)
