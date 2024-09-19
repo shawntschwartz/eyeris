@@ -15,7 +15,11 @@ An \code{eyeris} object with a new column in \code{timeseries}:
 }
 \description{
 Linear interpolation of time series data. The intended use of this method
-is for filling in missing pupil samples (NAs) in the time series.
+is for filling in missing pupil samples (NAs) in the time series. This method
+uses "na.approx()" function from the zoo package, which implements linear
+interpolation using the "approx()" function from the stats package. Currently,
+NAs at the beginning and the end of the data are replaced with values on either
+end, respectively, using the "rule = 2" argument in the "approx()" function.
 }
 \examples{
 \dontrun{
