@@ -26,7 +26,7 @@ on the constant \code{n}, which defaults to the value \code{16}.
 \examples{
 \dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
-  eyeris::load() |>
+  eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient()
 }
