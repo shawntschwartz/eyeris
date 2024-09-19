@@ -32,18 +32,36 @@
 #'
 #' @examples
 #' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' eye_preproc <- system.file("extdata", "assocret.asc", package = "eyeris") |>
 #'   eyeris::load() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
 #'   eyeris::interpolate() |>
 #'   eyeris::lpfilt(plot_freqz = TRUE) |>
-#'   eyeris::zscore() |>
+#'   eyeris::zscore()
+#'
+#' eye_preproc |>
+#'   eyeris::epoch(events = "PROBE*")
+#'
+#' eye_preproc |>
 #'   eyeris::epoch(
-#'     event_marker = "CUE_START_",
-#'     duration = 1,
-#'     matching_type = "contains",
-#'     metadata_template = "trial"
+#'     events = "PROBE_{type}_{trial}",
+#'     limits = c(0, 1) # grab the 1 second post event
+#'   )
+#'
+#' eye_preproc |>
+#'   eyeris::epoch(
+#'     events = "PROBE_{type}_{trial}",
+#'     limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+#'     label = "prePostProbe" # custom epoch label name
+#'   )
+#'
+#' eye_prepoc |>
+#'   eyeris::epoch(
+#'     events = list(
+#'       data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
+#'       data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
+#'     )
 #'   )
 #' }
 #'
