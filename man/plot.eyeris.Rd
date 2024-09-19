@@ -4,40 +4,34 @@
 \alias{plot.eyeris}
 \title{Plot pre-processed pupil data from \code{eyeris}}
 \usage{
-\method{plot}{eyeris}(
-  x,
-  trial_id,
-  trial_col_name = NULL,
-  event_name = NULL,
-  steps = NULL,
-  time_range = NULL,
-  ...
-)
+\method{plot}{eyeris}(x, ..., time_range = c(10000, 20000))
 }
 \arguments{
-\item{x}{A value}
+\item{x}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
 
-\item{trial_id}{A value}
+\item{...}{Additional arguments to be passed to \code{plot}.}
 
-\item{trial_col_name}{A value}
-
-\item{event_name}{A value}
-
-\item{steps}{A value}
-
-\item{time_range}{A value}
-
-\item{...}{Additional args}
+\item{time_range}{The start and stop raw timestamps used to subset the
+preprocessed data from each step of the \code{eyeris} pipeline for visualization.}
 }
 \value{
-The sum of \code{x} and \code{y}
+No return value; iteratively plots a subset of the pupil timeseries
+from each preprocessing step run.
 }
 \description{
-todo: description goes here...
+S3 plotting method for objects of class \code{eyeris}. Plots a single-panel
+timeseries for a subset of the pupil timeseries at each preprocessing step.
+The intended use of this function is to provide a simple method for
+qualitatively assessing the consequences of the preprocessing recipe and
+parameters on the raw pupillary signal.
 }
 \examples{
 \dontrun{
+# using the default 10000 to 20000 ms time subset
 plot(eyeris_data)
+
+# using a custom time subset (i.e., 1 to 500 ms)
+plot(eyeris_data, time_range = c(1, 500))
 }
 
 }

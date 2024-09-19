@@ -1,27 +1,32 @@
 #' Plot pre-processed pupil data from `eyeris`
 #'
-#' todo: description goes here...
+#' S3 plotting method for objects of class `eyeris`. Plots a single-panel
+#' timeseries for a subset of the pupil timeseries at each preprocessing step.
+#' The intended use of this function is to provide a simple method for
+#' qualitatively assessing the consequences of the preprocessing recipe and
+#' parameters on the raw pupillary signal.
 #'
-#' @param x A value
-#' @param trial_id A value
-#' @param trial_col_name A value
-#' @param event_name A value
-#' @param steps A value
-#' @param time_range A value
-#' @param ... Additional args
+#' @param x An object of class `eyeris` derived from [eyeris::load()].
+#' @param ... Additional arguments to be passed to `plot`.
+#' @param time_range The start and stop raw timestamps used to subset the
+#' preprocessed data from each step of the `eyeris` pipeline for visualization.
 #'
-#' @return The sum of \code{x} and \code{y}
+#' @return No return value; iteratively plots a subset of the pupil timeseries
+#' from each preprocessing step run.
 #'
 #' @examples
 #' \dontrun{
+#' # using the default 10000 to 20000 ms time subset
 #' plot(eyeris_data)
+#'
+#' # using a custom time subset (i.e., 1 to 500 ms)
+#' plot(eyeris_data, time_range = c(1, 500))
 #' }
 #'
 #' @rdname plot.eyeris
 #'
 #' @export
-plot.eyeris <- function(x, trial_id, trial_col_name = NULL, event_name = NULL,
-                        steps = NULL, time_range = NULL, ...) {
+plot.eyeris <- function(x, ..., time_range = c(10000, 20000)) {
   # tests
   tryCatch(
     {
@@ -41,100 +46,24 @@ plot.eyeris <- function(x, trial_id, trial_col_name = NULL, event_name = NULL,
     }
   )
 
-  epochs <- filter_epochs(x, epoch)
+  pupil_data <- x$timeseries
+  pupil_steps <- grep("^pupil_", names(pupil_data), value = TRUE)
 
-  tryCatch(
-    {
-      count_epochs(epochs)
-    },
-    error = function(e) {
-      error_handler(e, "epoch_count_error")
-    }
-  )
+  start_index <- time_range[1]
+  end_index <- min(time_range[2], nrow(pupil_data))
+  sliced_pupil_data <- pupil_data[start_index:end_index, ]
 
-  tryCatch(
-    {
-      check_epoch_input(epochs)
-    },
-    error = function(e) {
-      error_handler(e, "too_many_epochs_error")
-    }
-  )
+  colors <- c("black", rainbow(length(pupil_steps) - 1))
 
-  if (is.null(trial_col_name)) {
-    trial_col_name <- "trial"
-  }
+  par(mfrow = c(1, 1))
 
-  pupil <- x[epochs][[epochs]] |>
-    dplyr::mutate(!!dplyr::sym(trial_col_name) := as.character(
-      !!dplyr::sym(trial_col_name)
-    )) |>
-    dplyr::filter(!!dplyr::sym(trial_col_name) == as.character(trial_id))
-
-  all_steps <- grep("^pupil_raw", colnames(pupil), value = TRUE)
-
-  # filter steps (if user specifies them)
-  if (!is.null(steps)) {
-    steps <- paste0("pupil_raw_", steps)
-    all_steps <- intersect(all_steps, steps)
-    all_steps <- c(all_steps, "pupil_raw")
-  }
-
-  # remove z-scored column since different y-scale
-  all_steps <- grep("z", all_steps, value = TRUE, invert = TRUE)
-
-  # remove detrend column since different y-scale
-  all_steps <- grep("detrend", all_steps, value = TRUE, invert = TRUE)
-
-  if (!is.null(time_range)) {
-    pupil <- pupil[pupil$timebin >= time_range[1] &
-                     pupil$timebin <= time_range[2], ]
-    xlim <- time_range
-  } else {
-    xlim <- range(pupil$timebin)
-  }
-
-  line_types <- c("solid", "dashed", "dotted", "dotdash", "twodash", "longdash")
-
-  pupil_long <- pupil |>
-    dplyr::select(timebin, all_of(all_steps)) |>
-    tidyr::pivot_longer(
-      cols = all_of(all_steps),
-      names_to = "step",
-      values_to = "pupil_size"
-    ) |>
-    dplyr::mutate(step = factor(step, levels = all_steps))
-
-  n_facets <- length(unique(pupil_long$step))
-  n_col <- ceiling(sqrt(n_facets))
-  n_row <- ceiling(n_facets / n_col)
-
-  title_fname <- basename(eyeris$file)
-  default_title <- paste0(
-    trial_col_name, ": ", trial_id,
-    " | epoch: ", event_name
-  )
-
-  p <- ggplot2::ggplot(pupil_long,
-    mapping = ggplot2::aes(
-      x = timebin,
-      y = pupil_size,
-      color = step
+  for (i in seq_along(pupil_steps)) {
+    plot(sliced_pupil_data[[pupil_steps[i]]],
+      type = "l", col = colors[i], lwd = 2,
+      main = pupil_steps[i], xlab = "Time",
+      ylab = "Pupil Size"
     )
-  ) +
-    ggplot2::geom_line(size = 1.1) +
-    ggplot2::scale_colour_brewer(palette = "Set1") +
-    ggplot2::labs(
-      title = default_title,
-      subtitle = title_fname,
-      x = "time (s)",
-      y = "pupil size (a.u.)"
-    ) +
-    ggplot2::facet_wrap(~step, nrow = n_row, ncol = n_col) +
-    ggplot2::theme_classic(base_family = "Verdana") +
-    ggplot2::theme(legend.position = "none")
+  }
 
-  p <- p + list(...)
-
-  return(p)
+  par(mfrow = c(1, 1))
 }
