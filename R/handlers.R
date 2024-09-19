@@ -32,8 +32,14 @@ pipeline_handler <- function(eyeris, operation, new_suffix, ...) {
     # setters
     output_col <- paste0(prev_operation, "_", new_suffix)
 
-    # run op
-    data[[output_col]] <- operation(data, prev_operation, ...)
+    # run operation
+    if (new_suffix == "detrend") {
+      list_detrend <- operation(data, prev_operation, ...)
+      data["detrend_fitted_betas"] <- list_detrend$betas
+      data[[output_col]] <- list_detrend$detrend
+    } else {
+      data[[output_col]] <- operation(data, prev_operation, ...)
+    }
 
     # update S3 eyeris class
     eyeris$timeseries <- data
