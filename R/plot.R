@@ -59,20 +59,23 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
 
   pupil_data <- x$timeseries
   pupil_steps <- grep("^pupil_", names(pupil_data), value = TRUE)
+  colors <- c("black", rainbow(length(pupil_steps) - 1))
 
   if (length(steps) == 1) {
     if (steps[1] == "all") {
       pupil_steps <- pupil_steps
+      colors <- colors
     } else {
       pupil_steps <- pupil_steps[steps]
+      colors <- colors[steps]
     }
   } else if (length(steps) > 1 && !is.null(time_range)) {
     pupil_steps <- pupil_steps[steps]
+    colors <- colors[steps]
   } else {
     pupil_steps <- pupil_steps
+    colors <- colors
   }
-
-  colors <- c("black", rainbow(length(pupil_steps) - 1))
 
   if (is.null(time_range)) {
     hz <- x$info$sample.rate
