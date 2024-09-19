@@ -62,7 +62,7 @@ eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
 #> → Running zscore ...
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" width="25%" style="display: block; margin: auto auto auto 0;" />
 
 ### step-wise correction of pupillary signal
 

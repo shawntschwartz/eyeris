@@ -53,7 +53,7 @@ to flexibly construct and compare different pipelines.
 
 We hope you enjoy! -shawn
 
-```{r example, fig.width=2.5, fig.height=5}
+```{r example, fig.width=2.5, fig.height=5, out.width='25%', fig.align='left'}
 library(eyeris)
 
 set.seed(1)
