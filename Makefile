@@ -1,8 +1,8 @@
 # default target
-all: uninstall getdeps build install roxygenize clean
+all: uninstall getdeps build install roxygenize readme clean
 
 # debugging target
-debug: uninstall build install clean
+debug: uninstall build install readme clean
 
 # uninstall dev version of package if loaded
 uninstall:
@@ -35,6 +35,11 @@ check:
 roxygenize:
 	Rscript -e "roxygen2::roxygenize('.')"
 	@echo "[ OK ] - roxygenize completed!"
+
+# readme
+readme:
+	Rscript -e "devtools::build_readme()"
+	@echo "[ OK ] - README update completed!"
 
 # clean build directory
 clean:
