@@ -64,7 +64,7 @@ eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
 
 <img src="man/figures/README-example-1.png" width="100%" />
 
-<img src="man/figures/README-plot-1.png" width="50%" /><img src="man/figures/README-plot-2.png" width="50%" /><img src="man/figures/README-plot-3.png" width="50%" /><img src="man/figures/README-plot-4.png" width="50%" /><img src="man/figures/README-plot-5.png" width="50%" /><img src="man/figures/README-plot-6.png" width="50%" />
+<img src="man/figures/README-plot-1.png" width="33%" /><img src="man/figures/README-plot-2.png" width="33%" /><img src="man/figures/README-plot-3.png" width="33%" /><img src="man/figures/README-plot-4.png" width="33%" /><img src="man/figures/README-plot-5.png" width="33%" /><img src="man/figures/README-plot-6.png" width="33%" />
 
 # Comments, suggestions, questions, issues
 
