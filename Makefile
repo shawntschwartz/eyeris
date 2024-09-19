@@ -2,7 +2,7 @@
 all: uninstall getdeps build install roxygenize readme clean
 
 # debugging target
-debug: uninstall build install readme clean
+debug: uninstall build install clean
 
 # uninstall dev version of package if loaded
 uninstall:
