@@ -8,8 +8,15 @@
 #'
 #' @param x An object of class `eyeris` derived from [eyeris::load()].
 #' @param ... Additional arguments to be passed to `plot`.
+#' @param n_epochs Number of random epochs to generate for visualization.
+#' @param duration Time in seconds of each randomly selected epoch.
 #' @param time_range The start and stop raw timestamps used to subset the
 #' preprocessed data from each step of the `eyeris` pipeline for visualization.
+#' Defaults to NULL, meaning random epochs as defined by `n_epochs` and
+#' `duration` will be plotted. To override the random epochs, set `time_range`
+#' here to a vector with relative start and stop times (e.g., `c(5000, 6000)`
+#' to indicate the raw data from 5-6 seconds on data that were recorded at
+#' 1000 Hz).
 #'
 #' @return No return value; iteratively plots a subset of the pupil timeseries
 #' from each preprocessing step run.

@@ -4,15 +4,24 @@
 \alias{plot.eyeris}
 \title{Plot pre-processed pupil data from \code{eyeris}}
 \usage{
-\method{plot}{eyeris}(x, ..., time_range = c(10000, 20000))
+\method{plot}{eyeris}(x, ..., n_epochs = 3, duration = 5, time_range = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
 
 \item{...}{Additional arguments to be passed to \code{plot}.}
 
+\item{n_epochs}{Number of random epochs to generate for visualization.}
+
+\item{duration}{Time in seconds of each randomly selected epoch.}
+
 \item{time_range}{The start and stop raw timestamps used to subset the
-preprocessed data from each step of the \code{eyeris} pipeline for visualization.}
+preprocessed data from each step of the \code{eyeris} pipeline for visualization.
+Defaults to NULL, meaning random epochs as defined by \code{n_epochs} and
+\code{duration} will be plotted. To override the random epochs, set \code{time_range}
+here to a vector with relative start and stop times (e.g., \code{c(5000, 6000)}
+to indicate the raw data from 5-6 seconds on data that were recorded at
+1000 Hz).}
 }
 \value{
 No return value; iteratively plots a subset of the pupil timeseries
