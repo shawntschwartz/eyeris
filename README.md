@@ -64,7 +64,13 @@ eyeris_preproc <- glassbox(demo_data) # also try setting `interactive` to TRUE
 
 <img src="man/figures/README-example-1.png" width="100%" />
 
-<img src="man/figures/README-plot-1.png" width="33%" /><img src="man/figures/README-plot-2.png" width="33%" /><img src="man/figures/README-plot-3.png" width="33%" /><img src="man/figures/README-plot-4.png" width="33%" /><img src="man/figures/README-plot-5.png" width="33%" /><img src="man/figures/README-plot-6.png" width="33%" />
+### step-wise correction of pupillary signal
+
+<img src="man/figures/README-glassbox-plot-1.png" width="50%" /><img src="man/figures/README-glassbox-plot-2.png" width="50%" /><img src="man/figures/README-glassbox-plot-3.png" width="50%" /><img src="man/figures/README-glassbox-plot-4.png" width="50%" /><img src="man/figures/README-glassbox-plot-5.png" width="50%" /><img src="man/figures/README-glassbox-plot-6.png" width="50%" />
+
+### final pre-post correction of pupillary signal (raw -\> preprocessed)
+
+<img src="man/figures/README-timeseries-plot-1.png" width="100%" /><img src="man/figures/README-timeseries-plot-2.png" width="100%" />
 
 # Comments, suggestions, questions, issues
 
