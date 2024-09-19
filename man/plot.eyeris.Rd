@@ -4,7 +4,7 @@
 \alias{plot.eyeris}
 \title{Plot pre-processed pupil data from \code{eyeris}}
 \usage{
-\method{plot}{eyeris}(x, ..., n_epochs = 3, duration = 5, time_range = NULL)
+\method{plot}{eyeris}(x, ..., n_epochs = 3, duration = 5, steps = "all", time_range = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
@@ -14,6 +14,10 @@
 \item{n_epochs}{Number of random epochs to generate for visualization.}
 
 \item{duration}{Time in seconds of each randomly selected epoch.}
+
+\item{steps}{Which steps to plot; defaults to \code{all} (i.e., plot all steps).
+Otherwise, pass in a vector containing the index of the step(s) you want to
+plot, with index \code{1} being the original raw pupil timeseries.}
 
 \item{time_range}{The start and stop raw timestamps used to subset the
 preprocessed data from each step of the \code{eyeris} pipeline for visualization.

@@ -10,6 +10,9 @@
 #' @param ... Additional arguments to be passed to `plot`.
 #' @param n_epochs Number of random epochs to generate for visualization.
 #' @param duration Time in seconds of each randomly selected epoch.
+#' @param steps Which steps to plot; defaults to `all` (i.e., plot all steps).
+#' Otherwise, pass in a vector containing the index of the step(s) you want to
+#' plot, with index `1` being the original raw pupil timeseries.
 #' @param time_range The start and stop raw timestamps used to subset the
 #' preprocessed data from each step of the `eyeris` pipeline for visualization.
 #' Defaults to NULL, meaning random epochs as defined by `n_epochs` and
@@ -33,7 +36,8 @@
 #' @rdname plot.eyeris
 #'
 #' @export
-plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, time_range = NULL) {
+plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
+                        time_range = NULL) {
   # tests
   tryCatch(
     {
@@ -55,6 +59,19 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, time_range = NULL) {
 
   pupil_data <- x$timeseries
   pupil_steps <- grep("^pupil_", names(pupil_data), value = TRUE)
+
+  if (length(steps) == 1) {
+    if (steps[1] == "all") {
+      pupil_steps <- pupil_steps
+    } else {
+      pupil_steps <- pupil_steps[steps]
+    }
+  } else if (length(steps) > 1 && !is.null(time_range)) {
+    pupil_steps <- pupil_steps[steps]
+  } else {
+    pupil_steps <- pupil_steps
+  }
+
   colors <- c("black", rainbow(length(pupil_steps) - 1))
 
   if (is.null(time_range)) {
