@@ -29,11 +29,15 @@ detrend_pupil <- function(x, prev_op) {
   timeseries <- x[["time_orig"]]
 
   fit <- lm(pupil ~ timeseries)
-  trend <- fit$fitted.values
+
+  fitted_values <- fit$fitted.values
+  coefficients <- fit$coefficients
+  residuals <- fit$residuals
 
   list_out <- list(
-    betas = trend,
-    detrend = (pupil - trend)
+    fitted_values = fitted_values,
+    coefficients = coefficients,
+    residuals = residuals
   )
 
   return(list_out)

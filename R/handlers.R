@@ -35,8 +35,8 @@ pipeline_handler <- function(eyeris, operation, new_suffix, ...) {
     # run operation
     if (new_suffix == "detrend") {
       list_detrend <- operation(data, prev_operation, ...)
-      data["detrend_fitted_betas"] <- list_detrend$betas
-      data[[output_col]] <- list_detrend$detrend
+      data["detrend_fitted_values"] <- list_detrend$fitted_values
+      data[[output_col]] <- list_detrend$residuals
     } else {
       data[[output_col]] <- operation(data, prev_operation, ...)
     }
@@ -46,6 +46,11 @@ pipeline_handler <- function(eyeris, operation, new_suffix, ...) {
 
     # update log var with latest op
     eyeris$latest <- output_col
+
+    # update with detrend coefs if detrended
+    if (new_suffix == "detrend") {
+      eyeris$detrend_coefs <- list_detrend$coefficients
+    }
   }
 
   return(eyeris)
