@@ -66,6 +66,8 @@
 #' @export
 glassbox <- function(file, interactive = FALSE, n_epochs = 3, duration = 5,
                      time_range = NULL, ...) {
+
+  # the default parameters
   params <- list(
     deblink = list(extend = 50),
     detransient = list(n = 16),
