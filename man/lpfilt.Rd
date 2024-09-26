@@ -13,9 +13,9 @@ lpfilt(eyeris, wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = FALSE)
 
 \item{ws}{The start of stopband frequency in Hz (required lowpass cutoff).}
 
-\item{rp}{Required maximal ripple within passband in Hz.}
+\item{rp}{Required maximal ripple within passband in dB.}
 
-\item{rs}{Required minimal attenuation within stopband in Hz.}
+\item{rs}{Required minimal attenuation within stopband in dB.}
 
 \item{plot_freqz}{Boolean flag for displaying filter frequency response.}
 }

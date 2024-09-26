@@ -7,8 +7,8 @@
 #' @param eyeris An object of class `eyeris` derived from [eyeris::load()].
 #' @param wp The end of passband frequency in Hz (desired lowpass cutoff).
 #' @param ws The start of stopband frequency in Hz (required lowpass cutoff).
-#' @param rp Required maximal ripple within passband in Hz.
-#' @param rs Required minimal attenuation within stopband in Hz.
+#' @param rp Required maximal ripple within passband in dB.
+#' @param rs Required minimal attenuation within stopband in dB.
 #' @param plot_freqz Boolean flag for displaying filter frequency response.
 #'
 #' @return An `eyeris` object with a new column in `timeseries`: `pupil_lpfilt`.
