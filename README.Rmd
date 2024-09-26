@@ -71,7 +71,7 @@ plot(eyeris_preproc)
 
 ### final pre-post correction of pupillary signal (raw -> preprocessed)
 
-```{r timeseries-plot, echo=TRUE, fig.width=8, fig.height=5, fig.dpi=300}
+```{r timeseries-plot, eval=FALSE, echo=TRUE, fig.width=8, fig.height=5, fig.dpi=300}
 plot(eyeris_preproc, steps = c(1, 6), time_range = c(0, 100000))
 ```
 
