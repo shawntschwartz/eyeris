@@ -4,13 +4,15 @@
 \alias{deblink}
 \title{NA-pad blink events / missing data}
 \usage{
-deblink(eyeris, extend = 0)
+deblink(eyeris, extend = 40)
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
 
-\item{extend}{A number indicating the number of milliseconds to pad
-forward/backward around each missing sample.}
+\item{extend}{Either a single number indicating the number of milliseconds to
+pad forward/backward around each missing sample, or, a vector of length two
+indicating different numbers of milliseconds pad forward/backward around each
+missing sample, in the format \code{c(backward, forward)}.}
 }
 \value{
 An \code{eyeris} object with a new column: \code{pupil_deblink}.
@@ -27,7 +29,11 @@ here will NA-pad each missing data point by your specified number of ms.
 \dontrun{
 system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load_asc() |>
-  eyeris::deblink(extend = 50)
+  eyeris::deblink(extend = 40) # 40 ms in both directions
 }
+
+system.file("extdata", "assocret.asc", package = "eyeris") |>
+  eyeris::load_asc() |>
+  eyeris::deblink(extend = c(40, 50)) # 40 ms backward, 50 ms forward
 
 }
