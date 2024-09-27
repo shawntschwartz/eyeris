@@ -60,7 +60,6 @@ eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
 #> → Running lpfilt ...
 #> → Running detrend ...
 #> → Running zscore ...
-#> ℹ Skipping zscore : unused argument (groups = params$zscore$groups)
 ```
 
 <img src="man/figures/README-glassbox-example-1.png" width="100%" />
@@ -71,13 +70,15 @@ eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
 plot(eyeris_preproc)
 ```
 
-<img src="man/figures/README-glassbox-plot-1.png" width="100%" /><img src="man/figures/README-glassbox-plot-2.png" width="100%" /><img src="man/figures/README-glassbox-plot-3.png" width="100%" /><img src="man/figures/README-glassbox-plot-4.png" width="100%" /><img src="man/figures/README-glassbox-plot-5.png" width="100%" />
+<img src="man/figures/README-glassbox-plot-1.png" width="100%" /><img src="man/figures/README-glassbox-plot-2.png" width="100%" /><img src="man/figures/README-glassbox-plot-3.png" width="100%" /><img src="man/figures/README-glassbox-plot-4.png" width="100%" /><img src="man/figures/README-glassbox-plot-5.png" width="100%" /><img src="man/figures/README-glassbox-plot-6.png" width="100%" />
 
 ### final pre-post correction of pupillary signal (raw -\> preprocessed)
 
 ``` r
 plot(eyeris_preproc, steps = c(1, 6), time_range = c(0, 100000))
 ```
+
+<img src="man/figures/README-timeseries-plot-1.png" width="100%" /><img src="man/figures/README-timeseries-plot-2.png" width="100%" />
 
 # Comments, suggestions, questions, issues
 

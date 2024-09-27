@@ -60,7 +60,7 @@ zscore_pupil <- function(x, prev_op) {
   pupil_col <- dplyr::sym(prev_op)
 
   z <- x |>
-    dplyr::mutate(zscore = get_zscores(pupil_col)) |>
+    dplyr::mutate(zscore = get_zscores(!!pupil_col)) |>
     dplyr::ungroup() |>
     dplyr::pull(zscore)
 
