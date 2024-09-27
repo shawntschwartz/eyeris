@@ -8,8 +8,10 @@
 #' here will NA-pad each missing data point by your specified number of ms.
 #'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
-#' @param extend A number indicating the number of milliseconds to pad
-#' forward/backward around each missing sample.
+#' @param extend Either a single number indicating the number of milliseconds to
+#' pad forward/backward around each missing sample, or, a vector of length two
+#' indicating different numbers of milliseconds pad forward/backward around each
+#' missing sample, in the format `c(backward, forward)`.
 #'
 #' @return An `eyeris` object with a new column: `pupil_deblink`.
 #'
@@ -17,17 +19,36 @@
 #' \dontrun{
 #' system.file("extdata", "assocret.asc", package = "eyeris") |>
 #'   eyeris::load_asc() |>
-#'   eyeris::deblink(extend = 50)
+#'   eyeris::deblink(extend = 40) # 40 ms in both directions
 #' }
 #'
+#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#'   eyeris::load_asc() |>
+#'   eyeris::deblink(extend = c(40, 50)) # 40 ms backward, 50 ms forward
+#'
 #' @export
-deblink <- function(eyeris, extend = 0) {
+deblink <- function(eyeris, extend = 40) {
   return(pipeline_handler(eyeris, deblink_pupil, "deblink", extend))
 }
 
 # based on https://github.com/dr-JT/pupillometry/blob/main/R/pupil_deblink.R
 deblink_pupil <- function(x, prev_op, extend) {
   column <- dplyr::sym(prev_op)
+
+  if (length(extend) == 1) { # symmetric blink padding case
+    extend_backward <- extend
+    extend_forward <- extend
+  } else if (length(extend) == 2) { # asymmetric
+    extend_backward <- extend[1]
+    extend_forward <- extend[2]
+  } else {
+    cli::cli_abort(
+      paste(
+        "extend must either be a single integer (symmetric) or a vector of",
+        "length 2 (asymmetric) in the format `c(backward, forward)`!"
+      )
+    )
+  }
 
   data <- x |>
     dplyr::select(
@@ -47,10 +68,10 @@ deblink_pupil <- function(x, prev_op, extend) {
       ),
       blink.end = zoo::na.locf(blink.end, na.rm = FALSE),
       blink = ifelse(!is.na(blink.start) &
-                       time >= blink.start - extend &
+                       time >= blink.start - extend_backward &
                        time <= blink.start, 1, blink),
       blink = ifelse(!is.na(blink.end) &
-                       time <= blink.end + extend &
+                       time <= blink.end + extend_forward &
                        time >= blink.end, 1, blink),
       pupil_deblink = ifelse(pupil == 0 | blink == 1, as.numeric(NA), pupil)
     ) |>
