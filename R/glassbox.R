@@ -81,14 +81,13 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
   params <- list(
     deblink = list(extend = 50),
     detransient = list(n = 16),
-    lpfilt = list(wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = TRUE),
-    zscore = list(groups = NULL)
+    lpfilt = list(wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = TRUE)
   )
 
   params <- utils::modifyList(params, list(...))
 
   pipeline <- list(
-    load = function(data, params) {
+    load_asc = function(data, params) {
       return(eyeris::load_asc(data))
     },
     deblink = function(data, params) {
@@ -117,7 +116,7 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
       }
     },
     zscore = function(data, params) {
-      return(eyeris::zscore(data, groups = params$zscore$groups))
+      return(eyeris::zscore(data))
     }
   )
 
