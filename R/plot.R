@@ -8,18 +8,29 @@
 #'
 #' @param x An object of class `eyeris` derived from [eyeris::load()].
 #' @param ... Additional arguments to be passed to `plot`.
-#' @param n_epochs Number of random epochs to generate for visualization.
-#' @param duration Time in seconds of each randomly selected epoch.
 #' @param steps Which steps to plot; defaults to `all` (i.e., plot all steps).
 #' Otherwise, pass in a vector containing the index of the step(s) you want to
 #' plot, with index `1` being the original raw pupil timeseries.
-#' @param time_range The start and stop raw timestamps used to subset the
-#' preprocessed data from each step of the `eyeris` pipeline for visualization.
-#' Defaults to NULL, meaning random epochs as defined by `n_epochs` and
-#' `duration` will be plotted. To override the random epochs, set `time_range`
-#' here to a vector with relative start and stop times (e.g., `c(5000, 6000)`
-#' to indicate the raw data from 5-6 seconds on data that were recorded at
-#' 1000 Hz).
+#' @param num_previews Number of random example "epochs" to generate for
+#' previewing the effect of each preprocessing step on the pupil timeseries.
+#' @param preview_duration Time in seconds of each randomly selected preview.
+#' @param preview_window The start and stop raw timestamps used to subset the
+#' preprocessed data from each step of the `eyeris` workflow for visualization.
+#' Defaults to NULL, meaning random epochs as defined by `num_examples` and
+#' `example_duration` will be plotted. To override the random epochs, set
+#' `example_timelim` here to a vector with relative start and stop times
+#' (e.g., `c(5000, 6000)` to indicate the raw data from 5-6 seconds on data that
+#' were recorded at 1000 Hz). Note, the start/stop time values indicated here
+#' relate to the raw index position of each pupil sample from 1 to n (which
+#' will need to be specified manually by the user depending on the sampling rate
+#' of the recording; i.e., 5000-6000 for the epoch positioned from 5-6 seconds
+#' after the start of the timeseries, sampled at 1000 Hz).
+#' @param seed Random seed for current plotting session. Leave NULL to select
+#' `num_previews` number of random preview "epochs" (of `preview_duration`) each
+#' time. Otherwise, choose any seed-integer as you would normally select for
+#' [base::set.seed()], and you will be able to continue re-plotting the same
+#' random example pupil epochs each time -- which is helpful when adjusting
+#' parameters within and across `eyeris` workflow steps.
 #'
 #' @return No return value; iteratively plots a subset of the pupil timeseries
 #' from each preprocessing step run.
@@ -30,14 +41,15 @@
 #' plot(eyeris_data)
 #'
 #' # using a custom time subset (i.e., 1 to 500 ms)
-#' plot(eyeris_data, time_range = c(1, 500))
+#' plot(eyeris_data, preview_window = c(1, 500))
 #' }
 #'
 #' @rdname plot.eyeris
 #'
 #' @export
-plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
-                        time_range = NULL) {
+plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
+                        preview_duration = NULL, preview_window = NULL,
+                        seed = NULL) {
   # tests
   tryCatch(
     {
@@ -57,6 +69,51 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
     }
   )
 
+  # set param defaults outside of function declaration
+  if (!is.null(preview_window)) {
+    if (!is.null(num_previews) || !is.null(preview_duration)) {
+      cli::cli_alert_warning(
+        paste(
+          "num_previews and/or preview_duration will be ignored,",
+          "since preview_window was specified here."
+        )
+      )
+    }
+  }
+
+  if (is.null(steps)) {
+    steps <- "all"
+  }
+
+  if (is.null(num_previews)) {
+    num_previews <- 3
+  }
+
+  if (is.null(preview_duration)) {
+    preview_duration <- 5
+  }
+
+  # handle random seed for this plotting session
+  if (is.null(seed)) {
+    seed <- sample.int(.Machine$integer.max, 1)
+  }
+
+  # nolint start
+  current_seed <- .Random.seed
+  # nolint end
+
+  set.seed(seed)
+
+  if (!is.null(current_seed)) { # restore global seed
+    # nolint start
+    .Random.seed <- current_seed
+    # nolint end
+  } else {
+    # nolint start
+    rm(.Random.seed)
+    # nolint end
+  }
+
   pupil_data <- x$timeseries
   pupil_steps <- grep("^pupil_", names(pupil_data), value = TRUE)
   colors <- c("black", rainbow(length(pupil_steps) - 1))
@@ -69,7 +126,7 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
       pupil_steps <- pupil_steps[steps]
       colors <- colors[steps]
     }
-  } else if (length(steps) > 1 && !is.null(time_range)) {
+  } else if (length(steps) > 1 && !is.null(preview_window)) {
     pupil_steps <- pupil_steps[steps]
     colors <- colors[steps]
   } else {
@@ -77,16 +134,19 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
     colors <- colors
   }
 
-  if (is.null(time_range)) {
+  if (is.null(preview_window)) {
     hz <- x$info$sample.rate
-    random_epochs <- draw_random_epochs(pupil_data, n_epochs, duration, hz)
-    par(mfrow = c(1, n_epochs))
+    random_epochs <- draw_random_epochs(
+      pupil_data, num_previews,
+      preview_duration, hz
+    )
+    par(mfrow = c(1, num_previews))
     for (i in seq_along(pupil_steps)) {
-      for (n in 1:n_epochs) {
+      for (n in 1:num_previews) {
         st <- min(random_epochs[[n]]$time_orig)
         et <- max(random_epochs[[n]]$time_orig)
 
-        main_panel <- ceiling(n_epochs / 2)
+        main_panel <- ceiling(num_previews / 2)
 
         if (n == main_panel) {
           title <- paste0(pupil_steps[i], "\n[", st, " - ", et, "]")
@@ -113,10 +173,10 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
       }
     }
 
-    par(mfrow = c(1, n_epochs))
+    par(mfrow = c(1, num_previews))
   } else {
-    start_index <- time_range[1]
-    end_index <- min(time_range[2], nrow(pupil_data))
+    start_index <- preview_window[1]
+    end_index <- min(preview_window[2], nrow(pupil_data))
     sliced_pupil_data <- pupil_data[start_index:end_index, ]
     par(mfrow = c(1, 1))
     for (i in seq_along(pupil_steps)) {
@@ -126,7 +186,7 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
         type = "l", col = colors[i], lwd = 2,
         main = paste0(
           pupil_steps[i], "\n[", st, " - ", et, "] | ",
-          "[", time_range[1], " - ", time_range[2], "]"
+          "[", preview_window[1], " - ", preview_window[2], "]"
         ),
         xlab = "Time", ylab = "Pupil Size"
       )
@@ -144,7 +204,7 @@ draw_random_epochs <- function(x, n, d, hz) {
   max_timestamp <- max(x$time_orig)
 
   if ((max_timestamp - min_timestamp) < d) {
-    cli::cli_abort("Epoch duration is longer than available duration of data.")
+    cli::cli_abort("Example duration is longer than the duration of data.")
   }
 
   drawn_epochs <- list()

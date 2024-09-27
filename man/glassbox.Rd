@@ -6,11 +6,11 @@
 \usage{
 glassbox(
   file,
-  n_epochs = 3,
-  duration = 5,
-  time_range = NULL,
   confirm = FALSE,
   detrend_data = FALSE,
+  num_previews = 3,
+  preview_duration = 5,
+  preview_window = NULL,
   ...
 )
 }
@@ -24,22 +24,28 @@ interactively provide a visualization after each pipeline step, where you
 must also indicate "(y)es" or "(n)o" to either proceed or cancel the
 current \code{glassbox} pipeline operation (set to \code{TRUE}).}
 
-\item{n_epochs}{Number of random epochs to generate for visualization.}
 \item{detrend_data}{A flag to indicate whether to run the \code{detrend} step (set
 to \code{FALSE} by default). Detrending your pupil timeseries can have unintended
 consequences; we thus recommend that users understand the implications of
 detrending -- in addition to whether detrending is appropriate for the
 research design and question(s) -- before using this function.}
 
-\item{duration}{Time in seconds of each randomly selected epoch.}
+\item{num_previews}{Number of random example "epochs" to generate for
+previewing the effect of each preprocessing step on the pupil timeseries.}
 
-\item{time_range}{The start and stop raw timestamps used to subset the
-preprocessed data from each step of the \code{eyeris} pipeline for visualization.
-Defaults to NULL, meaning random epochs as defined by \code{n_epochs} and
-\code{duration} will be plotted. To override the random epochs, set \code{time_range}
-here to a vector with relative start and stop times (e.g., \code{c(5000, 6000)}
-to indicate the raw data from 5-6 seconds on data that were recorded at
-1000 Hz).}
+\item{preview_duration}{Time in seconds of each randomly selected preview.}
+
+\item{preview_window}{The start and stop raw timestamps used to subset the
+preprocessed data from each step of the \code{eyeris} workflow for visualization.
+Defaults to NULL, meaning random epochs as defined by \code{num_previews} and
+\code{preview_duration} will be plotted. To override the random epochs, set
+\code{preview_window} here to a vector with relative start and stop times
+(e.g., \code{c(5000, 6000)} to indicate the raw data from 5-6 seconds on data that
+were recorded at 1000 Hz). Note, the start/stop time values indicated here
+relate to the raw index position of each pupil sample from 1 to n (which
+will need to be specified manually by the user depending on the sampling rate
+of the recording; i.e., 5000-6000 for the epoch positioned from 5-6 seconds
+after the start of the timeseries, sampled at 1000 Hz).}
 
 \item{...}{Additional arguments to override the default, prescribed settings.}
 }

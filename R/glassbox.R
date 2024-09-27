@@ -33,20 +33,25 @@
 #' interactively provide a visualization after each pipeline step, where you
 #' must also indicate "(y)es" or "(n)o" to either proceed or cancel the
 #' current `glassbox` pipeline operation (set to `TRUE`).
-#' @param n_epochs Number of random epochs to generate for visualization.
-#' @param duration Time in seconds of each randomly selected epoch.
-#' @param time_range The start and stop raw timestamps used to subset the
-#' preprocessed data from each step of the `eyeris` pipeline for visualization.
-#' Defaults to NULL, meaning random epochs as defined by `n_epochs` and
-#' `duration` will be plotted. To override the random epochs, set `time_range`
-#' here to a vector with relative start and stop times (e.g., `c(5000, 6000)`
-#' to indicate the raw data from 5-6 seconds on data that were recorded at
-#' 1000 Hz).
 #' @param detrend_data A flag to indicate whether to run the `detrend` step (set
 #' to `FALSE` by default). Detrending your pupil timeseries can have unintended
 #' consequences; we thus recommend that users understand the implications of
 #' detrending -- in addition to whether detrending is appropriate for the
 #' research design and question(s) -- before using this function.
+#' @param num_previews Number of random example "epochs" to generate for
+#' previewing the effect of each preprocessing step on the pupil timeseries.
+#' @param preview_duration Time in seconds of each randomly selected preview.
+#' @param preview_window The start and stop raw timestamps used to subset the
+#' preprocessed data from each step of the `eyeris` workflow for visualization.
+#' Defaults to NULL, meaning random epochs as defined by `num_previews` and
+#' `preview_duration` will be plotted. To override the random epochs, set
+#' `preview_window` here to a vector with relative start and stop times
+#' (e.g., `c(5000, 6000)` to indicate the raw data from 5-6 seconds on data that
+#' were recorded at 1000 Hz). Note, the start/stop time values indicated here
+#' relate to the raw index position of each pupil sample from 1 to n (which
+#' will need to be specified manually by the user depending on the sampling rate
+#' of the recording; i.e., 5000-6000 for the epoch positioned from 5-6 seconds
+#' after the start of the timeseries, sampled at 1000 Hz).
 #' @param ... Additional arguments to override the default, prescribed settings.
 #'
 #' @examples
@@ -70,6 +75,8 @@
 #'
 #' @export
 glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
+                     num_previews = 3, preview_duration = 5,
+                     preview_window = NULL, ...) {
   # the default parameters
   params <- list(
     deblink = list(extend = 50),
@@ -114,6 +121,7 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
     }
   )
 
+  seed <- sample.int(.Machine$integer.max, 1)
   step_counter <- 1
 
   for (step_name in names(pipeline)) {
