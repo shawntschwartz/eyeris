@@ -4,28 +4,48 @@
 \alias{plot.eyeris}
 \title{Plot pre-processed pupil data from \code{eyeris}}
 \usage{
-\method{plot}{eyeris}(x, ..., n_epochs = 3, duration = 5, steps = "all", time_range = NULL)
+\method{plot}{eyeris}(
+  x,
+  ...,
+  steps = NULL,
+  num_previews = NULL,
+  preview_duration = NULL,
+  preview_window = NULL,
+  seed = NULL
+)
 }
 \arguments{
 \item{x}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
 
 \item{...}{Additional arguments to be passed to \code{plot}.}
 
-\item{n_epochs}{Number of random epochs to generate for visualization.}
-
-\item{duration}{Time in seconds of each randomly selected epoch.}
-
 \item{steps}{Which steps to plot; defaults to \code{all} (i.e., plot all steps).
 Otherwise, pass in a vector containing the index of the step(s) you want to
 plot, with index \code{1} being the original raw pupil timeseries.}
 
-\item{time_range}{The start and stop raw timestamps used to subset the
-preprocessed data from each step of the \code{eyeris} pipeline for visualization.
-Defaults to NULL, meaning random epochs as defined by \code{n_epochs} and
-\code{duration} will be plotted. To override the random epochs, set \code{time_range}
-here to a vector with relative start and stop times (e.g., \code{c(5000, 6000)}
-to indicate the raw data from 5-6 seconds on data that were recorded at
-1000 Hz).}
+\item{num_previews}{Number of random example "epochs" to generate for
+previewing the effect of each preprocessing step on the pupil timeseries.}
+
+\item{preview_duration}{Time in seconds of each randomly selected preview.}
+
+\item{preview_window}{The start and stop raw timestamps used to subset the
+preprocessed data from each step of the \code{eyeris} workflow for visualization.
+Defaults to NULL, meaning random epochs as defined by \code{num_examples} and
+\code{example_duration} will be plotted. To override the random epochs, set
+\code{example_timelim} here to a vector with relative start and stop times
+(e.g., \code{c(5000, 6000)} to indicate the raw data from 5-6 seconds on data that
+were recorded at 1000 Hz). Note, the start/stop time values indicated here
+relate to the raw index position of each pupil sample from 1 to n (which
+will need to be specified manually by the user depending on the sampling rate
+of the recording; i.e., 5000-6000 for the epoch positioned from 5-6 seconds
+after the start of the timeseries, sampled at 1000 Hz).}
+
+\item{seed}{Random seed for current plotting session. Leave NULL to select
+\code{num_previews} number of random preview "epochs" (of \code{preview_duration}) each
+time. Otherwise, choose any seed-integer as you would normally select for
+\code{\link[base:Random]{base::set.seed()}}, and you will be able to continue re-plotting the same
+random example pupil epochs each time -- which is helpful when adjusting
+parameters within and across \code{eyeris} workflow steps.}
 }
 \value{
 No return value; iteratively plots a subset of the pupil timeseries
@@ -44,7 +64,7 @@ parameters on the raw pupillary signal.
 plot(eyeris_data)
 
 # using a custom time subset (i.e., 1 to 500 ms)
-plot(eyeris_data, time_range = c(1, 500))
+plot(eyeris_data, preview_window = c(1, 500))
 }
 
 }

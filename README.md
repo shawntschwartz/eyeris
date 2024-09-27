@@ -51,15 +51,15 @@ library(eyeris)
 
 demo_data <- system.file("extdata", "assocret.asc", package = "eyeris")
 
-eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
-#> → Running load ...
-#> → Running deblink ...
-#> → Running detransient ...
-#> → Running interpolate ...
-#> ℹ Skipping interpolate : No NAs detected in pupil data for interpolation.
-#> → Running lpfilt ...
-#> → Running detrend ...
-#> → Running zscore ...
+eyeris_preproc <- glassbox(demo_data, detrend_data = F, lpfilt = list(plot_freqz = T))
+#> ✔ [  OK  ] - Running eyeris::load_asc()
+#> ✔ [  OK  ] - Running eyeris::deblink()
+#> ✔ [  OK  ] - Running eyeris::detransient()
+#> ✔ [  OK  ] - Running eyeris::interpolate()
+#> ℹ [ INFO ] - Skipping eyeris::interpolate(): No NAs detected in pupil data for interpolation.
+#> ✔ [  OK  ] - Running eyeris::lpfilt()
+#> ✔ [  OK  ] - Skipping eyeris::detrend()
+#> ✔ [  OK  ] - Running eyeris::zscore()
 ```
 
 <img src="man/figures/README-glassbox-example-1.png" width="100%" />
@@ -70,12 +70,12 @@ eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
 plot(eyeris_preproc)
 ```
 
-<img src="man/figures/README-glassbox-plot-1.png" width="100%" /><img src="man/figures/README-glassbox-plot-2.png" width="100%" /><img src="man/figures/README-glassbox-plot-3.png" width="100%" /><img src="man/figures/README-glassbox-plot-4.png" width="100%" /><img src="man/figures/README-glassbox-plot-5.png" width="100%" /><img src="man/figures/README-glassbox-plot-6.png" width="100%" />
+<img src="man/figures/README-glassbox-plot-1.png" width="100%" /><img src="man/figures/README-glassbox-plot-2.png" width="100%" /><img src="man/figures/README-glassbox-plot-3.png" width="100%" /><img src="man/figures/README-glassbox-plot-4.png" width="100%" /><img src="man/figures/README-glassbox-plot-5.png" width="100%" />
 
 ### final pre-post correction of pupillary signal (raw -\> preprocessed)
 
 ``` r
-plot(eyeris_preproc, steps = c(1, 6), time_range = c(0, 100000))
+plot(eyeris_preproc, steps = c(1, 5), preview_window = c(0, 100000))
 ```
 
 <img src="man/figures/README-timeseries-plot-1.png" width="100%" /><img src="man/figures/README-timeseries-plot-2.png" width="100%" />
