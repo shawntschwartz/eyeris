@@ -94,9 +94,21 @@ plot.eyeris <- function(x, ..., n_epochs = 3, duration = 5, steps = "all",
           title <- paste0("\n[", st, " - ", et, "]")
         }
 
+        if (grepl("z", pupil_steps[i])) {
+          y_units <- "(z)"
+        } else {
+          y_units <- "(a.u.)"
+        }
+
+        if (n == 1) {
+          y_label <- paste("pupil size", y_units)
+        } else {
+          y_label <- ""
+        }
+
         plot(random_epochs[[n]][[pupil_steps[i]]],
           type = "l", col = colors[i], lwd = 2,
-          main = title, xlab = "Time", ylab = "Pupil Size"
+          main = title, xlab = "time (ms)", ylab = y_label
         )
       }
     }
