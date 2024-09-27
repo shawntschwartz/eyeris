@@ -10,6 +10,7 @@ glassbox(
   duration = 5,
   time_range = NULL,
   confirm = FALSE,
+  detrend_data = FALSE,
   ...
 )
 }
@@ -24,6 +25,11 @@ must also indicate "(y)es" or "(n)o" to either proceed or cancel the
 current \code{glassbox} pipeline operation (set to \code{TRUE}).}
 
 \item{n_epochs}{Number of random epochs to generate for visualization.}
+\item{detrend_data}{A flag to indicate whether to run the \code{detrend} step (set
+to \code{FALSE} by default). Detrending your pupil timeseries can have unintended
+consequences; we thus recommend that users understand the implications of
+detrending -- in addition to whether detrending is appropriate for the
+research design and question(s) -- before using this function.}
 
 \item{duration}{Time in seconds of each randomly selected epoch.}
 

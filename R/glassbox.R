@@ -42,6 +42,11 @@
 #' here to a vector with relative start and stop times (e.g., `c(5000, 6000)`
 #' to indicate the raw data from 5-6 seconds on data that were recorded at
 #' 1000 Hz).
+#' @param detrend_data A flag to indicate whether to run the `detrend` step (set
+#' to `FALSE` by default). Detrending your pupil timeseries can have unintended
+#' consequences; we thus recommend that users understand the implications of
+#' detrending -- in addition to whether detrending is appropriate for the
+#' research design and question(s) -- before using this function.
 #' @param ... Additional arguments to override the default, prescribed settings.
 #'
 #' @examples
@@ -98,16 +103,33 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
       ))
     },
     detrend = function(data, params) {
-      return(eyeris::detrend(data))
+      if (detrend_data) {
+        return(eyeris::detrend(data))
+      } else {
+        return(data)
+      }
     },
     zscore = function(data, params) {
       return(eyeris::zscore(data, groups = params$zscore$groups))
     }
   )
 
+  step_counter <- 1
+
   for (step_name in names(pipeline)) {
-    cli::cli_alert(
-      paste("Running", step_name, "...")
+    action <- "Running "
+    skip_plot <- FALSE
+
+    if (!detrend_data) {
+      if (step_name == "detrend") {
+        action <- "Skipping "
+        step_counter <- step_counter - 1
+        skip_plot <- TRUE
+      }
+    }
+
+    cli::cli_alert_success(
+      paste0("[  OK  ] - ", action, "eyeris::", step_name, "()")
     )
 
     step_to_run <- pipeline[[step_name]]
@@ -118,17 +140,23 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
       },
       error = function(e) {
         cli::cli_alert_info(
-          paste("Skipping", step_name, ":", e$message, "\n")
+          paste0("[ INFO ] - ", "Skipping eyeris::", step_name, "(): ",
+                 e$message)
         )
-        cat("\n")
         err_thrown <<- TRUE
+        step_counter <<- step_counter - 1
         return(file)
       }
     )
 
     if (confirm) {
       if (!err_thrown) {
-        plot(file, time_range = time_range)
+        if (!skip_plot) {
+          plot(file,
+            steps = step_counter, num_previews = num_previews, seed = seed,
+            preview_duration = preview_duration, preview_window = preview_window
+          )
+        }
         if (step_name != "zscore") {
           if (!prompt_user()) {
             cli::cli_alert_info(
@@ -145,6 +173,8 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
         }
       }
     }
+
+    step_counter <- step_counter + 1
   }
 
   return(file)
