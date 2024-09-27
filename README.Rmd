@@ -60,7 +60,7 @@ library(eyeris)
 
 demo_data <- system.file("extdata", "assocret.asc", package = "eyeris")
 
-eyeris_preproc <- glassbox(demo_data, lpfilt = list(plot_freqz = TRUE))
+eyeris_preproc <- glassbox(demo_data, detrend_data = F, lpfilt = list(plot_freqz = T))
 ```
 
 ### step-wise correction of pupillary signal
@@ -72,7 +72,7 @@ plot(eyeris_preproc)
 ### final pre-post correction of pupillary signal (raw -> preprocessed)
 
 ```{r timeseries-plot, echo=TRUE, fig.width=8, fig.height=5, fig.dpi=300}
-plot(eyeris_preproc, steps = c(1, 6), time_range = c(0, 100000))
+plot(eyeris_preproc, steps = c(1, 5), preview_window = c(0, 100000))
 ```
 
 # Comments, suggestions, questions, issues
