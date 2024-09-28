@@ -26,7 +26,7 @@
 #' and message string pairs.
 #'
 #' For event-modes `1` and `2`, the way in which you pass in the event message
-#' string must conform to a standarized protocol so that `eyeris` knows how to
+#' string must conform to a standardized protocol so that `eyeris` knows how to
 #' find your events and (optionally) parse any included metadata into the tidy
 #' epoch data outputs. You have two primary choices: either (a) specify a string
 #' followed by a `*` wildcard expression (e.g., `"PROBE_START*`), which will
@@ -63,7 +63,10 @@
 #'   eyeris::zscore()
 #'
 #' eye_preproc |>
-#'   eyeris::epoch(events = "PROBE*")
+#'   eyeris::epoch(events = "PROBE*", limits = c(-1, 1))
+#'
+#' eye_preproc |>
+#'   eyeris::epoch(events = "TRIALID {trial}") # all samples between each trial
 #'
 #' eye_preproc |>
 #'   eyeris::epoch(
@@ -78,11 +81,21 @@
 #'     label = "prePostProbe" # custom epoch label name
 #'   )
 #'
+#' # here, the `msg` column of each data frame is optional
 #' eye_prepoc |>
 #'   eyeris::epoch(
 #'     events = list(
 #'       data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
 #'       data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
+#'     )
+#'   )
+#'
+#' # note: set `msg` to NA if you only want to pass in start/end timestamps
+#' eye_preproc |>
+#'   eyeris::epoch(
+#'     events = list(
+#'       data.frame(time = c(11243355), msg = NA), # start events
+#'       data.frame(time = c(11245956), msg = NA) # end events
 #'     )
 #'   )
 #' }
@@ -106,7 +119,7 @@ epoch_pupil <- function(x, prev_op, evs, lims, label, hz) {
   timestamped_events <- x |>
     purrr::pluck("events")
 
-  timestamps <- get_timestamps(evs, timestamped_events, msg_s, msg_e)
+  timestamps <- get_timestamps(evs, timestamped_events, msg_s, msg_e, lims)
 
   timestamps_s <- timestamps$start
   timestamps_e <- timestamps$end
@@ -144,12 +157,20 @@ epoch_pupil <- function(x, prev_op, evs, lims, label, hz) {
   return(x)
 }
 
-get_timestamps <- function(evs, timestamped_events, msg_s, msg_e) {
+get_timestamps <- function(evs, timestamped_events, msg_s, msg_e, limits) {
+  end_ts <- NULL
+
   if (!is.list(evs)) {
     start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
 
-    if (!is.null(evs[2])) {
-      end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
+    if (!endsWith(msg_s, "*")) {
+      if (!is.na(evs[2])) {
+        end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
+      }
+    } else {
+      if (is.null(limits)) {
+        check_limits(limits)
+      }
     }
 
     out_list <- list(

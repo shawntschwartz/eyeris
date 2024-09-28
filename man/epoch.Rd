@@ -28,7 +28,7 @@ string pairs, and the second data.frame indicates the \code{end} event timestamp
 and message string pairs.
 
 For event-modes \code{1} and \code{2}, the way in which you pass in the event message
-string must conform to a standarized protocol so that \code{eyeris} knows how to
+string must conform to a standardized protocol so that \code{eyeris} knows how to
 find your events and (optionally) parse any included metadata into the tidy
 epoch data outputs. You have two primary choices: either (a) specify a string
 followed by a \code{*} wildcard expression (e.g., \verb{"PROBE_START*}), which will
@@ -76,7 +76,10 @@ eye_preproc <- system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::zscore()
 
 eye_preproc |>
-  eyeris::epoch(events = "PROBE*")
+  eyeris::epoch(events = "PROBE*", limits = c(-1, 1))
+
+eye_preproc |>
+  eyeris::epoch(events = "TRIALID {trial}") # all samples between each trial
 
 eye_preproc |>
   eyeris::epoch(
@@ -91,11 +94,21 @@ eye_preproc |>
     label = "prePostProbe" # custom epoch label name
   )
 
+# here, the `msg` column of each data frame is optional
 eye_prepoc |>
   eyeris::epoch(
     events = list(
       data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
       data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
+    )
+  )
+
+# note: set `msg` to NA if you only want to pass in start/end timestamps
+eye_preproc |>
+  eyeris::epoch(
+    events = list(
+      data.frame(time = c(11243355), msg = NA), # start events
+      data.frame(time = c(11245956), msg = NA) # end events
     )
   )
 }

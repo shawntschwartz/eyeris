@@ -138,6 +138,18 @@ check_epoch_msg_values <- function(eyeris, events) {
   }
 }
 
+check_limits <- function(limits) {
+  if (is.null(limits)) {
+    m <- paste("limits cannot be NULL when using wildcard (*) mode",
+               "since no stop message is declared!\n")
+
+    stop(structure(list(
+      message = m,
+      call = match.call()
+    ), class = "invalid_limits_in_wildcard_mode_error"))
+  }
+}
+
 check_start_end_timestamps <- function(start, end) {
   s_len <- length(start$time)
   e_len <- length(end$time)
