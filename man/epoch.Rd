@@ -2,9 +2,20 @@
 % Please edit documentation in R/epoch.R
 \name{epoch}
 \alias{epoch}
-\title{Epoch pupil data based on custom event message structure}
+\title{Epoch (and baseline) pupil data based on custom event message structure}
 \usage{
-epoch(eyeris, events, limits = NULL, label = NULL, hz = NULL)
+epoch(
+  eyeris,
+  events,
+  limits = NULL,
+  label = NULL,
+  calc_baseline = FALSE,
+  apply_baseline = FALSE,
+  baseline_type = c("sub", "div"),
+  baseline_events = NULL,
+  baseline_period = NULL,
+  hz = NULL
+)
 }
 \arguments{
 \item{eyeris}{An object of class \code{eyeris} derived from \code{\link[=load]{load()}}.}
@@ -28,7 +39,7 @@ string pairs, and the second data.frame indicates the \code{end} event timestamp
 and message string pairs.
 
 For event-modes \code{1} and \code{2}, the way in which you pass in the event message
-string must conform to a standarized protocol so that \code{eyeris} knows how to
+string must conform to a standardized protocol so that \code{eyeris} knows how to
 find your events and (optionally) parse any included metadata into the tidy
 epoch data outputs. You have two primary choices: either (a) specify a string
 followed by a \code{*} wildcard expression (e.g., \verb{"PROBE_START*}), which will
@@ -50,6 +61,34 @@ left as \code{NULL} (default), then list item will be called \code{epoch_xyz}, w
 \code{xyz} will be a sanitized version of the original \code{start} event string you
 provided for matching. If you choose to specify a \code{label} here, then the
 resulting list object name will take the form: \code{epoch_label}.}
+
+\item{calc_baseline}{A flag indicated whether to perform baseline correction.
+Note, setting \code{calc_baseline} to TRUE alone will only compute the baseline
+period, but will not apply it to the preprocessed timeseries unless
+\code{apply_baseline} is also set to TRUE.}
+
+\item{apply_baseline}{A flag indicating whether to apply the calculated
+baseline to the pupil timeseries. The baseline correction will be applied to
+the pupil from the latest preprocessing step.}
+
+\item{baseline_type}{Whether to perform \emph{subtractive} (\code{sub}) or \emph{divisive}
+(\code{div}) baseline correction. Defaults to \code{sub}.}
+
+\item{baseline_events}{Similar to \code{events}, \code{baseline_events}, you can supply
+either (1) a single string representing the event message to center the
+baseline calculation around, as indicated by \code{baseline_period}; or (2) a
+vector containing both \code{start} and \code{end} event message strings -- here,
+\code{baseline_period} will be ignored and the duration of each baseline period
+that the mean will be calculated on will be the number of samples between
+each matched \code{start} and \code{end} event message pair, as opposed to a specified
+fixed duration (as described in 1).}
+
+\item{baseline_period}{A vector of 2 values (start, end) in seconds,
+indicating the window of data that will be used to perform the baseline
+correction, which will be centered around the single string "start" message
+string provided in \code{baseline_events}. Again, \code{baseline_period} will be
+ignored if both a "start" \strong{and} "end" message string are provided to the
+\code{baseline_events} argument.}
 
 \item{hz}{Data sampling rate. If not specified, will use the value contained
 within the tracker's metadata.}
@@ -76,7 +115,10 @@ eye_preproc <- system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::zscore()
 
 eye_preproc |>
-  eyeris::epoch(events = "PROBE*")
+  eyeris::epoch(events = "PROBE*", limits = c(-1, 1))
+
+eye_preproc |>
+  eyeris::epoch(events = "TRIALID {trial}") # all samples between each trial
 
 eye_preproc |>
   eyeris::epoch(
@@ -91,11 +133,21 @@ eye_preproc |>
     label = "prePostProbe" # custom epoch label name
   )
 
+# here, the `msg` column of each data frame is optional
 eye_prepoc |>
   eyeris::epoch(
     events = list(
       data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
       data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
+    )
+  )
+
+# note: set `msg` to NA if you only want to pass in start/end timestamps
+eye_preproc |>
+  eyeris::epoch(
+    events = list(
+      data.frame(time = c(11243355), msg = NA), # start events
+      data.frame(time = c(11245956), msg = NA) # end events
     )
   )
 }

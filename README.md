@@ -58,11 +58,12 @@ eyeris_preproc <- glassbox(demo_data, detrend_data = F, lpfilt = list(plot_freqz
 #> ✔ [  OK  ] - Running eyeris::interpolate()
 #> ℹ [ INFO ] - Skipping eyeris::interpolate(): No NAs detected in pupil data for interpolation.
 #> ✔ [  OK  ] - Running eyeris::lpfilt()
-#> ✔ [  OK  ] - Skipping eyeris::detrend()
-#> ✔ [  OK  ] - Running eyeris::zscore()
 ```
 
 <img src="man/figures/README-glassbox-example-1.png" width="100%" />
+
+    #> ✔ [  OK  ] - Skipping eyeris::detrend()
+    #> ✔ [  OK  ] - Running eyeris::zscore()
 
 ### step-wise correction of pupillary signal
 
