@@ -42,6 +42,48 @@ check_input <- function(arg) {
   }
 }
 
+check_baseline_mean <- function(x) {
+  if (x == 0) {
+    m <- "baseline mean is zero, unable to divide by a baseline of 0; call = "
+    stop(structure(list(
+      message = m,
+      call = match.call()
+    ), class = "divisive_baseline_mean_zero_error"))
+  }
+}
+
+check_baseline_epoch_counts <- function(epochs, baselines) {
+  if (length(epochs) != length(baselines)) {
+    m <- paste("number of trials matched based on baseline_events/",
+               "baseline_period {", length(baselines), "} does not match",
+               "the number of epochs matched based on events/limits {",
+               length(epochs), "}! please check whether the event message(s)",
+               "provided for baselining are appropriate for the epoched data.")
+    stop(structure(list(
+      message = m,
+      call = match.call()
+    ), class = "baseline_epochs_mismatch_error"))
+  }
+}
+
+check_baseline_inputs <- function(events, limits) {
+  if (is.null(events) && is.null(limits)) {
+    m <- paste("compute_baseline is TRUE, but baseline_events and",
+               "baseline_period are NULL!\t")
+    stop(structure(list(
+      message = m,
+      call = match.call()
+    ), class = "baseline_input_args_error"))
+  } else if (is.na(events[2]) && is.null(limits)) {
+    m <- paste("if no stop event messages are provided, then you must specify",
+               "the baseline_period in the form `c(time_min, time_max)`.")
+    stop(structure(list(
+      message = m,
+      call = match.call()
+    ), class = "baseline_input_args_error"))
+  }
+}
+
 check_data <- function(eyeris, fun) {
   err <- paste(
     "the provided object to `eyeris::%s()` is of type '%s' but",

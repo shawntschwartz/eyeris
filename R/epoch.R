@@ -1,4 +1,4 @@
-#' Epoch pupil data based on custom event message structure
+#' Epoch (and baseline) pupil data based on custom event message structure
 #'
 #' Intended to be used as the final preprocessing step. This function creates
 #' data epochs of either fixed or dynamic durations with respect to provided
@@ -46,6 +46,29 @@
 #' `xyz` will be a sanitized version of the original `start` event string you
 #' provided for matching. If you choose to specify a `label` here, then the
 #' resulting list object name will take the form: `epoch_label`.
+#' @param calc_baseline A flag indicated whether to perform baseline correction.
+#' Note, setting `calc_baseline` to TRUE alone will only compute the baseline
+#' period, but will not apply it to the preprocessed timeseries unless
+#' `apply_baseline` is also set to TRUE.
+#' @param apply_baseline A flag indicating whether to apply the calculated
+#' baseline to the pupil timeseries. The baseline correction will be applied to
+#' the pupil from the latest preprocessing step.
+#' @param baseline_type Whether to perform *subtractive* (`sub`) or *divisive*
+#' (`div`) baseline correction. Defaults to `sub`.
+#' @param baseline_events Similar to `events`, `baseline_events`, you can supply
+#' either (1) a single string representing the event message to center the
+#' baseline calculation around, as indicated by `baseline_period`; or (2) a
+#' vector containing both `start` and `end` event message strings -- here,
+#' `baseline_period` will be ignored and the duration of each baseline period
+#' that the mean will be calculated on will be the number of samples between
+#' each matched `start` and `end` event message pair, as opposed to a specified
+#' fixed duration (as described in 1).
+#' @param baseline_period A vector of 2 values (start, end) in seconds,
+#' indicating the window of data that will be used to perform the baseline
+#' correction, which will be centered around the single string "start" message
+#' string provided in `baseline_events`. Again, `baseline_period` will be
+#' ignored if both a "start" **and** "end" message string are provided to the
+#' `baseline_events` argument.
 #' @param hz Data sampling rate. If not specified, will use the value contained
 #' within the tracker's metadata.
 #'
@@ -101,14 +124,19 @@
 #' }
 #'
 #' @export
-epoch <- function(eyeris, events, limits = NULL, label = NULL, hz = NULL) {
+epoch <- function(eyeris, events, limits = NULL, label = NULL,
+                  calc_baseline = FALSE, apply_baseline = FALSE,
+                  baseline_type = c("sub", "div"), baseline_events = NULL,
+                  baseline_period = NULL, hz = NULL) {
   return(pipeline_handler(
-    eyeris, epoch_pupil, "epoch", events,
-    limits, label, hz
+    eyeris, epoch_pupil, "epoch", events, limits, label, calc_baseline,
+    apply_baseline, baseline_type, baseline_events, baseline_period, hz
   ))
 }
 
-epoch_pupil <- function(x, prev_op, evs, lims, label, hz) {
+epoch_pupil <- function(x, prev_op, evs, lims, label, c_bline, a_bline,
+                        bline_type = c("sub", "div"), bline_evs, bline_per,
+                        hz) {
   if (is.null(hz)) {
     hz <- x$info$sample.rate
   }
@@ -150,36 +178,90 @@ epoch_pupil <- function(x, prev_op, evs, lims, label, hz) {
     epoched_data <- epoch_manually(x, evs, hz)
   }
 
-  epoch_id <- make_epoch_labels(evs, label, epoched_data)
+  epoch_id <- make_epoch_label(evs, label, epoched_data)
 
-  x[[epoch_id]] <- epoched_data
+  if (c_bline) {
+    bline_type <- tolower(bline_type)
+    bline_type <- match.arg(bline_type)
+
+    bline_msg_s <- bline_evs[1]
+    bline_msg_e <- bline_evs[2]
+
+    bline_matches <- get_timestamps(bline_evs, timestamped_events, bline_msg_s,
+      bline_msg_e, bline_per,
+      baseline_mode = TRUE
+    )
+
+    check_baseline_epoch_counts(timestamps, bline_matches)
+    baseline_epochs <- extract_baseline_epochs(
+      x, bline_evs, bline_per,
+      bline_matches, hz
+    )
+    computed_baselines <- compute_baseline(
+      x, epoched_data, baseline_epochs,
+      bline_type
+    )
+
+    if (a_bline) {
+      for (i in seq_len(length(epoched_data))) {
+        epoched_data[[i]][[computed_baselines$baseline_corrected_col_name]] <-
+          computed_baselines$baseline_corrected_epochs[[i]]
+      }
+    }
+
+    baseline_id <- make_baseline_label(computed_baselines, epoch_id)
+
+    baseline_args <- list(
+      calc_baseline = c_bline,
+      apply_baseline = a_bline,
+      baseline_type = bline_type,
+      baseline_events = bline_evs,
+      baseline_period = bline_per
+    )
+
+    computed_baselines[["info"]] <- baseline_args
+
+    x[[baseline_id]] <- computed_baselines
+  }
+
+  epochs_df <- do.call(rbind.data.frame, epoched_data)
+  x[[epoch_id]] <- epochs_df
 
   return(x)
 }
 
-get_timestamps <- function(evs, timestamped_events, msg_s, msg_e, limits) {
+get_timestamps <- function(evs, timestamped_events, msg_s, msg_e, limits,
+                           baseline_mode = FALSE) {
   end_ts <- NULL
 
-  if (!is.list(evs)) {
+  if (baseline_mode) {
     start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
 
-    if (!endsWith(msg_s, "*")) {
-      if (!is.na(evs[2])) {
-        end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
-      }
-    } else {
-      if (is.null(limits)) {
-        check_limits(limits)
+    if (!is.na(msg_e)) {
+      end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
+    }
+  } else {
+    if (!is.list(evs)) {
+      start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
+
+      if (!endsWith(msg_s, "*")) {
+        if (!is.na(evs[2])) {
+          end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
+        }
+      } else {
+        if (is.null(limits)) {
+          check_limits(limits)
+        }
       }
     }
-
-    out_list <- list(
-      start = start_ts,
-      end = end_ts
-    )
-
-    return(out_list)
   }
+
+  out_list <- list(
+    start = start_ts,
+    end = end_ts
+  )
+
+  return(out_list)
 }
 
 parse_timestamps <- function(evs, timestamped_events, msg) {
@@ -189,7 +271,7 @@ parse_timestamps <- function(evs, timestamped_events, msg) {
   return(timestamps)
 }
 
-make_epoch_labels <- function(evs, label, epoched_data) {
+make_epoch_label <- function(evs, label, epoched_data) {
   if (is.null(label) && !is.list(evs)) {
     epoch_id <- sanitize_event_tag(evs[1])
   } else if (is.null(label) && is.list(evs)) {
@@ -357,9 +439,7 @@ epoch_manually <- function(eyeris, ts_list, hz) {
     epochs[[i]] <- current_epoch
   }
 
-  epochs_df <- do.call(rbind.data.frame, epochs)
-
-  return(epochs_df)
+  return(epochs)
 }
 
 epoch_only_start_msg <- function(eyeris, start, hz) {
@@ -388,9 +468,7 @@ epoch_only_start_msg <- function(eyeris, start, hz) {
     epochs[[i]] <- current_epoch
   }
 
-  epochs_df <- do.call(rbind.data.frame, epochs)
-
-  return(epochs_df)
+  return(epochs)
 }
 
 epoch_start_msg_and_limits <- function(eyeris, start, lims, hz) {
@@ -422,9 +500,7 @@ epoch_start_msg_and_limits <- function(eyeris, start, lims, hz) {
     epochs[[i]] <- current_epoch
   }
 
-  epochs_df <- do.call(rbind.data.frame, epochs)
-
-  return(epochs_df)
+  return(epochs)
 }
 
 epoch_start_end_msg <- function(eyeris, start, end, hz) {
@@ -461,7 +537,5 @@ epoch_start_end_msg <- function(eyeris, start, end, hz) {
       dplyr::mutate(!!!metadata_vals)
   }
 
-  epochs_df <- do.call(rbind.data.frame, epochs)
-
-  return(epochs_df)
+  return(epochs)
 }
