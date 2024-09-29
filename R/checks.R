@@ -88,7 +88,7 @@ check_pupil_cols <- function(eyeris, fun) {
   err_m <- sprintf(paste(
     "The provided object to `eyeris::%s()` doesn't include the",
     "expected `pupil_raw` column.\t"
-  ), fun, class(eyeris))
+  ), fun)
   err_c <- "missing_pupil_raw_error"
 
   if (!"pupil_raw" %in% colnames(eyeris$timeseries)) {

@@ -84,8 +84,10 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
     lpfilt = list(wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = TRUE)
   )
 
+  # override defaults
   params <- utils::modifyList(params, list(...))
 
+  # eyeris workflow data structure
   pipeline <- list(
     load_asc = function(data, params) {
       return(eyeris::load_asc(data))
@@ -122,6 +124,8 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
 
   seed <- sample.int(.Machine$integer.max, 1)
   step_counter <- 1
+  only_linear_trend <- FALSE
+  next_step <- c()
 
   for (step_name in names(pipeline)) {
     action <- "Running "
@@ -132,6 +136,10 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
         action <- "Skipping "
         step_counter <- step_counter - 1
         skip_plot <- TRUE
+      }
+    } else {
+      if (step_name == "detrend") {
+        only_linear_trend <- TRUE
       }
     }
 
@@ -147,8 +155,10 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
       },
       error = function(e) {
         cli::cli_alert_info(
-          paste0("[ INFO ] - ", "Skipping eyeris::", step_name, "(): ",
-                 e$message)
+          paste0(
+            "[ INFO ] - ", "Skipping eyeris::", step_name, "(): ",
+            e$message
+          )
         )
         err_thrown <<- TRUE
         step_counter <<- step_counter - 1
@@ -156,13 +166,28 @@ glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,
       }
     )
 
+    pupil_steps <- grep("^pupil_", colnames(file$timeseries), value = TRUE)
+
     if (confirm) {
       if (!err_thrown) {
         if (!skip_plot) {
+          if (step_counter + 1 <= length(names(pipeline))) {
+            next_step <- c(next_step, pupil_steps[step_counter])
+          } else {
+            next_step <- NULL
+          }
+
           plot(file,
             steps = step_counter, num_previews = num_previews, seed = seed,
-            preview_duration = preview_duration, preview_window = preview_window
+            preview_duration = preview_duration,
+            preview_window = preview_window,
+            only_linear_trend = only_linear_trend, next_step = next_step
           )
+
+          if (step_name == "detrend") {
+            # reset linear trend flags
+            only_linear_trend <- FALSE
+          }
         }
         if (step_name != "zscore") {
           if (!prompt_user()) {

@@ -69,6 +69,13 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
     }
   )
 
+  params <- list(...)
+  only_liner_trend <- if ("only_linear_trend" %in% names(params)) {
+    params$only_linear_trend <- params$only_linear_trend
+  } else {
+    params$only_linear_trend <- FALSE
+  }
+
   # set param defaults outside of function declaration
   if (!is.null(preview_window)) {
     if (!is.null(num_previews) || !is.null(preview_duration)) {
@@ -141,6 +148,7 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
       preview_duration, hz
     )
     par(mfrow = c(1, num_previews))
+    detrend_plotted <- FALSE
     for (i in seq_along(pupil_steps)) {
       for (n in 1:num_previews) {
         st <- min(random_epochs[[n]]$time_orig)
@@ -166,10 +174,55 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
           y_label <- ""
         }
 
-        plot(random_epochs[[n]][[pupil_steps[i]]],
-          type = "l", col = colors[i], lwd = 2,
-          main = title, xlab = "time (ms)", ylab = y_label
-        )
+        # used when running `plot()` by itself (and thus plotting all steps)
+        if (!only_liner_trend) {
+          if (grepl("_detrend$", pupil_steps[i]) && !detrend_plotted) {
+            par(mfrow = c(1, 1))
+            plot(pupil_data$time_orig, pupil_data[[pupil_steps[i - 1]]],
+                 type = "l", col = "black", lwd = 2,
+                 main = paste0("detrend:\n", pupil_steps[i - 1]),
+                 xlab = "raw tracker time (ms)", ylab = "pupil size (a.u.)")
+            lines(pupil_data$time_orig, pupil_data$detrend_fitted_values,
+                  type = "l", col = "blue", lwd = 2, lty = 2)
+            legend("topleft", legend = c("pupil timeseries", "linear trend"),
+                   col = c("black", "blue"), lwd = 2, lty = c(1, 2))
+            par(mfrow = c(1, num_previews))
+            detrend_plotted <- TRUE
+          }
+        } else {
+          if (!detrend_plotted) {
+            par(mfrow = c(1, 1))
+            title <- paste0("detrend:\n",
+                            params$next_step[length(params$next_step) - 1])
+            plot(pupil_data$time_orig,
+                 pupil_data[[params$next_step[length(params$next_step) - 1]]],
+                 type = "l", col = "black", lwd = 2, main = title,
+                 xlab = "raw tracker time (ms)", ylab = "pupil size (a.u.)")
+            lines(pupil_data$time_orig,
+                  pupil_data$detrend_fitted_values,
+                  type = "l", col = "blue", lwd = 2, lty = 2)
+            legend("topleft", legend = c("pupil timeseries", "linear trend"),
+                   col = c("black", "blue"), lwd = 2, lty = c(1, 2))
+            par(mfrow = c(1, num_previews))
+            detrend_plotted <- TRUE
+            prompt_user()
+          }
+        }
+
+        if (!is.null(params$next_step)) {
+          plot(
+            random_epochs[[n]][[params$next_step[length(params$next_step)]]],
+            type = "l", col = colors[i], lwd = 2,
+            main = title, xlab = "time (ms)", ylab = y_label
+          )
+        } else {
+          plot(
+            random_epochs[[n]][[pupil_steps[i]]],
+            type = "l", col = colors[i], lwd = 2,
+            main = title, xlab = "time (ms)", ylab = y_label
+          )
+
+        }
       }
     }
 
