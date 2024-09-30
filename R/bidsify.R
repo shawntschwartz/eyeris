@@ -24,6 +24,15 @@
 #' @param run_num BIDS run ID.
 #' @param save_raw Logical flag indicating whether to save_raw pupil data in
 #' addition to epoched data. Defaults to TRUE.
+#' @param render_report Logical flag indicating whether to save out the `eyeris`
+#' preprocessing summary report. Defaults to TRUE.
+#' @param html_report Logical flag indicating whether to save out the `eyeris`
+#' preprocessing summary report as an HTML file. Defaults to TRUE.
+#' @param pdf_report Logical flag indicating whether to save out the `eyeris`
+#' preprocessing summary report as a PDF file. Note, a valid TeX distribution
+#' must already be installed. Defaults to TRUE.
+#' @param report_seed Random seed for the plots that will appear in the report.
+#' Defaults to 0. See [eyeris::plot()] for a more detailed description.
 #'
 #' @examples
 #' # Bleed around blink periods just long enough to remove majority of
@@ -42,7 +51,7 @@
 #'     label = "prePostProbe" # custom epoch label name
 #'   ) |>
 #'   eyeris::bidsify(
-#'     bids_dir = "derivatives",
+#'     bids_dir = ".", # make bids dir in current directory
 #'     participant_id = "001",
 #'     session_num = "01",
 #'     task_name = "assocret",
@@ -54,7 +63,9 @@
 bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
                     merge_epochs = FALSE, bids_dir = NULL,
                     participant_id = NULL, session_num = NULL,
-                    task_name = NULL, run_num = NULL, save_raw = TRUE) {
+                    task_name = NULL, run_num = NULL, save_raw = TRUE,
+                    render_report = TRUE, html_report = TRUE,
+                    pdf_report = TRUE, report_seed = 0) {
   sub <- participant_id
   ses <- session_num
   task <- task_name
@@ -131,7 +142,11 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
     check_and_create_dir(dir, p)
   }
 
-  p <- file.path(p, "pupil")
+  if (render_report) {
+    report_path <- p
+  }
+
+  p <- file.path(p, "eye")
   check_and_create_dir(dir, p)
 
   if (!merge_epochs) {
@@ -193,5 +208,61 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
       "success", "Raw pupil timeseries data successfully written to: '%s'",
       file.path(dir, p, f)
     )
+  }
+
+  if (render_report) {
+    figs_out <- file.path(report_path, "source")
+    check_and_create_dir(figs_out)
+
+    figs_out <- file.path(figs_out, "figures")
+    check_and_create_dir(figs_out)
+
+    pupil_steps <- grep("^pupil_", colnames(eyeris$timeseries), value = TRUE)
+    fig_paths <- rep(NA, length(pupil_steps))
+
+    for (i in seq_along(pupil_steps)) {
+      fig_paths[i] <- file.path(figs_out, paste0("fig", i, ".jpg"))
+      jpeg(file.path(fig_paths[i]),
+        width = 12, height = 7, units = "in",
+        res = 300, pointsize = 14
+      )
+      plot(eyeris, steps = i, seed = report_seed)
+      dev.off()
+    }
+
+    fig_paths <- c(
+      fig_paths,
+      file.path(figs_out, paste0("fig", length(fig_paths) + 1, ".jpg"))
+    )
+
+    jpeg(file.path(fig_paths[length(fig_paths)]),
+      width = 12, height = 7, units = "in", res = 300, pointsize = 18
+    )
+
+    plot(eyeris, steps = 1, preview_window = c(0, nrow(eyeris$timeseries)))
+
+    dev.off()
+
+    fig_paths <- c(
+      fig_paths,
+      file.path(figs_out, paste0("fig", length(fig_paths) + 1, ".jpg"))
+    )
+
+    jpeg(file.path(fig_paths[length(fig_paths)]),
+      width = 12, height = 7, units = "in", res = 300, pointsize = 18
+    )
+
+    plot(eyeris,
+      steps = length(pupil_steps),
+      preview_window = c(0, nrow(eyeris$timeseries))
+    )
+
+    dev.off()
+
+    report_output <- make_report(eyeris, report_path, fig_paths,
+      sub = sub, ses = ses, task = task, run = run
+    )
+
+    render_report(report_output, html = html_report, pdf = pdf_report)
   }
 }

@@ -14,7 +14,11 @@ bidsify(
   session_num = NULL,
   task_name = NULL,
   run_num = NULL,
-  save_raw = TRUE
+  save_raw = TRUE,
+  render_report = TRUE,
+  html_report = TRUE,
+  pdf_report = TRUE,
+  report_seed = 0
 )
 }
 \arguments{
@@ -40,6 +44,19 @@ as one file or as separate files. Defaults to FLASE (no merge).}
 
 \item{save_raw}{Logical flag indicating whether to save_raw pupil data in
 addition to epoched data. Defaults to TRUE.}
+
+\item{render_report}{Logical flag indicating whether to save out the \code{eyeris}
+preprocessing summary report. Defaults to TRUE.}
+
+\item{html_report}{Logical flag indicating whether to save out the \code{eyeris}
+preprocessing summary report as an HTML file. Defaults to TRUE.}
+
+\item{pdf_report}{Logical flag indicating whether to save out the \code{eyeris}
+preprocessing summary report as a PDF file. Note, a valid TeX distribution
+must already be installed. Defaults to TRUE.}
+
+\item{report_seed}{Random seed for the plots that will appear in the report.
+Defaults to 0. See \code{\link[=plot]{plot()}} for a more detailed description.}
 }
 \description{
 This method provides a structured way to save out pupil data in a BIDS-like
@@ -70,7 +87,7 @@ system.file("extdata", "assocret.asc", package = "eyeris") |>
     label = "prePostProbe" # custom epoch label name
   ) |>
   eyeris::bidsify(
-    bids_dir = "derivatives",
+    bids_dir = ".", # make bids dir in current directory
     participant_id = "001",
     session_num = "01",
     task_name = "assocret",
