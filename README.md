@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <img src="inst/figures/sticker.png" align="right"/>
+# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <img src="inst/figures/sticker.png" width="125px" align="right"/>
 
 <!-- badges: start -->
 
