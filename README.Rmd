@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R
+# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <img src="inst/figures/sticker.png" align="right"/>
 
 <!-- badges: start -->
 <a href="LICENSE.md" alt="MIT License"><img src="https://badgen.net/static/license/MIT/blue?icon=github" /></a>
