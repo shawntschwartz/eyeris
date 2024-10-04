@@ -434,7 +434,7 @@ epoch_manually <- function(eyeris, ts_list, hz) {
         ),
         .after = time_orig
       ) |>
-      dplyr::mutate(!!!metadata_vals[i,])
+      dplyr::mutate(!!!metadata_vals[i, ])
 
     epochs[[i]] <- current_epoch
   }
