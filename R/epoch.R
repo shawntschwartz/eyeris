@@ -58,11 +58,15 @@
 #' @param baseline_events Similar to `events`, `baseline_events`, you can supply
 #' either (1) a single string representing the event message to center the
 #' baseline calculation around, as indicated by `baseline_period`; or (2) a
-#' vector containing both `start` and `end` event message strings -- here,
-#' `baseline_period` will be ignored and the duration of each baseline period
-#' that the mean will be calculated on will be the number of samples between
-#' each matched `start` and `end` event message pair, as opposed to a specified
-#' fixed duration (as described in 1).
+#' single vector containing both a `start` and an `end` event message string --
+#' here, `baseline_period` will be ignored and the duration of each baseline
+#' period that the mean will be calculated on will be the number of samples
+#' between each matched `start` and `end` event message pair, as opposed to a
+#' specified fixed duration (as described in 1). Please note, providing a list
+#' of trial-level start/end message pairs (like in the `events` parameter) to
+#' manually indicate unique start/end chunks for baselining is currently
+#' unsupported. Though, we intend to add this feature in a later version of
+#' `eyeris`, given it likely won't be a heavily utilized / in demand feature.
 #' @param baseline_period A vector of 2 values (start, end) in seconds,
 #' indicating the window of data that will be used to perform the baseline
 #' correction, which will be centered around the single string "start" message
@@ -93,14 +97,14 @@
 #'
 #' eye_preproc |>
 #'   eyeris::epoch(
-#'     events = "PROBE_{type}_{trial}",
-#'     limits = c(0, 1) # grab the 1 second post event
+#'     events = "PROBE_START_{trial}",
+#'     limits = c(0, 1) # grab the 1 second following probe onset
 #'   )
 #'
 #' eye_preproc |>
 #'   eyeris::epoch(
-#'     events = "PROBE_{type}_{trial}",
-#'     limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+#'     events = "PROBE_START_{trial}",
+#'     limits = c(-2, 1), # 2 seconds prior to and 1 second after probe onset
 #'     label = "prePostProbe" # custom epoch label name
 #'   )
 #'
@@ -121,8 +125,48 @@
 #'       data.frame(time = c(11245956), msg = NA) # end events
 #'     )
 #'   )
-#' }
 #'
+#' # examples with baseline arguments enabled
+#'
+#' # example 1: use mean of 1-s preceding "PROBE_START" (i.e. "DELAY_STOP")
+#' to perform subtractive baselining of the 1-s PROBE epochs.
+#' eye_preproc |>
+#'   eyeris::epoch(
+#'     events = "PROBE_START_{trial}",
+#'     limits = c(0, 1), # grab 0 seconds prior to and 1 second post PROBE event
+#'     label = "prePostProbe", # custom epoch label name
+#'     calc_baseline = TRUE,
+#'     apply_baseline = TRUE,
+#'     baseline_type = "sub", # "sub"tractive baseline calculation is default
+#'     baseline_events = "DELAY_STOP_*",
+#'     baseline_period = c(-1, 0)
+#'   )
+#'
+#' # example 2: use mean of time period between set start/end event messages
+#' (i.e. between "DELAY_START" and "DELAY_STOP"). In this case, the
+#' `baseline_period` argument will be ignored since both a "start" and "end"
+#' message string are provided to the `baseline_events` argument.
+#' eye_preproc |>
+#'   eyeris::epoch(
+#'     events = "PROBE_START_{trial}",
+#'     limits = c(0, 1), # grab 0 seconds prior to and 1 second post PROBE event
+#'     label = "prePostProbe", # custom epoch label name
+#'     calc_baseline = TRUE,
+#'     apply_baseline = TRUE,
+#'     baseline_type = "sub", # "sub"tractive baseline calculation is default
+#'     baseline_events = c("DELAY_START_*",
+#'                         "DELAY_STOP_*")
+#'   )
+#'
+#' # additional (potentially helpful) example
+#'  start_events <- data.frame(time = c(11243355, 11247588),
+#'                             msg = c("TRIALID 0", "TRIALID 1"))
+#'  end_events <- data.frame(time = c(11245956, 11250506),
+#'                           msg = c("RESPONSE_0", "RESPONSE_1"))
+#'  eye_prepoc |>
+#'   eyeris::epoch(events = list(start_events, end_events))
+#' }
+
 #' @export
 epoch <- function(eyeris, events, limits = NULL, label = NULL,
                   calc_baseline = FALSE, apply_baseline = FALSE,
@@ -147,10 +191,11 @@ epoch_pupil <- function(x, prev_op, evs, lims, label, c_bline, a_bline,
   timestamped_events <- x |>
     purrr::pluck("events")
 
-  timestamps <- get_timestamps(evs, timestamped_events, msg_s, msg_e, lims)
-
-  timestamps_s <- timestamps$start
-  timestamps_e <- timestamps$end
+  if (!is.list(evs)) {
+    timestamps <- get_timestamps(evs, timestamped_events, msg_s, msg_e, lims)
+    timestamps_s <- timestamps$start
+    timestamps_e <- timestamps$end
+  }
 
   # run 1 of 4 possible epoch modes
   if (is.character(evs) && length(evs) == 1) {
@@ -232,20 +277,28 @@ epoch_pupil <- function(x, prev_op, evs, lims, label, c_bline, a_bline,
 
 get_timestamps <- function(evs, timestamped_events, msg_s, msg_e, limits,
                            baseline_mode = FALSE) {
+  start_ts <- NULL
   end_ts <- NULL
 
-  if (baseline_mode) {
+  if (baseline_mode) { ## baseline calculation enabled
     start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
 
     if (!is.na(msg_e)) {
       end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
     }
-  } else {
+  } else { ## baseline calculation disabled
     if (!is.list(evs)) {
       start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
+    }
 
-      if (!endsWith(msg_s, "*")) {
-        if (!is.na(evs[2])) {
+    if (is.list(evs)) {
+      msg_s <- msg_s[[1]]$msg
+      msg_e <- msg_e[[1]]$msg
+    }
+
+    if (!any(is.na(msg_e))) {
+      if (!any(endsWith(msg_s, "*"))) {
+        if (!any(is.na(evs[2]))) {
           end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
         }
       } else {
@@ -276,7 +329,7 @@ make_epoch_label <- function(evs, label, epoched_data) {
     epoch_id <- sanitize_event_tag(evs[1])
   } else if (is.null(label) && is.list(evs)) {
     epoch_id <- sanitize_event_tag(paste0(
-      epoched_data$start_msg[1], epoched_data$end_msg[1]
+      epoched_data[[1]]$start_msg[1], epoched_data[[1]]$end_msg[1]
     ))
   } else {
     epoch_id <- paste0("epoch_", label)
@@ -298,7 +351,7 @@ parse_events_and_metadata <- function(events, metadata_template) {
   event_messages <- events |>
     dplyr::pull(text)
 
-  if (endsWith(metadata_template, "*")) { # wildcard mode
+  if (any(endsWith(metadata_template, "*"))) { # wildcard mode
     prefix <- substr(metadata_template, 1, nchar(metadata_template) - 1)
 
     for (char in special_chars) { # escape special chars
@@ -434,7 +487,7 @@ epoch_manually <- function(eyeris, ts_list, hz) {
         ),
         .after = time_orig
       ) |>
-      dplyr::mutate(!!!metadata_vals)
+      dplyr::mutate(!!!metadata_vals[i, ])
 
     epochs[[i]] <- current_epoch
   }

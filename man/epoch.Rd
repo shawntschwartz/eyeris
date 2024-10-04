@@ -77,11 +77,15 @@ the pupil from the latest preprocessing step.}
 \item{baseline_events}{Similar to \code{events}, \code{baseline_events}, you can supply
 either (1) a single string representing the event message to center the
 baseline calculation around, as indicated by \code{baseline_period}; or (2) a
-vector containing both \code{start} and \code{end} event message strings -- here,
-\code{baseline_period} will be ignored and the duration of each baseline period
-that the mean will be calculated on will be the number of samples between
-each matched \code{start} and \code{end} event message pair, as opposed to a specified
-fixed duration (as described in 1).}
+single vector containing both a \code{start} and an \code{end} event message string --
+here, \code{baseline_period} will be ignored and the duration of each baseline
+period that the mean will be calculated on will be the number of samples
+between each matched \code{start} and \code{end} event message pair, as opposed to a
+specified fixed duration (as described in 1). Please note, providing a list
+of trial-level start/end message pairs (like in the \code{events} parameter) to
+manually indicate unique start/end chunks for baselining is currently
+unsupported. Though, we intend to add this feature in a later version of
+\code{eyeris}, given it likely won't be a heavily utilized / in demand feature.}
 
 \item{baseline_period}{A vector of 2 values (start, end) in seconds,
 indicating the window of data that will be used to perform the baseline
@@ -122,14 +126,14 @@ eye_preproc |>
 
 eye_preproc |>
   eyeris::epoch(
-    events = "PROBE_{type}_{trial}",
-    limits = c(0, 1) # grab the 1 second post event
+    events = "PROBE_START_{trial}",
+    limits = c(0, 1) # grab the 1 second following probe onset
   )
 
 eye_preproc |>
   eyeris::epoch(
-    events = "PROBE_{type}_{trial}",
-    limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+    events = "PROBE_START_{trial}",
+    limits = c(-2, 1), # 2 seconds prior to and 1 second after probe onset
     label = "prePostProbe" # custom epoch label name
   )
 
@@ -150,6 +154,45 @@ eye_preproc |>
       data.frame(time = c(11245956), msg = NA) # end events
     )
   )
-}
 
+# examples with baseline arguments enabled
+
+# example 1: use mean of 1-s preceding "PROBE_START" (i.e. "DELAY_STOP")
+to perform subtractive baselining of the 1-s PROBE epochs.
+eye_preproc |>
+  eyeris::epoch(
+    events = "PROBE_START_{trial}",
+    limits = c(0, 1), # grab 0 seconds prior to and 1 second post PROBE event
+    label = "prePostProbe", # custom epoch label name
+    calc_baseline = TRUE,
+    apply_baseline = TRUE,
+    baseline_type = "sub", # "sub"tractive baseline calculation is default
+    baseline_events = "DELAY_STOP_*",
+    baseline_period = c(-1, 0)
+  )
+
+# example 2: use mean of time period between set start/end event messages
+(i.e. between "DELAY_START" and "DELAY_STOP"). In this case, the
+`baseline_period` argument will be ignored since both a "start" and "end"
+message string are provided to the `baseline_events` argument.
+eye_preproc |>
+  eyeris::epoch(
+    events = "PROBE_START_{trial}",
+    limits = c(0, 1), # grab 0 seconds prior to and 1 second post PROBE event
+    label = "prePostProbe", # custom epoch label name
+    calc_baseline = TRUE,
+    apply_baseline = TRUE,
+    baseline_type = "sub", # "sub"tractive baseline calculation is default
+    baseline_events = c("DELAY_START_*",
+                        "DELAY_STOP_*")
+  )
+
+# additional (potentially helpful) example
+ start_events <- data.frame(time = c(11243355, 11247588),
+                            msg = c("TRIALID 0", "TRIALID 1"))
+ end_events <- data.frame(time = c(11245956, 11250506),
+                          msg = c("RESPONSE_0", "RESPONSE_1"))
+ eye_prepoc |>
+  eyeris::epoch(events = list(start_events, end_events))
+}
 }
