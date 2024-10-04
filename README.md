@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <img src="inst/figures/sticker.png" align="right"/>
+# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <img src="inst/figures/sticker.png" width="100px" align="right"/>
 
 <!-- badges: start -->
 
@@ -83,8 +83,7 @@ plot(eyeris_preproc, steps = c(1, 5), preview_window = c(0, 100000))
 
 # Comments, suggestions, questions, issues
 
-> \[!IMPORTANT\]  
-> Please use the issues tab
+> \[!IMPORTANT\] Please use the issues tab
 > (<https://github.com/shawntschwartz/eyeris/issues>) to make note of
 > any bugs, comments, suggestions, feedback, etc… all are welcomed and
 > appreciated, thanks!
