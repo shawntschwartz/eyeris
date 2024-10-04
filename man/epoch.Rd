@@ -122,14 +122,14 @@ eye_preproc |>
 
 eye_preproc |>
   eyeris::epoch(
-    events = "PROBE_{type}_{trial}",
-    limits = c(0, 1) # grab the 1 second post event
+    events = "PROBE_START_{trial}",
+    limits = c(0, 1) # grab the 1 second following probe onset
   )
 
 eye_preproc |>
   eyeris::epoch(
-    events = "PROBE_{type}_{trial}",
-    limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+    events = "PROBE_START_{trial}",
+    limits = c(-2, 1), # 2 seconds prior to and 1 second after probe onset
     label = "prePostProbe" # custom epoch label name
   )
 
@@ -150,6 +150,5 @@ eye_preproc |>
       data.frame(time = c(11245956), msg = NA) # end events
     )
   )
-}
 
 }
