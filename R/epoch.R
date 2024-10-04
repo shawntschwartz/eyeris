@@ -147,10 +147,11 @@ epoch_pupil <- function(x, prev_op, evs, lims, label, c_bline, a_bline,
   timestamped_events <- x |>
     purrr::pluck("events")
 
-  timestamps <- get_timestamps(evs, timestamped_events, msg_s, msg_e, lims)
-
-  timestamps_s <- timestamps$start
-  timestamps_e <- timestamps$end
+  if (!is.list(evs)) {
+    timestamps <- get_timestamps(evs, timestamped_events, msg_s, msg_e, lims)
+    timestamps_s <- timestamps$start
+    timestamps_e <- timestamps$end
+  }
 
   # run 1 of 4 possible epoch modes
   if (is.character(evs) && length(evs) == 1) {
@@ -232,20 +233,28 @@ epoch_pupil <- function(x, prev_op, evs, lims, label, c_bline, a_bline,
 
 get_timestamps <- function(evs, timestamped_events, msg_s, msg_e, limits,
                            baseline_mode = FALSE) {
+  start_ts <- NULL
   end_ts <- NULL
 
-  if (baseline_mode) {
+  if (baseline_mode) { ## baseline calculation enabled
     start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
 
     if (!is.na(msg_e)) {
       end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
     }
-  } else {
+  } else { ## baseline calculation disabled
     if (!is.list(evs)) {
       start_ts <- parse_timestamps(evs, timestamped_events, msg_s)
+    }
 
-      if (!endsWith(msg_s, "*")) {
-        if (!is.na(evs[2])) {
+    if (is.list(evs)) {
+      msg_s <- msg_s[[1]]$msg
+      msg_e <- msg_e[[1]]$msg
+    }
+
+    if (!any(is.na(msg_e))) {
+      if (!any(endsWith(msg_s, "*"))) {
+        if (!any(is.na(evs[2]))) {
           end_ts <- parse_timestamps(evs, timestamped_events, msg_e)
         }
       } else {
@@ -276,7 +285,7 @@ make_epoch_label <- function(evs, label, epoched_data) {
     epoch_id <- sanitize_event_tag(evs[1])
   } else if (is.null(label) && is.list(evs)) {
     epoch_id <- sanitize_event_tag(paste0(
-      epoched_data$start_msg[1], epoched_data$end_msg[1]
+      epoched_data[[1]]$start_msg[1], epoched_data[[1]]$end_msg[1]
     ))
   } else {
     epoch_id <- paste0("epoch_", label)
@@ -298,7 +307,7 @@ parse_events_and_metadata <- function(events, metadata_template) {
   event_messages <- events |>
     dplyr::pull(text)
 
-  if (endsWith(metadata_template, "*")) { # wildcard mode
+  if (any(endsWith(metadata_template, "*"))) { # wildcard mode
     prefix <- substr(metadata_template, 1, nchar(metadata_template) - 1)
 
     for (char in special_chars) { # escape special chars
