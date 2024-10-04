@@ -83,7 +83,9 @@ plot(eyeris_preproc, steps = c(1, 5), preview_window = c(0, 100000))
 
 # Comments, suggestions, questions, issues
 
-> \[!IMPORTANT\] Please use the issues tab
+> \[!IMPORTANT\]
+
+> Please use the issues tab
 > (<https://github.com/shawntschwartz/eyeris/issues>) to make note of
 > any bugs, comments, suggestions, feedback, etc… all are welcomed and
 > appreciated, thanks!
