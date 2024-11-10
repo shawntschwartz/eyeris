@@ -19,14 +19,14 @@ You can install the development version of eyeris from
 
 ``` r
 # install.packages("pak")
-pak::pak("shawntschwartz/eyeris")
+pak::pak("shawntz/eyeris")
 ```
 
 or
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("shawntschwartz/eyeris")
+devtools::install_github("shawntz/eyeris")
 ```
 
 ## Example
