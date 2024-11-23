@@ -56,7 +56,7 @@ eyeris_preproc <- glassbox(demo_data, detrend_data = F, lpfilt = list(plot_freqz
 #> ✔ [  OK  ] - Running eyeris::deblink()
 #> ✔ [  OK  ] - Running eyeris::detransient()
 #> ✔ [  OK  ] - Running eyeris::interpolate()
-#> ℹ [ INFO ] - Skipping eyeris::interpolate(): No NAs detected in pupil data for interpolation.
+#> ! [ INFO ] - No NAs detected in pupil data for interpolation... Skipping!
 #> ✔ [  OK  ] - Running eyeris::lpfilt()
 #> ✔ [  OK  ] - Skipping eyeris::detrend()
 #> ✔ [  OK  ] - Running eyeris::zscore()
@@ -121,6 +121,16 @@ README FIGURE
 <div class="figure">
 
 <img src="man/figures/README-glassbox-plot-5.png" alt="README FIGURE" width="100%" />
+<p class="caption">
+
+README FIGURE
+</p>
+
+</div>
+
+<div class="figure">
+
+<img src="man/figures/README-glassbox-plot-6.png" alt="README FIGURE" width="100%" />
 <p class="caption">
 
 README FIGURE

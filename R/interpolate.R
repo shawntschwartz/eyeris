@@ -30,7 +30,10 @@ interpolate <- function(eyeris) {
 
 interpolate_pupil <- function(x, prev_op) {
   if (!any(is.na(x[[prev_op]]))) {
-    cli::cli_abort("No NAs detected in pupil data for interpolation.")
+    cli::cli_alert_warning(
+      "[ INFO ] - No NAs detected in pupil data for interpolation... Skipping!"
+    )
+    return(x[[prev_op]])
   } else {
     prev_pupil <- x[[prev_op]]
   }
