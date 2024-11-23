@@ -8,6 +8,13 @@
 \description{
 More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://shawnschwartz.com/eyeris/}
+}
+
+}
 \author{
 \strong{Maintainer}: Shawn Schwartz \email{stschwartz@stanford.edu} (\href{https://orcid.org/0000-0001-6444-8451}{ORCID})
 

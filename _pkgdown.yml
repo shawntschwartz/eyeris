@@ -1,0 +1,24 @@
+url: http://shawnschwartz.com/eyeris/
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, version, github, lightswitch]
+template:
+  bootstrap: 5
+  light-switch: true
+  bslib:
+      bootswatch: pulse
+      pkgdown-nav-height: 100px
+footer:
+  structure:
+    left: developed_by
+    right: built_with
+components:
+  version: "v0.0.0.9000"
+  menu:
+      - text: "v1.0.0 (current)"
+        href: "#"
+      - text: "v0.9.0"
+        href: "https://shawnschwartz.com/eyeris/v0.9.0"
+      - text: "v0.8.0"
+        href: "https://shawnschwartz.com/eyeris/v0.8.0"

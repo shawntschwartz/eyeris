@@ -1,7 +1,7 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.Rmd-->
 
-# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <img src="inst/figures/sticker.png" width="100px" align="right"/>
+# `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <a href="http://shawnschwartz.com/eyeris/" title="eyeris website"><img src="man/figures/logo.png" align="right" height="139" alt="eyeris website" /></a>
 
 <!-- badges: start -->
 
@@ -18,15 +18,15 @@ You can install the development version of eyeris from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("pak")
-pak::pak("shawntz/eyeris")
+# install.packages("devtools")
+devtools::install_github("shawntz/eyeris")
 ```
 
 or
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("shawntz/eyeris")
+# install.packages("pak")
+pak::pak("shawntz/eyeris")
 ```
 
 ## Example
@@ -58,12 +58,11 @@ eyeris_preproc <- glassbox(demo_data, detrend_data = F, lpfilt = list(plot_freqz
 #> ✔ [  OK  ] - Running eyeris::interpolate()
 #> ℹ [ INFO ] - Skipping eyeris::interpolate(): No NAs detected in pupil data for interpolation.
 #> ✔ [  OK  ] - Running eyeris::lpfilt()
+#> ✔ [  OK  ] - Skipping eyeris::detrend()
+#> ✔ [  OK  ] - Running eyeris::zscore()
 ```
 
 <img src="man/figures/README-glassbox-example-1.png" width="100%" />
-
-    #> ✔ [  OK  ] - Skipping eyeris::detrend()
-    #> ✔ [  OK  ] - Running eyeris::zscore()
 
 ### step-wise correction of pupillary signal
 
@@ -83,7 +82,6 @@ plot(eyeris_preproc, steps = c(1, 5), preview_window = c(0, 100000))
 
 # Comments, suggestions, questions, issues
 
-Please use the issues tab
-(<https://github.com/shawntschwartz/eyeris/issues>) to make note of any
-bugs, comments, suggestions, feedback, etc… all are welcomed and
-appreciated, thanks!
+Please use the issues tab (<https://github.com/shawntz/eyeris/issues>)
+to make note of any bugs, comments, suggestions, feedback, etc… all are
+welcomed and appreciated, thanks!
