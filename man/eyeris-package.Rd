@@ -4,19 +4,22 @@
 \name{eyeris-package}
 \alias{eyeris}
 \alias{eyeris-package}
-\title{eyeris: Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines}
+\title{eyeris: eyeris}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
+Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://shawnschwartz.com/eyeris/}
+  \item \url{http://shawnschwartz.com/eyeris}
+  \item Report bugs at \url{https://github.com/shawntz/eyeris/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Shawn Schwartz \email{stschwartz@stanford.edu} (\href{https://orcid.org/0000-0001-6444-8451}{ORCID})
+\strong{Maintainer}: Shawn T. Schwartz \email{stschwartz@stanford.edu} (\href{https://orcid.org/0000-0001-6444-8451}{ORCID})
 
 }
 \keyword{internal}

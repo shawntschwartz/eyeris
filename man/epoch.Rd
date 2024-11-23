@@ -109,7 +109,6 @@ feature where additional trial data embedded within event messages can easily
 be identified and joined into the resulting epoched data frames.
 }
 \examples{
-\dontrun{
 eye_preproc <- system.file("extdata", "assocret.asc", package = "eyeris") |>
   eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
@@ -124,75 +123,4 @@ eye_preproc |>
 eye_preproc |>
   eyeris::epoch(events = "TRIALID {trial}") # all samples between each trial
 
-eye_preproc |>
-  eyeris::epoch(
-    events = "PROBE_START_{trial}",
-    limits = c(0, 1) # grab the 1 second following probe onset
-  )
-
-eye_preproc |>
-  eyeris::epoch(
-    events = "PROBE_START_{trial}",
-    limits = c(-2, 1), # 2 seconds prior to and 1 second after probe onset
-    label = "prePostProbe" # custom epoch label name
-  )
-
-# here, the `msg` column of each data frame is optional
-eye_prepoc |>
-  eyeris::epoch(
-    events = list(
-      data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
-      data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
-    )
-  )
-
-# note: set `msg` to NA if you only want to pass in start/end timestamps
-eye_preproc |>
-  eyeris::epoch(
-    events = list(
-      data.frame(time = c(11243355), msg = NA), # start events
-      data.frame(time = c(11245956), msg = NA) # end events
-    )
-  )
-
-# examples with baseline arguments enabled
-
-# example 1: use mean of 1-s preceding "PROBE_START" (i.e. "DELAY_STOP")
-to perform subtractive baselining of the 1-s PROBE epochs.
-eye_preproc |>
-  eyeris::epoch(
-    events = "PROBE_START_{trial}",
-    limits = c(0, 1), # grab 0 seconds prior to and 1 second post PROBE event
-    label = "prePostProbe", # custom epoch label name
-    calc_baseline = TRUE,
-    apply_baseline = TRUE,
-    baseline_type = "sub", # "sub"tractive baseline calculation is default
-    baseline_events = "DELAY_STOP_*",
-    baseline_period = c(-1, 0)
-  )
-
-# example 2: use mean of time period between set start/end event messages
-(i.e. between "DELAY_START" and "DELAY_STOP"). In this case, the
-`baseline_period` argument will be ignored since both a "start" and "end"
-message string are provided to the `baseline_events` argument.
-eye_preproc |>
-  eyeris::epoch(
-    events = "PROBE_START_{trial}",
-    limits = c(0, 1), # grab 0 seconds prior to and 1 second post PROBE event
-    label = "prePostProbe", # custom epoch label name
-    calc_baseline = TRUE,
-    apply_baseline = TRUE,
-    baseline_type = "sub", # "sub"tractive baseline calculation is default
-    baseline_events = c("DELAY_START_*",
-                        "DELAY_STOP_*")
-  )
-
-# additional (potentially helpful) example
- start_events <- data.frame(time = c(11243355, 11247588),
-                            msg = c("TRIALID 0", "TRIALID 1"))
- end_events <- data.frame(time = c(11245956, 11250506),
-                          msg = c("RESPONSE_0", "RESPONSE_1"))
- eye_prepoc |>
-  eyeris::epoch(events = list(start_events, end_events))
-}
 }

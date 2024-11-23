@@ -9,16 +9,17 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  fig.cap = "README FIGURE"
 )
 ```
 
 # `eyeris`: create and run flexible and reproducible pupillometry preprocessing pipelines in R <a href="http://shawnschwartz.com/eyeris/" title="eyeris website"><img src="man/figures/logo.png" align="right" height="139" alt="eyeris website" /></a>
 
 <!-- badges: start -->
-<a href="LICENSE.md" alt="MIT License"><img src="https://badgen.net/static/license/MIT/blue?icon=github" /></a>
-<a href="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="R Package Build Status"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" /></a>
-<a href="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" alt="R Package Linter Status"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" /></a>
+<a href="LICENSE.md" alt="MIT License"><img src="https://badgen.net/static/license/MIT/blue?icon=github" alt="MIT License Badge"/></a>
+<a href="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="R Package Build Status"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="Package Build Status Badge" /></a>
+<a href="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" alt="R Package Linter Status"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" alt="Package Linter Status Badge" /></a>
 <!-- badges: end -->
 
 <!-- The goal of eyeris is to ... -->

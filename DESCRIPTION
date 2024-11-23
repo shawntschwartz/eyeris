@@ -1,16 +1,17 @@
 Package: eyeris
 Type: Package
-Title: Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines
+Title: eyeris
 Version: 0.0.0.9000
 Authors@R:
   person(
-    given = c("Shawn", "Tyler"),
+    given = c("Shawn", "T."),
     family = "Schwartz",
     role = c("aut", "cre"),
     email = "stschwartz@stanford.edu", 
     comment = c(ORCID = "0000-0001-6444-8451")
   )
-Description: More about what it does (maybe more than one line)
+Description: Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines
+    More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 Encoding: UTF-8
 Depends:
@@ -42,5 +43,5 @@ VignetteBuilder: knitr
 License: MIT + file LICENSE
 Config/testthat/edition: 3
 LazyData: true
-URL: https://shawnschwartz.com/eyeris
+URL: http://shawnschwartz.com/eyeris
 BugReports: https://github.com/shawntz/eyeris/issues

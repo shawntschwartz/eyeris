@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines • eyeris</title>
+<title>eyeris • eyeris</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -16,9 +16,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines">
-<meta name="description" content="More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.">
-<meta property="og:description" content="More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="eyeris">
+<meta name="description" content="Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.">
+<meta property="og:description" content="Create and Run Flexible and Reproducible Pupillometry Preprocessing Pipelines More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.">
 <meta property="og:image" content="http://shawnschwartz.com/eyeris/logo.png">
 </head>
 <body>
@@ -99,7 +99,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://shawnschwartz.com/eyeris/">eyeris</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://shawnschwartz.com/eyeris">eyeris</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">demo_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"assocret.asc"</span>, package <span class="op">=</span> <span class="st">"eyeris"</span><span class="op">)</span></span>
 <span></span>
@@ -112,21 +112,58 @@
 <span><span class="co">#&gt; ✔ [  OK  ] - Running eyeris::lpfilt()</span></span>
 <span><span class="co">#&gt; ✔ [  OK  ] - Skipping eyeris::detrend()</span></span>
 <span><span class="co">#&gt; ✔ [  OK  ] - Running eyeris::zscore()</span></span></code></pre></div>
-<p><img src="reference/figures/README-glassbox-example-1.png" width="100%"></p>
+<div class="figure">
+<img src="reference/figures/README-glassbox-example-1.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="step-wise-correction-of-pupillary-signal">step-wise correction of pupillary signal<a class="anchor" aria-label="anchor" href="#step-wise-correction-of-pupillary-signal"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eyeris_preproc</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-glassbox-plot-1.png" width="100%"><img src="reference/figures/README-glassbox-plot-2.png" width="100%"><img src="reference/figures/README-glassbox-plot-3.png" width="100%"><img src="reference/figures/README-glassbox-plot-4.png" width="100%"><img src="reference/figures/README-glassbox-plot-5.png" width="100%"></p>
+<div class="figure">
+<img src="reference/figures/README-glassbox-plot-1.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
+<div class="figure">
+<img src="reference/figures/README-glassbox-plot-2.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
+<div class="figure">
+<img src="reference/figures/README-glassbox-plot-3.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
+<div class="figure">
+<img src="reference/figures/README-glassbox-plot-4.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
+<div class="figure">
+<img src="reference/figures/README-glassbox-plot-5.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="final-pre-post-correction-of-pupillary-signal-raw---preprocessed">final pre-post correction of pupillary signal (raw -&gt; preprocessed)<a class="anchor" aria-label="anchor" href="#final-pre-post-correction-of-pupillary-signal-raw---preprocessed"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eyeris_preproc</span>, steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, preview_window <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100000</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-timeseries-plot-1.png" width="100%"><img src="reference/figures/README-timeseries-plot-2.png" width="100%"></p>
+<div class="figure">
+<img src="reference/figures/README-timeseries-plot-1.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
+<div class="figure">
+<img src="reference/figures/README-timeseries-plot-2.png" alt="README FIGURE" width="100%"><p class="caption">
+README FIGURE
+</p>
+</div>
 </div>
 </div>
 </div>
@@ -163,16 +200,16 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Shawn Tyler Schwartz <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-6444-8451" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Shawn T. Schwartz <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-6444-8451" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html" alt="MIT License"><img src="https://badgen.net/static/license/MIT/blue?icon=github"></a></li>
-<li><a href="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="R Package Build Status" class="external-link"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg"></a></li>
-<li><a href="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" alt="R Package Linter Status" class="external-link"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg"></a></li>
+<li><a href="LICENSE.html" alt="MIT License"><img src="https://badgen.net/static/license/MIT/blue?icon=github" alt="MIT License Badge"></a></li>
+<li><a href="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="R Package Build Status" class="external-link"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/build.yml/badge.svg" alt="Package Build Status Badge"></a></li>
+<li><a href="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" alt="R Package Linter Status" class="external-link"><img src="https://github.com/shawntschwartz/eyeris/actions/workflows/linter.yml/badge.svg" alt="Package Linter Status Badge"></a></li>
 </ul>
 </div>
 
@@ -181,7 +218,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Shawn Tyler Schwartz.</p>
+  <p>Developed by Shawn T. Schwartz.</p>
 </div>
 
 <div class="pkgdown-footer-right">
