@@ -141,7 +141,9 @@ README FIGURE
 ### final pre-post correction of pupillary signal (raw -\> preprocessed)
 
 ``` r
-plot(eyeris_preproc, steps = c(1, 5), preview_window = c(0, 100000))
+plot(eyeris_preproc,
+     steps = c(1, 5),
+     preview_window = c(0, nrow(eyeris_preproc$timeseries)))
 ```
 
 <div class="figure">

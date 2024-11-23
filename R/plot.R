@@ -178,31 +178,41 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
         if (!only_liner_trend) {
           if (grepl("_detrend$", pupil_steps[i]) && !detrend_plotted) {
             par(mfrow = c(1, 1))
-            plot(pupil_data$time_orig, pupil_data[[pupil_steps[i - 1]]],
-                 type = "l", col = "black", lwd = 2,
-                 main = paste0("detrend:\n", pupil_steps[i - 1]),
-                 xlab = "raw tracker time (ms)", ylab = "pupil size (a.u.)")
+            robust_plot(pupil_data$time_orig, pupil_data[[pupil_steps[i - 1]]],
+              type = "l", col = "black", lwd = 2,
+              main = paste0("detrend:\n", pupil_steps[i - 1]),
+              xlab = "raw tracker time (ms)", ylab = "pupil size (a.u.)"
+            )
             lines(pupil_data$time_orig, pupil_data$detrend_fitted_values,
-                  type = "l", col = "blue", lwd = 2, lty = 2)
-            legend("topleft", legend = c("pupil timeseries", "linear trend"),
-                   col = c("black", "blue"), lwd = 2, lty = c(1, 2))
+              type = "l", col = "blue", lwd = 2, lty = 2
+            )
+            legend("topleft",
+              legend = c("pupil timeseries", "linear trend"),
+              col = c("black", "blue"), lwd = 2, lty = c(1, 2)
+            )
             par(mfrow = c(1, num_previews))
             detrend_plotted <- TRUE
           }
         } else {
           if (!detrend_plotted) {
             par(mfrow = c(1, 1))
-            title <- paste0("detrend:\n",
-                            params$next_step[length(params$next_step) - 1])
-            plot(pupil_data$time_orig,
-                 pupil_data[[params$next_step[length(params$next_step) - 1]]],
-                 type = "l", col = "black", lwd = 2, main = title,
-                 xlab = "raw tracker time (ms)", ylab = "pupil size (a.u.)")
+            title <- paste0(
+              "detrend:\n",
+              params$next_step[length(params$next_step) - 1]
+            )
+            robust_plot(pupil_data$time_orig,
+              pupil_data[[params$next_step[length(params$next_step) - 1]]],
+              type = "l", col = "black", lwd = 2, main = title,
+              xlab = "raw tracker time (ms)", ylab = "pupil size (a.u.)"
+            )
             lines(pupil_data$time_orig,
-                  pupil_data$detrend_fitted_values,
-                  type = "l", col = "blue", lwd = 2, lty = 2)
-            legend("topleft", legend = c("pupil timeseries", "linear trend"),
-                   col = c("black", "blue"), lwd = 2, lty = c(1, 2))
+              pupil_data$detrend_fitted_values,
+              type = "l", col = "blue", lwd = 2, lty = 2
+            )
+            legend("topleft",
+              legend = c("pupil timeseries", "linear trend"),
+              col = c("black", "blue"), lwd = 2, lty = c(1, 2)
+            )
             par(mfrow = c(1, num_previews))
             detrend_plotted <- TRUE
             prompt_user()
@@ -210,18 +220,17 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
         }
 
         if (!is.null(params$next_step)) {
-          plot(
+          robust_plot(
             random_epochs[[n]][[params$next_step[length(params$next_step)]]],
             type = "l", col = colors[i], lwd = 2,
             main = title, xlab = "time (ms)", ylab = y_label
           )
         } else {
-          plot(
+          robust_plot(
             random_epochs[[n]][[pupil_steps[i]]],
             type = "l", col = colors[i], lwd = 2,
             main = title, xlab = "time (ms)", ylab = y_label
           )
-
         }
       }
     }
@@ -235,13 +244,22 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
     for (i in seq_along(pupil_steps)) {
       st <- min(sliced_pupil_data$time_orig)
       et <- max(sliced_pupil_data$time_orig)
-      plot(sliced_pupil_data[[pupil_steps[i]]],
+
+      if (grepl("z", pupil_steps[i])) {
+        y_units <- "(z)"
+      } else {
+        y_units <- "(a.u.)"
+      }
+
+      y_label <- paste("pupil size", y_units)
+
+      robust_plot(sliced_pupil_data[[pupil_steps[i]]],
         type = "l", col = colors[i], lwd = 2,
         main = paste0(
           pupil_steps[i], "\n[", st, " - ", et, "] | ",
           "[", preview_window[1], " - ", preview_window[2], "]"
         ),
-        xlab = "Time", ylab = "Pupil Size"
+        xlab = "time (s)", ylab = y_label
       )
     }
 
@@ -270,4 +288,32 @@ draw_random_epochs <- function(x, n, d, hz) {
   }
 
   return(drawn_epochs)
+}
+
+
+robust_plot <- function(x, ...) {
+  tryCatch(
+    {
+      valid <- is.finite(x) # filter out non-finite values
+
+      if (all(!valid)) {
+        cli::cli_alert_warning("All values are non-finite... Skipping!")
+        return(NULL)
+      }
+
+      x <- x[valid]
+
+      plot(x, ...)
+    },
+    error = function(e) {
+      cli::cli_alert_info(
+        paste("An error occurred during plotting:", e$message)
+      )
+    },
+    warning = function(w) {
+      cli::cli_alert_warning(
+        paste("A warning occurred during plotting:", w$message)
+      )
+    }
+  )
 }
