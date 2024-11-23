@@ -24,13 +24,11 @@
 #' @param run_num BIDS run ID.
 #' @param save_raw Logical flag indicating whether to save_raw pupil data in
 #' addition to epoched data. Defaults to TRUE.
-#' @param render_report Logical flag indicating whether to save out the `eyeris`
-#' preprocessing summary report. Defaults to TRUE.
 #' @param html_report Logical flag indicating whether to save out the `eyeris`
 #' preprocessing summary report as an HTML file. Defaults to TRUE.
 #' @param pdf_report Logical flag indicating whether to save out the `eyeris`
 #' preprocessing summary report as a PDF file. Note, a valid TeX distribution
-#' must already be installed. Defaults to TRUE.
+#' must already be installed. Defaults to FALSE.
 #' @param report_seed Random seed for the plots that will appear in the report.
 #' Defaults to 0. See [eyeris::plot()] for a more detailed description.
 #'
@@ -64,8 +62,7 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
                     merge_epochs = FALSE, bids_dir = NULL,
                     participant_id = NULL, session_num = NULL,
                     task_name = NULL, run_num = NULL, save_raw = TRUE,
-                    render_report = TRUE, html_report = TRUE,
-                    pdf_report = TRUE, report_seed = 0) {
+                    html_report = TRUE, pdf_report = FALSE, report_seed = 0) {
   sub <- participant_id
   ses <- session_num
   task <- task_name
@@ -141,6 +138,8 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
     p <- file.path(p, paste0("ses-", ses))
     check_and_create_dir(dir, p)
   }
+
+  render_report <- html_report || pdf_report
 
   if (render_report) {
     report_path <- p

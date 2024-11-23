@@ -15,9 +15,8 @@ bidsify(
   task_name = NULL,
   run_num = NULL,
   save_raw = TRUE,
-  render_report = TRUE,
   html_report = TRUE,
-  pdf_report = TRUE,
+  pdf_report = FALSE,
   report_seed = 0
 )
 }
@@ -45,15 +44,12 @@ as one file or as separate files. Defaults to FLASE (no merge).}
 \item{save_raw}{Logical flag indicating whether to save_raw pupil data in
 addition to epoched data. Defaults to TRUE.}
 
-\item{render_report}{Logical flag indicating whether to save out the \code{eyeris}
-preprocessing summary report. Defaults to TRUE.}
-
 \item{html_report}{Logical flag indicating whether to save out the \code{eyeris}
 preprocessing summary report as an HTML file. Defaults to TRUE.}
 
 \item{pdf_report}{Logical flag indicating whether to save out the \code{eyeris}
 preprocessing summary report as a PDF file. Note, a valid TeX distribution
-must already be installed. Defaults to TRUE.}
+must already be installed. Defaults to FALSE.}
 
 \item{report_seed}{Random seed for the plots that will appear in the report.
 Defaults to 0. See \code{\link[=plot]{plot()}} for a more detailed description.}
