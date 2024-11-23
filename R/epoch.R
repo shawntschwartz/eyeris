@@ -84,7 +84,7 @@
 #'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
-#'   #eyeris::interpolate() |>
+#'   eyeris::interpolate() |>
 #'   eyeris::lpfilt(plot_freqz = TRUE) |>
 #'   eyeris::zscore()
 #'
