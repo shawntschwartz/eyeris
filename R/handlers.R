@@ -8,6 +8,14 @@ error_handler <- function(e, e_class) {
 
 # generic handler/wrapper for eyeris pupil pipeline funcs
 pipeline_handler <- function(eyeris, operation, new_suffix, ...) {
+  call_stack <- sys.calls()[[1]]
+
+  if (!is.list(eyeris$params)) {
+    eyeris$params <- list()
+  }
+
+  eyeris$params[[new_suffix]] <- call_stack
+
   tryCatch(
     {
       check_data(eyeris, new_suffix)
