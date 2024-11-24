@@ -45,7 +45,7 @@
 #'   eyeris::zscore() |>
 #'   eyeris::epoch(
 #'     events = "PROBE_{type}_{trial}",
-#'     limits = c(-2, 1), # grab 2 seconds prior to and 1 second post event
+#'     limits = c(-1, 1), # grab 1 second prior to and 1 second post event
 #'     label = "prePostProbe" # custom epoch label name
 #'   ) |>
 #'   eyeris::bidsify(
