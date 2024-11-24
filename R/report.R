@@ -46,6 +46,9 @@ make_report <- function(eyeris, out, plots, ...) {
     "\n\n---\n\n## EyeLink Header Metadata\n\n",
     make_md_table(eyeris$info), "\n",
 
+    "\n\n---\n\n## eyeris call stack\n\n",
+    make_md_table(format_call_stack(eyeris$params)), "\n",
+
     "\n\n---\n\n### Citation\n\n",
     "```{r citation, echo=FALSE, comment=NA}\n",
     "citation('eyeris')\n",
