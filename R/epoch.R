@@ -104,21 +104,21 @@
 #'     limits = c(0, 1)
 #'   )
 #'
-#' # example 4: 2 seconds prior to and 1 second after probe onset
+#' # example 4: 1 second prior to and 1 second after probe onset
 #' eye_preproc |>
 #'   eyeris::epoch(
 #'     events = "PROBE_START_{trial}",
-#'     limits = c(-2, 1),
+#'     limits = c(-1, 1),
 #'     label = "prePostProbe" # custom epoch label name
 #'   )
 #'
 #' # example 5: manual start/end event pairs
 #' # note: here, the `msg` column of each data frame is optional
-#' eye_prepoc |>
+#' eye_preproc |>
 #'   eyeris::epoch(
 #'     events = list(
-#'       data.frame(time = c(11243355), msg = c("TRIALID 0")), # start events
-#'       data.frame(time = c(11245956), msg = c("RESPONSE_0")) # end events
+#'       data.frame(time = c(11334491), msg = c("TRIALID 22")), # start events
+#'       data.frame(time = c(11337158), msg = c("RESPONSE_22")) # end events
 #'     )
 #'   )
 #'
@@ -127,8 +127,8 @@
 #' eye_preproc |>
 #'   eyeris::epoch(
 #'     events = list(
-#'       data.frame(time = c(11243355), msg = NA), # start events
-#'       data.frame(time = c(11245956), msg = NA) # end events
+#'       data.frame(time = c(11334491), msg = NA), # start events
+#'       data.frame(time = c(11337158), msg = NA) # end events
 #'     )
 #'   )
 #'
@@ -165,11 +165,11 @@
 #'   )
 #'
 #' # example 9: additional (potentially helpful) example
-#' start_events <- data.frame(time = c(11243355, 11247588),
-#'                            msg = c("TRIALID 0", "TRIALID 1"))
-#' end_events <- data.frame(time = c(11245956, 11250506),
-#'                          msg = c("RESPONSE_0", "RESPONSE_1"))
-#' eye_prepoc |>
+#' start_events <- data.frame(time = c(11334491, 11338691),
+#'                            msg = c("TRIALID 22", "TRIALID 23"))
+#' end_events <- data.frame(time = c(11337158, 11341292),
+#'                          msg = c("RESPONSE_22", "RESPONSE_23"))
+#' eye_preproc |>
 #'   eyeris::epoch(events = list(start_events, end_events))
 #' }
 #'
