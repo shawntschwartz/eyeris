@@ -6,18 +6,17 @@
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
 #' @return An `eyeris` object with two new columns in `timeseries`:
-#' `detrend_fitted_betas`, and `pupil_detrend`.
+#' `detrend_fitted_betas`, and `pupil_raw_{...}_detrend`.
 #'
 #' @examples
-#' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' system.file("extdata", "memory.asc", package = "eyeris") |>
 #'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
 #'   eyeris::interpolate() |>
 #'   eyeris::lpfilt(plot_freqz = TRUE) |>
-#'   eyeris::detrend()
-#' }
+#'   eyeris::detrend() |>
+#'   plot(seed = 0)
 #'
 #' @export
 detrend <- function(eyeris) {

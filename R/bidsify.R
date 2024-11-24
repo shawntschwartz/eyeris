@@ -36,7 +36,7 @@
 #' # Bleed around blink periods just long enough to remove majority of
 #' #  deflections due to eyelid movements
 #' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' system.file("extdata", "memory.asc", package = "eyeris") |>
 #'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>

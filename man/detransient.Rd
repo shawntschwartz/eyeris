@@ -14,7 +14,7 @@ threshold.}
 }
 \value{
 An \code{eyeris} object with a new column in \code{timeseries}:
-\code{pupil_detransient}.
+\verb{pupil_raw_\{...\}_detransient}.
 }
 \description{
 The intended use of this method is for removing pupil samples that emerge
@@ -24,11 +24,10 @@ absolute deviation from sample-to-sample). This threshold is computed based
 on the constant \code{n}, which defaults to the value \code{16}.
 }
 \examples{
-\dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
-  eyeris::detransient()
-}
+  eyeris::detransient() |>
+  plot(seed = 0)
 
 }

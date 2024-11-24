@@ -11,21 +11,20 @@ detrend(eyeris)
 }
 \value{
 An \code{eyeris} object with two new columns in \code{timeseries}:
-\code{detrend_fitted_betas}, and \code{pupil_detrend}.
+\code{detrend_fitted_betas}, and \verb{pupil_raw_\{...\}_detrend}.
 }
 \description{
 Linearly detrend_pupil data by fitting a linear model of \code{pupil_data ~ time},
 and return the fitted betas and the residuals (\code{pupil_data - fitted_values}).
 }
 \examples{
-\dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE) |>
-  eyeris::detrend()
-}
+  eyeris::detrend() |>
+  plot(seed = 0)
 
 }

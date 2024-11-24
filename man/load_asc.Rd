@@ -28,10 +28,8 @@ additional processing, this function returns an S3 \code{eyeris} class for use i
 all subsequent \code{eyeris} pipeline steps and functions.
 }
 \examples{
-\dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc()
-}
 
 }
 \seealso{

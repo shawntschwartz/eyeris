@@ -21,10 +21,8 @@
 #' @seealso [eyelinker::read.asc()] which this function wraps.
 #'
 #' @examples
-#' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' system.file("extdata", "memory.asc", package = "eyeris") |>
 #'   eyeris::load_asc()
-#' }
 #'
 #' @export
 load_asc <- function(file) {

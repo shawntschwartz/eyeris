@@ -13,7 +13,4 @@ sticker
 \description{
 \code{eyeris} package logo (hexagon sticker)
 }
-\keyword{eyeris,}
-\keyword{hex}
-\keyword{logo,}
-\keyword{sticker,}
+\keyword{internal}

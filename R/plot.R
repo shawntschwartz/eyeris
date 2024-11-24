@@ -37,11 +37,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' # using the default 10000 to 20000 ms time subset
-#' plot(eyeris_data)
+#' # example 1: using the default 10000 to 20000 ms time subset
+#' plot(your_eyeris_data_output_here)
 #'
-#' # using a custom time subset (i.e., 1 to 500 ms)
-#' plot(eyeris_data, preview_window = c(1, 500))
+#' # example 2: using a custom time subset (i.e., 1 to 500 ms)
+#' plot(your_eyeris_data_output_here, preview_window = c(1, 500))
 #' }
 #'
 #' @rdname plot.eyeris

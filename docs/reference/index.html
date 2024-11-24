@@ -18,8 +18,11 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/preproc-workflow.html">preproc-workflow</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>template</h6></li>
+    <li><a class="dropdown-item" href="../articles/preproc-workflow.html">preproc-workflow</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/shawntz/eyeris/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -40,7 +43,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="-eyeris-glassbox-all-in-one-wrapper"><code>eyeris</code> “glassbox” all-in-one wrapper<a class="anchor" aria-label="anchor" href="#-eyeris-glassbox-all-in-one-wrapper"></a></h2>
 
 
 
@@ -52,11 +55,39 @@
 
       <dl><dt>
 
-          <code><a href="bidsify.html">bidsify()</a></code>
+          <code><a href="glassbox.html">glassbox()</a></code>
 
         </dt>
-        <dd>Save out pupil timeseries data in a BIDS-like structure</dd>
-      </dl><dl><dt>
+        <dd>A "glassbox" pipeline wrapper for <code>eyeris</code></dd>
+      </dl></div><div class="section level2">
+      <h2 id="load-eyelink-asc-file">load eyelink <code>.asc</code> file<a class="anchor" aria-label="anchor" href="#load-eyelink-asc-file"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="load_asc.html">load_asc()</a></code>
+
+        </dt>
+        <dd>Load and parse SR Research EyeLink <code>.asc</code> files</dd>
+      </dl></div><div class="section level2">
+      <h2 id="core-preprocessing-operations">core preprocessing operations<a class="anchor" aria-label="anchor" href="#core-preprocessing-operations"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="deblink.html">deblink()</a></code>
 
@@ -70,34 +101,10 @@
         <dd>Remove pupil samples that are physiologically unlikely</dd>
       </dl><dl><dt>
 
-          <code><a href="detrend.html">detrend()</a></code>
-
-        </dt>
-        <dd>Detrend the pupil time series</dd>
-      </dl><dl><dt>
-
-          <code><a href="epoch.html">epoch()</a></code>
-
-        </dt>
-        <dd>Epoch (and baseline) pupil data based on custom event message structure</dd>
-      </dl><dl><dt>
-
-          <code><a href="glassbox.html">glassbox()</a></code>
-
-        </dt>
-        <dd>A "glassbox" pipeline wrapper for <code>eyeris</code></dd>
-      </dl><dl><dt>
-
           <code><a href="interpolate.html">interpolate()</a></code>
 
         </dt>
         <dd>Interpolate missing pupil samples</dd>
-      </dl><dl><dt>
-
-          <code><a href="load_asc.html">load_asc()</a></code>
-
-        </dt>
-        <dd>Load and parse SR Research EyeLink <code>.asc</code> files</dd>
       </dl><dl><dt>
 
           <code><a href="lpfilt.html">lpfilt()</a></code>
@@ -106,28 +113,63 @@
         <dd>Lowpass filtering of time series data</dd>
       </dl><dl><dt>
 
-          <code><a href="plot.eyeris.html">plot(<i>&lt;eyeris&gt;</i>)</a></code>
+          <code><a href="detrend.html">detrend()</a></code>
 
         </dt>
-        <dd>Plot pre-processed pupil data from <code>eyeris</code></dd>
-      </dl><dl><dt>
-
-          <code><a href="sticker.html">sticker</a></code>
-
-        </dt>
-        <dd><code>eyeris</code> package logo (hexagon sticker)</dd>
+        <dd>Detrend the pupil time series</dd>
       </dl><dl><dt>
 
           <code><a href="zscore.html">zscore()</a></code>
 
         </dt>
-        <dd>Z-Score pupil timeseries data</dd>
+        <dd>z-score pupil timeseries data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="trial-epoching-and-exporting-of-preprocessed-data">trial epoching and exporting of preprocessed data<a class="anchor" aria-label="anchor" href="#trial-epoching-and-exporting-of-preprocessed-data"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="epoch.html">epoch()</a></code>
+
+        </dt>
+        <dd>Epoch (and baseline) pupil data based on custom event message structure</dd>
+      </dl><dl><dt>
+
+          <code><a href="bidsify.html">bidsify()</a></code>
+
+        </dt>
+        <dd>Save out pupil timeseries data in a BIDS-like structure</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-visualization">data visualization<a class="anchor" aria-label="anchor" href="#data-visualization"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="plot.eyeris.html">plot(<i>&lt;eyeris&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot pre-processed pupil data from <code>eyeris</code></dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Shawn T. Schwartz.</p>
+  <p>Made with ♥ in Palo Alto, CA by <a href="http://shawnschwartz.com" class="external-link">Shawn Schwartz</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

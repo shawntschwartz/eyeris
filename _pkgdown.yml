@@ -1,24 +1,60 @@
 url: http://shawnschwartz.com/eyeris/
+
+home:
+  sidebar:
+    structure: [authors, citation, links, license, dev]
+
 navbar:
   structure:
-    left:  [intro, reference, articles, tutorials, news]
-    right: [search, version, github, lightswitch]
+    left:  [intro, reference, articles, news]
+    right: [search, github, lightswitch]
+
 template:
   bootstrap: 5
   light-switch: true
   bslib:
       bootswatch: pulse
       pkgdown-nav-height: 100px
+
 footer:
   structure:
     left: developed_by
     right: built_with
-components:
-  version: "v0.0.0.9000"
-  menu:
-      - text: "v1.0.0 (current)"
-        href: "#"
-      - text: "v0.9.0"
-        href: "https://shawnschwartz.com/eyeris/v0.9.0"
-      - text: "v0.8.0"
-        href: "https://shawnschwartz.com/eyeris/v0.8.0"
+
+authors:
+  Shawn Schwartz:
+      href: "http://shawnschwartz.com"
+  footer:
+      roles: [cre, fnd]
+      text: "Made with ♥ in Palo Alto, CA by"
+  sidebar:
+      roles: [aut, ctb]
+
+reference:
+  - title: "`eyeris` \"glassbox\" all-in-one wrapper"
+    contents:
+    - glassbox
+  - title: "load eyelink `.asc` file"
+    contents:
+    - load_asc
+  - title: core preprocessing operations
+    contents:
+    - deblink
+    - detransient
+    - interpolate
+    - lpfilt
+    - detrend
+    - zscore
+  - title: trial epoching and exporting of preprocessed data
+    contents:
+    - epoch
+    - bidsify
+  - title: data visualization
+    contents:
+    - plot.eyeris
+
+articles:
+  - title: template
+    navbar: template
+    contents:
+    - preproc-workflow

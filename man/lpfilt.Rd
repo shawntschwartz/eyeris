@@ -20,7 +20,8 @@ lpfilt(eyeris, wp = 4, ws = 8, rp = 1, rs = 35, plot_freqz = FALSE)
 \item{plot_freqz}{Boolean flag for displaying filter frequency response.}
 }
 \value{
-An \code{eyeris} object with a new column in \code{timeseries}: \code{pupil_lpfilt}.
+An \code{eyeris} object with a new column in \code{timeseries}:
+\verb{pupil_raw_\{...\}_lpfilt}.
 }
 \description{
 The intended use of this method is for smoothing, although by specifying
@@ -28,13 +29,12 @@ The intended use of this method is for smoothing, although by specifying
 as well. However, only lowpass filtering should be done on pupillometry data.
 }
 \examples{
-\dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
   eyeris::interpolate() |>
-  eyeris::lpfilt(plot_freqz = TRUE)
-}
+  eyeris::lpfilt(plot_freqz = TRUE) |>
+  plot(seed = 0)
 
 }

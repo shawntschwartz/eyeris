@@ -11,15 +11,14 @@
 #' threshold.
 #'
 #' @return An `eyeris` object with a new column in `timeseries`:
-#' `pupil_detransient`.
+#' `pupil_raw_{...}_detransient`.
 #'
 #' @examples
-#' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' system.file("extdata", "memory.asc", package = "eyeris") |>
 #'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
-#'   eyeris::detransient()
-#' }
+#'   eyeris::detransient() |>
+#'   plot(seed = 0)
 #'
 #' @export
 detransient <- function(eyeris, n = 16) {
@@ -42,10 +41,14 @@ detransient_pupil <- function(x, prev_op, n) {
 
 speed <- function(x, y) {
   delta <- diff(x) / diff(y)
-
   pupil <- abs(cbind(c(NA, delta), c(delta, NA)))
-  pupil <- apply(pupil, 1, max, na.rm = TRUE)
-  pupil <- ifelse(pupil == -Inf, NA, pupil)
+  pupil <- apply(pupil, 1, function(row) {
+    if (all(is.na(row))) {
+      return(NA) # return NA for all-NA rows
+    } else {
+      return(max(row, na.rm = TRUE)) # only compute max for valid rows
+    }
+  })
 
   return(pupil)
 }

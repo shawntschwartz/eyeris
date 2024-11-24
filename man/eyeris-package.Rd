@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Shawn T. Schwartz \email{stschwartz@stanford.edu} (\href{https://orcid.org/0000-0001-6444-8451}{ORCID})
+\strong{Maintainer}: Shawn Schwartz \email{stschwartz@stanford.edu} (\href{https://orcid.org/0000-0001-6444-8451}{ORCID})
 
 }
 \keyword{internal}

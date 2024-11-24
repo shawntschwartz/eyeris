@@ -11,17 +11,17 @@
 #' @param rs Required minimal attenuation within stopband in dB.
 #' @param plot_freqz Boolean flag for displaying filter frequency response.
 #'
-#' @return An `eyeris` object with a new column in `timeseries`: `pupil_lpfilt`.
+#' @return An `eyeris` object with a new column in `timeseries`:
+#' `pupil_raw_{...}_lpfilt`.
 #'
 #' @examples
-#' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' system.file("extdata", "memory.asc", package = "eyeris") |>
 #'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
 #'   eyeris::interpolate() |>
-#'   eyeris::lpfilt(plot_freqz = TRUE)
-#' }
+#'   eyeris::lpfilt(plot_freqz = TRUE) |>
+#'   plot(seed = 0)
 #'
 #' @export
 lpfilt <- function(eyeris, wp = 4, ws = 8,

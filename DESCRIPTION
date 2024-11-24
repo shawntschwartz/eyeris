@@ -4,7 +4,7 @@ Title: eyeris
 Version: 0.0.0.9000
 Authors@R:
   person(
-    given = c("Shawn", "T."),
+    given = "Shawn",
     family = "Schwartz",
     role = c("aut", "cre"),
     email = "stschwartz@stanford.edu", 
