@@ -55,23 +55,32 @@
 #' @param ... Additional arguments to override the default, prescribed settings.
 #'
 #' @examples
-#' \dontrun{
-#' demo_data <- system.file("extdata", "assocret.asc", package = "eyeris")
+#' demo_data <- system.file("extdata", "memory.asc", package = "eyeris")
 #'
 #' # (1) examples using the default prescribed parameters and pipeline recipe
+#'
 #' ## (a) run an automated pipeline with no real-time inspection of parameters
 #' output <- eyeris::glassbox(demo_data)
+#' plot(
+#'   output,
+#'   steps = c(1, 5),
+#'   preview_window = c(0, nrow(output$timeseries)),
+#'   seed = 0
+#' )
 #'
 #' ## (b) run a interactive workflow (with confirmation prompts after each step)
-#' output <- eyeris::glassbox(demo_data, confirm = TRUE)
+#' # output <- eyeris::glassbox(demo_data, confirm = TRUE, seed = 0)
+#'
 #'
 #' # (2) examples overriding the default parameters
-#' output <- eyeris::glassbox(demo_data,
-#'   confirm = TRUE,
+#' output <- eyeris::glassbox(
+#'   demo_data,
+#'   confirm = FALSE, # TRUE if you want to visualize each step in real-time
 #'   deblink = list(extend = 40),
 #'   lpfilt = list(plot_freqz = FALSE)
 #' )
-#' }
+#'
+#' plot(output, seed = 0)
 #'
 #' @export
 glassbox <- function(file, confirm = FALSE, detrend_data = FALSE,

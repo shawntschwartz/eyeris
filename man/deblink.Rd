@@ -15,7 +15,7 @@ indicating different numbers of milliseconds pad forward/backward around each
 missing sample, in the format \code{c(backward, forward)}.}
 }
 \value{
-An \code{eyeris} object with a new column: \code{pupil_deblink}.
+An \code{eyeris} object with a new column: \verb{pupil_raw_\{...\}_deblink}.
 }
 \description{
 Deblinking (a.k.a. NA-padding) of time series data. The intended use of
@@ -26,14 +26,14 @@ missing in-between these 'spike'-looking events. The deblinking procedure
 here will NA-pad each missing data point by your specified number of ms.
 }
 \examples{
-\dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc() |>
-  eyeris::deblink(extend = 40) # 40 ms in both directions
-}
+  eyeris::deblink(extend = 40) |> # 40 ms in both directions
+  plot(seed = 0)
 
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc() |>
-  eyeris::deblink(extend = c(40, 50)) # 40 ms backward, 50 ms forward
+  eyeris::deblink(extend = c(40, 50)) |> # 40 ms backward, 50 ms forward
+  plot(seed = 0)
 
 }

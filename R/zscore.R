@@ -1,13 +1,13 @@
-#' Z-Score pupil timeseries data
+#' z-score pupil timeseries data
 #'
 #' The intended use of this method is to scale the arbitrary units of the pupil
 #' size timeseries to have a mean of `0` and a standard deviation of `1`. This
 #' is accomplished by mean centering the data points and then dividing them by
 #' their standard deviation (i.e., z-scoring the data, similar to
-#' [base::scale()]). Z-scoring the pupil data is helpful for trial-level and
-#' between-subjects analyses where arbitrary units of pupil size recorded by the
-#' tracker do not scale across participants, and therefore make analyses that
-#' depend on data from more than one participant difficult to interpret.
+#' [base::scale()]). Opting to z-score your pupil data helps with trial-level
+#' and between-subjects analyses where arbitrary units of pupil size recorded by
+#' the tracker do not scale across participants, and therefore make analyses
+#' that depend on data from more than one participant difficult to interpret.
 #'
 #' @details
 #' In general, it is common to z-score pupil data within any given
@@ -34,22 +34,20 @@
 #' on the entire pupil timeseries (before epoching the data), and then split and
 #' take the mean of the z-scored timeseries as a function of condition variable.
 #'
-#'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
-#' @return A numeric vector giving number of characters (code points) in each
-#'    element of the character vector. Missing string have missing length.
+#' @return An `eyeris` object with a new column in `timeseries`:
+#' `pupil_raw_{...}_z`.
 #'
 #' @examples
-#' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' system.file("extdata", "memory.asc", package = "eyeris") |>
 #'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
 #'   eyeris::interpolate() |>
 #'   eyeris::lpfilt(plot_freqz = TRUE) |>
-#'   eyeris::zscore()
-#' }
+#'   eyeris::zscore() |>
+#'   plot(seed = 0)
 #'
 #' @export
 zscore <- function(eyeris) {

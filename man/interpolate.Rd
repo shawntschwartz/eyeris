@@ -11,7 +11,7 @@ interpolate(eyeris)
 }
 \value{
 An \code{eyeris} object with a new column in \code{timeseries}:
-\code{pupil_interpolate}.
+\verb{pupil_raw_\{...\}_interpolate}.
 }
 \description{
 Linear interpolation of time series data. The intended use of this method
@@ -23,12 +23,11 @@ values on either end, respectively, using the "rule = 2" argument in the
 \code{approx()} function.
 }
 \examples{
-\dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
-  eyeris::interpolate()
-}
+  eyeris::interpolate() |>
+  plot(seed = 0)
 
 }

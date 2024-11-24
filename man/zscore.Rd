@@ -2,7 +2,7 @@
 % Please edit documentation in R/zscore.R
 \name{zscore}
 \alias{zscore}
-\title{Z-Score pupil timeseries data}
+\title{z-score pupil timeseries data}
 \usage{
 zscore(eyeris)
 }
@@ -10,18 +10,18 @@ zscore(eyeris)
 \item{eyeris}{An object of class \code{eyeris} dervived from \code{\link[=load]{load()}}.}
 }
 \value{
-A numeric vector giving number of characters (code points) in each
-element of the character vector. Missing string have missing length.
+An \code{eyeris} object with a new column in \code{timeseries}:
+\verb{pupil_raw_\{...\}_z}.
 }
 \description{
 The intended use of this method is to scale the arbitrary units of the pupil
 size timeseries to have a mean of \code{0} and a standard deviation of \code{1}. This
 is accomplished by mean centering the data points and then dividing them by
 their standard deviation (i.e., z-scoring the data, similar to
-\code{\link[base:scale]{base::scale()}}). Z-scoring the pupil data is helpful for trial-level and
-between-subjects analyses where arbitrary units of pupil size recorded by the
-tracker do not scale across participants, and therefore make analyses that
-depend on data from more than one participant difficult to interpret.
+\code{\link[base:scale]{base::scale()}}). Opting to z-score your pupil data helps with trial-level
+and between-subjects analyses where arbitrary units of pupil size recorded by
+the tracker do not scale across participants, and therefore make analyses
+that depend on data from more than one participant difficult to interpret.
 }
 \details{
 In general, it is common to z-score pupil data within any given
@@ -49,14 +49,13 @@ on the entire pupil timeseries (before epoching the data), and then split and
 take the mean of the z-scored timeseries as a function of condition variable.
 }
 \examples{
-\dontrun{
-system.file("extdata", "assocret.asc", package = "eyeris") |>
+system.file("extdata", "memory.asc", package = "eyeris") |>
   eyeris::load_asc() |>
   eyeris::deblink(extend = 50) |>
   eyeris::detransient() |>
   eyeris::interpolate() |>
   eyeris::lpfilt(plot_freqz = TRUE) |>
-  eyeris::zscore()
-}
+  eyeris::zscore() |>
+  plot(seed = 0)
 
 }

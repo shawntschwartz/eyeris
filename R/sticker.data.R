@@ -2,5 +2,5 @@
 #'
 #' @format A png image file that is rendered into the README and html reports.
 #'
-#' @keywords eyeris, sticker, logo, hex
+#' @keywords internal
 "sticker"

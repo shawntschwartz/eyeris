@@ -8,20 +8,18 @@
 #' values on either end, respectively, using the "rule = 2" argument in the
 #' `approx()` function.
 #'
-#'
 #' @param eyeris An object of class `eyeris` dervived from [eyeris::load()].
 #'
 #' @return An `eyeris` object with a new column in `timeseries`:
-#' `pupil_interpolate`.
+#' `pupil_raw_{...}_interpolate`.
 #'
 #' @examples
-#' \dontrun{
-#' system.file("extdata", "assocret.asc", package = "eyeris") |>
+#' system.file("extdata", "memory.asc", package = "eyeris") |>
 #'   eyeris::load_asc() |>
 #'   eyeris::deblink(extend = 50) |>
 #'   eyeris::detransient() |>
-#'   eyeris::interpolate()
-#' }
+#'   eyeris::interpolate() |>
+#'   plot(seed = 0)
 #'
 #' @export
 interpolate <- function(eyeris) {
@@ -38,8 +36,10 @@ interpolate_pupil <- function(x, prev_op) {
     prev_pupil <- x[[prev_op]]
   }
 
-  interp_pupil <- zoo::na.approx(prev_pupil,
-    na.rm = FALSE, maxgap = Inf,
+  interp_pupil <- zoo::na.approx(
+    prev_pupil,
+    na.rm = FALSE,
+    maxgap = Inf,
     rule = 2
   )
 

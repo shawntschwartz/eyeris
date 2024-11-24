@@ -1,5 +1,5 @@
 # default target
-all: uninstall getdeps build install roxygenize readme clean
+all: uninstall getdeps build install roxygenize readme ghpages clean
 
 # debugging target
 debug: uninstall build install clean
@@ -48,6 +48,18 @@ readme:
 	@echo "[ INFO ] - building eyeris package github README..."
 	Rscript -e "devtools::build_readme()"
 	@echo "[  OK  ] - README update completed!\n"
+
+# pkgdown website preview
+website:
+	@echo "[ INFO ] - building eyeris pkgdown docs website preview..."
+	Rscript -e "pkgdown::build_site()"
+	@echo "[  OK  ] - pkgdown website preview build completed!\n"
+
+# pkgdown github pages website (jekyll)
+ghpages:
+	@echo "[ INFO ] - building eyeris pkgdown docs website for github pages..."
+	Rscript -e "pkgdown::build_site_github_pages(clean = TRUE, install = FALSE, new_process = FALSE)"
+	@echo "[  OK  ] - pkgdown website build for github pages completed!\n"
 
 # clean build directory
 clean:

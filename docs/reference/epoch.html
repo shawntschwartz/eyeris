@@ -26,8 +26,11 @@ be identified and joined into the resulting epoched data frames."><meta property
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/preproc-workflow.html">preproc-workflow</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>template</h6></li>
+    <li><a class="dropdown-item" href="../articles/preproc-workflow.html">preproc-workflow</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/shawntz/eyeris/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -181,170 +184,98 @@ within the tracker's metadata.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"assocret.asc"</span>, package <span class="op">=</span> <span class="st">"eyeris"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"memory.asc"</span>, package <span class="op">=</span> <span class="st">"eyeris"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="load_asc.html">load_asc</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="deblink.html">deblink</a></span><span class="op">(</span>extend <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="detransient.html">detransient</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="co">#eyeris::interpolate() |&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="interpolate.html">interpolate</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="lpfilt.html">lpfilt</a></span><span class="op">(</span>plot_freqz <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="zscore.html">zscore</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="epoch-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 1: select 1 second before/after matched event message "PROBE*"</span></span></span>
 <span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span>events <span class="op">=</span> <span class="st">"PROBE*"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $file</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/Users/shawn/work/eyeris/inst/extdata/assocret.asc"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $timeseries</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22,145 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    time_orig eye_x eye_y eye      hz type     pupil_raw pupil_raw_deblink</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  11<span style="text-decoration: underline;">242</span>177  949.  646. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>174              <span style="text-decoration: underline;">6</span>174</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  11<span style="text-decoration: underline;">242</span>178  947.  644. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>176              <span style="text-decoration: underline;">6</span>176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  11<span style="text-decoration: underline;">242</span>179  946.  643  R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>178              <span style="text-decoration: underline;">6</span>178</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  11<span style="text-decoration: underline;">242</span>180  945.  642  R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>179              <span style="text-decoration: underline;">6</span>179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  11<span style="text-decoration: underline;">242</span>181  945.  641. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>180              <span style="text-decoration: underline;">6</span>180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  11<span style="text-decoration: underline;">242</span>182  945.  642. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>182              <span style="text-decoration: underline;">6</span>182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  11<span style="text-decoration: underline;">242</span>183  945.  644. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>187              <span style="text-decoration: underline;">6</span>187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  11<span style="text-decoration: underline;">242</span>184  945.  644. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>197              <span style="text-decoration: underline;">6</span>197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  11<span style="text-decoration: underline;">242</span>185  945.  643. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>207              <span style="text-decoration: underline;">6</span>207</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  11<span style="text-decoration: underline;">242</span>186  945.  642. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>203              <span style="text-decoration: underline;">6</span>203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22,135 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: pupil_raw_deblink_detransient &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt_z &lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $events</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 67 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    block     time text                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1 11<span style="text-decoration: underline;">242</span>177 !MODE RECORD CR 1000 2 1 R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     1 11<span style="text-decoration: underline;">243</span>349 EXP_START                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     1 11<span style="text-decoration: underline;">243</span>355 TRIALID 0                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     1 11<span style="text-decoration: underline;">243</span>356 START_TRIAL_0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     1 11<span style="text-decoration: underline;">243</span>356 CUE_START_0               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     1 11<span style="text-decoration: underline;">244</span>328 CUE_STOP_0                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     1 11<span style="text-decoration: underline;">244</span>329 DELAY_START_0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     1 11<span style="text-decoration: underline;">245</span>337 DELAY_STOP_0              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     1 11<span style="text-decoration: underline;">245</span>338 PROBE_START_0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     1 11<span style="text-decoration: underline;">245</span>956 RESPONSE_0                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 57 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $blinks</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 0 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 variables: block &lt;int&gt;, stime &lt;dbl&gt;, etime &lt;dbl&gt;, dur &lt;dbl&gt;, eye &lt;fct&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $info</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  date        model version sample.rate   cr  left right mono</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2009-01-11 02:40:47 EyeLink 1000   4.594        1000 TRUE FALSE  TRUE TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   screen.x screen.y                                 mount filter.level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1920     1080 Desktop / Monocular / Head Stabilized            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   sample.dtype event.dtype pupil.dtype velocity resolution htarg input buttons</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         GAZE        GAZE    DIAMETER    FALSE      FALSE FALSE FALSE   FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $latest</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "pupil_raw_deblink_detransient_lpfilt_z"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $epoch_probe</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 20,000 × 16</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    time_orig timebin eye_x eye_y eye      hz type    pupil_raw pupil_raw_deblink</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  11<span style="text-decoration: underline;">244</span>338 0        972.  562. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>837              <span style="text-decoration: underline;">5</span>837</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  11<span style="text-decoration: underline;">244</span>339 0.001<span style="text-decoration: underline;">00</span>  971.  563. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>853              <span style="text-decoration: underline;">5</span>853</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  11<span style="text-decoration: underline;">244</span>340 0.002<span style="text-decoration: underline;">00</span>  970.  562. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>871              <span style="text-decoration: underline;">5</span>871</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  11<span style="text-decoration: underline;">244</span>341 0.003<span style="text-decoration: underline;">00</span>  969.  562. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>873              <span style="text-decoration: underline;">5</span>873</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  11<span style="text-decoration: underline;">244</span>342 0.004<span style="text-decoration: underline;">00</span>  971.  562. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>878              <span style="text-decoration: underline;">5</span>878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  11<span style="text-decoration: underline;">244</span>343 0.005<span style="text-decoration: underline;">00</span>  972.  562. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>883              <span style="text-decoration: underline;">5</span>883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  11<span style="text-decoration: underline;">244</span>344 0.006<span style="text-decoration: underline;">00</span>  971.  561. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>883              <span style="text-decoration: underline;">5</span>883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  11<span style="text-decoration: underline;">244</span>345 0.007<span style="text-decoration: underline;">00</span>  970.  559. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>877              <span style="text-decoration: underline;">5</span>877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  11<span style="text-decoration: underline;">244</span>346 0.008<span style="text-decoration: underline;">00</span>  970.  558. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>876              <span style="text-decoration: underline;">5</span>876</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  11<span style="text-decoration: underline;">244</span>347 0.009<span style="text-decoration: underline;">00</span>  969.  557. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">5</span>881              <span style="text-decoration: underline;">5</span>881</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 19,990 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: pupil_raw_deblink_detransient &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt_z &lt;dbl&gt;, template &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   matching_pattern &lt;chr&gt;, matched_event &lt;chr&gt;, event_message &lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "eyeris"</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 2: select all samples between each trial</span></span></span>
 <span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span>events <span class="op">=</span> <span class="st">"TRIALID {trial}"</span><span class="op">)</span> <span class="co"># all samples between each trial</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $file</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/Users/shawn/work/eyeris/inst/extdata/assocret.asc"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $timeseries</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22,145 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    time_orig eye_x eye_y eye      hz type     pupil_raw pupil_raw_deblink</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  11<span style="text-decoration: underline;">242</span>177  949.  646. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>174              <span style="text-decoration: underline;">6</span>174</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  11<span style="text-decoration: underline;">242</span>178  947.  644. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>176              <span style="text-decoration: underline;">6</span>176</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  11<span style="text-decoration: underline;">242</span>179  946.  643  R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>178              <span style="text-decoration: underline;">6</span>178</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  11<span style="text-decoration: underline;">242</span>180  945.  642  R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>179              <span style="text-decoration: underline;">6</span>179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  11<span style="text-decoration: underline;">242</span>181  945.  641. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>180              <span style="text-decoration: underline;">6</span>180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  11<span style="text-decoration: underline;">242</span>182  945.  642. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>182              <span style="text-decoration: underline;">6</span>182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  11<span style="text-decoration: underline;">242</span>183  945.  644. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>187              <span style="text-decoration: underline;">6</span>187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  11<span style="text-decoration: underline;">242</span>184  945.  644. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>197              <span style="text-decoration: underline;">6</span>197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  11<span style="text-decoration: underline;">242</span>185  945.  643. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>207              <span style="text-decoration: underline;">6</span>207</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  11<span style="text-decoration: underline;">242</span>186  945.  642. R      <span style="text-decoration: underline;">1</span>000 diameter      <span style="text-decoration: underline;">6</span>203              <span style="text-decoration: underline;">6</span>203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22,135 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: pupil_raw_deblink_detransient &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt_z &lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $events</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 67 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    block     time text                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1 11<span style="text-decoration: underline;">242</span>177 !MODE RECORD CR 1000 2 1 R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     1 11<span style="text-decoration: underline;">243</span>349 EXP_START                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     1 11<span style="text-decoration: underline;">243</span>355 TRIALID 0                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     1 11<span style="text-decoration: underline;">243</span>356 START_TRIAL_0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     1 11<span style="text-decoration: underline;">243</span>356 CUE_START_0               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     1 11<span style="text-decoration: underline;">244</span>328 CUE_STOP_0                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     1 11<span style="text-decoration: underline;">244</span>329 DELAY_START_0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     1 11<span style="text-decoration: underline;">245</span>337 DELAY_STOP_0              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     1 11<span style="text-decoration: underline;">245</span>338 PROBE_START_0             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     1 11<span style="text-decoration: underline;">245</span>956 RESPONSE_0                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 57 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $blinks</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 0 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 variables: block &lt;int&gt;, stime &lt;dbl&gt;, etime &lt;dbl&gt;, dur &lt;dbl&gt;, eye &lt;fct&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $info</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  date        model version sample.rate   cr  left right mono</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2009-01-11 02:40:47 EyeLink 1000   4.594        1000 TRUE FALSE  TRUE TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   screen.x screen.y                                 mount filter.level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1920     1080 Desktop / Monocular / Head Stabilized            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   sample.dtype event.dtype pupil.dtype velocity resolution htarg input buttons</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         GAZE        GAZE    DIAMETER    FALSE      FALSE FALSE FALSE   FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $latest</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "pupil_raw_deblink_detransient_lpfilt_z"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $epoch_trialidTrial</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 20,952 × 16</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    time_orig timebin eye_x eye_y eye      hz type    pupil_raw pupil_raw_deblink</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  11<span style="text-decoration: underline;">243</span>355 0        971   569. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>573              <span style="text-decoration: underline;">6</span>573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  11<span style="text-decoration: underline;">243</span>356 0.001<span style="text-decoration: underline;">00</span>  972.  569. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>574              <span style="text-decoration: underline;">6</span>574</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  11<span style="text-decoration: underline;">243</span>357 0.002<span style="text-decoration: underline;">00</span>  972.  570. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>564              <span style="text-decoration: underline;">6</span>564</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  11<span style="text-decoration: underline;">243</span>358 0.003<span style="text-decoration: underline;">00</span>  972.  570. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>554              <span style="text-decoration: underline;">6</span>554</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  11<span style="text-decoration: underline;">243</span>359 0.004<span style="text-decoration: underline;">00</span>  971.  569. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>548              <span style="text-decoration: underline;">6</span>548</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  11<span style="text-decoration: underline;">243</span>360 0.005<span style="text-decoration: underline;">00</span>  969.  568. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>550              <span style="text-decoration: underline;">6</span>550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  11<span style="text-decoration: underline;">243</span>361 0.006<span style="text-decoration: underline;">00</span>  968.  568. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>550              <span style="text-decoration: underline;">6</span>550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  11<span style="text-decoration: underline;">243</span>362 0.007<span style="text-decoration: underline;">00</span>  969   568. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>549              <span style="text-decoration: underline;">6</span>549</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  11<span style="text-decoration: underline;">243</span>363 0.008<span style="text-decoration: underline;">00</span>  970.  568. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>550              <span style="text-decoration: underline;">6</span>550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  11<span style="text-decoration: underline;">243</span>364 0.009<span style="text-decoration: underline;">00</span>  970.  568. R      <span style="text-decoration: underline;">1</span>000 diamet…      <span style="text-decoration: underline;">6</span>552              <span style="text-decoration: underline;">6</span>552</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20,942 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: pupil_raw_deblink_detransient &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pupil_raw_deblink_detransient_lpfilt_z &lt;dbl&gt;, template &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   matching_pattern &lt;chr&gt;, matched_event &lt;chr&gt;, trial &lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "eyeris"</span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span>events <span class="op">=</span> <span class="st">"TRIALID {trial}"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 3: grab the 1 second following probe onset</span></span></span>
+<span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    events <span class="op">=</span> <span class="st">"PROBE_START_{trial}"</span>,</span></span>
+<span class="r-in"><span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 4: 2 seconds prior to and 1 second after probe onset</span></span></span>
+<span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    events <span class="op">=</span> <span class="st">"PROBE_START_{trial}"</span>,</span></span>
+<span class="r-in"><span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    label <span class="op">=</span> <span class="st">"prePostProbe"</span> <span class="co"># custom epoch label name</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 5: manual start/end event pairs</span></span></span>
+<span class="r-in"><span><span class="co"># note: here, the `msg` column of each data frame is optional</span></span></span>
+<span class="r-in"><span><span class="va">eye_prepoc</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    events <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11243355</span><span class="op">)</span>, msg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRIALID 0"</span><span class="op">)</span><span class="op">)</span>, <span class="co"># start events</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11245956</span><span class="op">)</span>, msg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RESPONSE_0"</span><span class="op">)</span><span class="op">)</span> <span class="co"># end events</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 6: manual start/end event pairs</span></span></span>
+<span class="r-in"><span><span class="co"># note: set `msg` to NA if you only want to pass in start/end timestamps</span></span></span>
+<span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    events <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11243355</span><span class="op">)</span>, msg <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>, <span class="co"># start events</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11245956</span><span class="op">)</span>, msg <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="co"># end events</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## examples with baseline arguments enabled</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 7: use mean of 1-s preceding "PROBE_START" (i.e. "DELAY_STOP")</span></span></span>
+<span class="r-in"><span><span class="co"># to perform subtractive baselining of the 1-s PROBE epochs.</span></span></span>
+<span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    events <span class="op">=</span> <span class="st">"PROBE_START_{trial}"</span>,</span></span>
+<span class="r-in"><span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="co"># grab 0 seconds prior to and 1 second post PROBE event</span></span></span>
+<span class="r-in"><span>    label <span class="op">=</span> <span class="st">"prePostProbe"</span>, <span class="co"># custom epoch label name</span></span></span>
+<span class="r-in"><span>    calc_baseline <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    apply_baseline <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    baseline_type <span class="op">=</span> <span class="st">"sub"</span>, <span class="co"># "sub"tractive baseline calculation is default</span></span></span>
+<span class="r-in"><span>    baseline_events <span class="op">=</span> <span class="st">"DELAY_STOP_*"</span>,</span></span>
+<span class="r-in"><span>    baseline_period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 8: use mean of time period between set start/end event messages</span></span></span>
+<span class="r-in"><span><span class="co"># (i.e. between "DELAY_START" and "DELAY_STOP"). In this case, the</span></span></span>
+<span class="r-in"><span><span class="co"># `baseline_period` argument will be ignored since both a "start" and "end"</span></span></span>
+<span class="r-in"><span><span class="co"># message string are provided to the `baseline_events` argument.</span></span></span>
+<span class="r-in"><span><span class="va">eye_preproc</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    events <span class="op">=</span> <span class="st">"PROBE_START_{trial}"</span>,</span></span>
+<span class="r-in"><span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="co"># grab 0 seconds prior to and 1 second post PROBE event</span></span></span>
+<span class="r-in"><span>    label <span class="op">=</span> <span class="st">"prePostProbe"</span>, <span class="co"># custom epoch label name</span></span></span>
+<span class="r-in"><span>    calc_baseline <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    apply_baseline <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    baseline_type <span class="op">=</span> <span class="st">"sub"</span>, <span class="co"># "sub"tractive baseline calculation is default</span></span></span>
+<span class="r-in"><span>    baseline_events <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DELAY_START_*"</span>,</span></span>
+<span class="r-in"><span>                        <span class="st">"DELAY_STOP_*"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># example 9: additional (potentially helpful) example</span></span></span>
+<span class="r-in"><span><span class="va">start_events</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11243355</span>, <span class="fl">11247588</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                           msg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRIALID 0"</span>, <span class="st">"TRIALID 1"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">end_events</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11245956</span>, <span class="fl">11250506</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                         msg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RESPONSE_0"</span>, <span class="st">"RESPONSE_1"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">eye_prepoc</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">epoch</span><span class="op">(</span>events <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">start_events</span>, <span class="va">end_events</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -353,7 +284,7 @@ within the tracker's metadata.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Shawn T. Schwartz.</p>
+  <p>Made with ♥ in Palo Alto, CA by <a href="http://shawnschwartz.com" class="external-link">Shawn Schwartz</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
