@@ -72,6 +72,14 @@ check_baseline_inputs <- function(events, limits) {
   }
 }
 
+check_column <- function(df, col_name) {
+  if (!col_name %in% colnames(df)) {
+    err_c <- "column_doesnt_exist_in_df_error"
+    err_m <- paste0("No grouping variable '", col_name, "' in the epoched df.")
+    stop(structure(list(message = err_m, call = match.call()), class = err_c))
+  }
+}
+
 check_data <- function(eyeris, fun) {
   err_m <- sprintf(paste(
     "The provided object to `eyeris::%s()` is of type",
