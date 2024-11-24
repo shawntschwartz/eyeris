@@ -104,11 +104,11 @@
 #'     limits = c(0, 1)
 #'   )
 #'
-#' # example 4: 2 seconds prior to and 1 second after probe onset
+#' # example 4: 1 second prior to and 1 second after probe onset
 #' eye_preproc |>
 #'   eyeris::epoch(
 #'     events = "PROBE_START_{trial}",
-#'     limits = c(-2, 1),
+#'     limits = c(-1, 1),
 #'     label = "prePostProbe" # custom epoch label name
 #'   )
 #'
