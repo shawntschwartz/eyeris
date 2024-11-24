@@ -147,20 +147,14 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
       pupil_data, num_previews,
       preview_duration, hz
     )
-    par(mfrow = c(1, num_previews))
+    par(mfrow = c(1, num_previews), oma = c(0, 0, 3, 0))
     detrend_plotted <- FALSE
     for (i in seq_along(pupil_steps)) {
       for (n in 1:num_previews) {
         st <- min(random_epochs[[n]]$time_orig)
         et <- max(random_epochs[[n]]$time_orig)
-
-        main_panel <- ceiling(num_previews / 2)
-
-        if (n == main_panel) {
-          title <- paste0(pupil_steps[i], "\n[", st, " - ", et, "]")
-        } else {
-          title <- paste0("\n[", st, " - ", et, "]")
-        }
+        title <- paste0("\n[", st, " - ", et, "]")
+        header <- paste0(pupil_steps[i])
 
         if (grepl("z", pupil_steps[i])) {
           y_units <- "(z)"
@@ -177,7 +171,7 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
         # used when running `plot()` by itself (and thus plotting all steps)
         if (!only_liner_trend) {
           if (grepl("_detrend$", pupil_steps[i]) && !detrend_plotted) {
-            par(mfrow = c(1, 1))
+            par(mfrow = c(1, 1), oma = c(0, 0, 0, 0))
             robust_plot(pupil_data$time_orig, pupil_data[[pupil_steps[i - 1]]],
               type = "l", col = "black", lwd = 2,
               main = paste0("detrend:\n", pupil_steps[i - 1]),
@@ -190,12 +184,12 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
               legend = c("pupil timeseries", "linear trend"),
               col = c("black", "blue"), lwd = 2, lty = c(1, 2)
             )
-            par(mfrow = c(1, num_previews))
+            par(mfrow = c(1, num_previews), oma = c(0, 0, 3, 0))
             detrend_plotted <- TRUE
           }
         } else {
           if (!detrend_plotted) {
-            par(mfrow = c(1, 1))
+            par(mfrow = c(1, 1), oma = c(0, 0, 0, 0))
             title <- paste0(
               "detrend:\n",
               params$next_step[length(params$next_step) - 1]
@@ -213,7 +207,7 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
               legend = c("pupil timeseries", "linear trend"),
               col = c("black", "blue"), lwd = 2, lty = c(1, 2)
             )
-            par(mfrow = c(1, num_previews))
+            par(mfrow = c(1, num_previews), oma = c(0, 0, 3, 0))
             detrend_plotted <- TRUE
             prompt_user()
           }
@@ -232,15 +226,16 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
             main = title, xlab = "time (ms)", ylab = y_label
           )
         }
+        graphics::mtext(header, outer = TRUE, cex = 1.25, font = 2)
       }
     }
 
-    par(mfrow = c(1, num_previews))
+    par(mfrow = c(1, num_previews), oma = c(0, 0, 3, 0))
   } else {
     start_index <- preview_window[1]
     end_index <- min(preview_window[2], nrow(pupil_data))
     sliced_pupil_data <- pupil_data[start_index:end_index, ]
-    par(mfrow = c(1, 1))
+    par(mfrow = c(1, 1), oma = c(0, 0, 0, 0))
     for (i in seq_along(pupil_steps)) {
       st <- min(sliced_pupil_data$time_orig)
       et <- max(sliced_pupil_data$time_orig)
@@ -263,10 +258,10 @@ plot.eyeris <- function(x, ..., steps = NULL, num_previews = NULL,
       )
     }
 
-    par(mfrow = c(1, 1))
+    par(mfrow = c(1, 1), oma = c(0, 0, 0, 0))
   }
 
-  par(mfrow = c(1, 1))
+  par(mfrow = c(1, 1), oma = c(0, 0, 0, 0))
 }
 
 draw_random_epochs <- function(x, n, d, hz) {
@@ -289,7 +284,6 @@ draw_random_epochs <- function(x, n, d, hz) {
 
   return(drawn_epochs)
 }
-
 
 robust_plot <- function(x, ...) {
   tryCatch(
