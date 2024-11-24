@@ -47,6 +47,7 @@ lpfilt_pupil <- function(x, prev_op, wp, ws, rp, rs, fs, plot_freqz) {
 
   # plot frequency response of the filter
   if (plot_freqz) {
+    par(mfrow = c(1, 1), oma = c(0, 0, 0, 0))
     freq_response <- gsignal::freqz(filt, fs = fs)
     xlim_sel <- freq_response$w <= min((ws + 10), fs_nq)
     gsignal::freqz_plot(
