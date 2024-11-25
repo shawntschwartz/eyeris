@@ -327,7 +327,10 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
       }
     }
 
-    report_output <- make_report(eyeris, report_path, fig_paths,
+    report_output <- make_report(
+      eyeris,
+      report_path,
+      fig_paths,
       sub = sub, ses = ses, task = task, run = run
     )
 
