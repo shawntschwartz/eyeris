@@ -10,6 +10,7 @@
 #' @importFrom graphics text
 #' @importFrom grDevices dev.off
 #' @importFrom grDevices jpeg
+#' @importFrom grDevices png
 #' @importFrom grDevices rainbow
 #' @importFrom rlang :=
 #' @importFrom stats lm

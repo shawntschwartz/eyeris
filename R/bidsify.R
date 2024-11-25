@@ -31,6 +31,12 @@
 #' must already be installed. Defaults to FALSE.
 #' @param report_seed Random seed for the plots that will appear in the report.
 #' Defaults to 0. See [eyeris::plot()] for a more detailed description.
+#' @param report_epoch_grouping_var_col String name of grouping column to use
+#' for epoch-by-epoch diagnostic plots in an interactive rendered HTML report.
+#' Column name must exist (i.e., be a custom grouping variable name set within
+#' the metadata template of your `epoch()` call). Defaults to `"matched_event"`,
+#' which all epoched dataframes have as a valid column name. To disable these
+#' epoch-level diagnostic plots, set to `NULL`.
 #'
 #' @examples
 #' # Bleed around blink periods just long enough to remove majority of
@@ -62,7 +68,8 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
                     merge_epochs = FALSE, bids_dir = NULL,
                     participant_id = NULL, session_num = NULL,
                     task_name = NULL, run_num = NULL, save_raw = TRUE,
-                    html_report = TRUE, pdf_report = FALSE, report_seed = 0) {
+                    html_report = TRUE, pdf_report = FALSE, report_seed = 0,
+                    report_epoch_grouping_var_col = "matched_event") {
   sub <- participant_id
   ses <- session_num
   task <- task_name
@@ -221,6 +228,7 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
 
     for (i in seq_along(pupil_steps)) {
       fig_paths[i] <- file.path(figs_out, paste0("fig", i, ".jpg"))
+
       jpeg(file.path(fig_paths[i]),
         width = 12, height = 7, units = "in",
         res = 300, pointsize = 14
@@ -237,9 +245,7 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
     jpeg(file.path(fig_paths[length(fig_paths)]),
       width = 12, height = 7, units = "in", res = 300, pointsize = 18
     )
-
     plot(eyeris, steps = 1, preview_window = c(0, nrow(eyeris$timeseries)))
-
     dev.off()
 
     fig_paths <- c(
@@ -250,15 +256,84 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
     jpeg(file.path(fig_paths[length(fig_paths)]),
       width = 12, height = 7, units = "in", res = 300, pointsize = 18
     )
-
     plot(eyeris,
       steps = length(pupil_steps),
       preview_window = c(0, nrow(eyeris$timeseries))
     )
-
     dev.off()
 
-    report_output <- make_report(eyeris, report_path, fig_paths,
+    if (!is.null(report_epoch_grouping_var_col)) {
+      for (i in seq_along(epochs_to_save)) {
+        tryCatch(
+          {
+            check_column(epochs_to_save[[i]], report_epoch_grouping_var_col)
+          },
+          error = function(e) {
+            error_handler(e, "column_doesnt_exist_in_df_error")
+          }
+        )
+
+        epochs_out <- file.path(figs_out, names(epochs_to_save)[i])
+        check_and_create_dir(epochs_out)
+
+        epoch_groups <- as.vector(
+          unique(epochs_to_save[[i]][report_epoch_grouping_var_col])[[1]]
+        )
+
+        for (group in epoch_groups) {
+          group_df <- epochs_to_save[[i]]
+          group_df <- group_df[
+            group_df[[report_epoch_grouping_var_col]] == group,
+          ]
+
+          for (pstep in seq_along(pupil_steps)) {
+            if (grepl("z", pupil_steps[pstep])) {
+              y_units <- "(z)"
+            } else {
+              y_units <- "(a.u.)"
+            }
+
+            colors <- c("black", rainbow(length(pupil_steps) - 1))
+
+            y_label <- paste("pupil size", y_units)
+
+            file_out <- file.path(epochs_out, paste0(group, "_", pstep, ".png"))
+
+            png(file_out,
+              width = 3.25,
+              height = 2.5,
+              units = "in",
+              res = 600,
+              pointsize = 6
+            )
+            plot(group_df$timebin, group_df[[pupil_steps[pstep]]],
+              type = "l", xlab = "time (s)", ylab = y_label,
+              col = colors[pstep],
+              main = paste0(group, "\n", pupil_steps[pstep])
+            )
+            dev.off()
+          }
+        }
+
+        epochs <- list.files(epochs_out,
+          full.names = FALSE,
+          pattern = "\\.(jpg|jpeg|png|gif)$",
+          ignore.case = TRUE
+        )
+
+        epochs <- file.path("source", "figures",
+                            names(epochs_to_save)[i], epochs)
+
+        make_gallery(eyeris, epochs, report_path, names(epochs_to_save)[i],
+          sub = sub, ses = ses, task = task, run = run
+        )
+      }
+    }
+
+    report_output <- make_report(
+      eyeris,
+      report_path,
+      fig_paths,
       sub = sub, ses = ses, task = task, run = run
     )
 
