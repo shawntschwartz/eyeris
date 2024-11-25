@@ -37,7 +37,7 @@ make_report <- function(eyeris, out, plots, ...) {
     " - Run: ", params$run, "\n",
     " - BIDS Directory: ", out, "\n",
     " - Source `.asc` file: ", eyeris$file, "\n",
-    " - [`eyeris` version](https://github.com/shawntschwartz/eyeris): ",
+    " - [`eyeris` version](https://github.com/shawntz/eyeris): ",
     package_version, "\n",
 
     "\n## Preprocessed Data Preview\n\n",
