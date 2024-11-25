@@ -32,11 +32,11 @@
 #' @param report_seed Random seed for the plots that will appear in the report.
 #' Defaults to 0. See [eyeris::plot()] for a more detailed description.
 #' @param report_epoch_grouping_var_col String name of grouping column to use
-#' for epoch-by-epoch diagnostic plots in the rendered report. Column name must
-#' exist (i.e., be a custom grouping variable name set within the metadata
-#' template of your `epoch()` call). Defaults to `"matched_event"`, which all
-#' epoched dataframes have as a valid column name. To disable these epoch-level
-#' diagnostic plots, set to `NULL`.
+#' for epoch-by-epoch diagnostic plots in an interactive rendered HTML report.
+#' Column name must exist (i.e., be a custom grouping variable name set within
+#' the metadata template of your `epoch()` call). Defaults to `"matched_event"`,
+#' which all epoched dataframes have as a valid column name. To disable these
+#' epoch-level diagnostic plots, set to `NULL`.
 #'
 #' @examples
 #' # Bleed around blink periods just long enough to remove majority of

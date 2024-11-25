@@ -56,11 +56,11 @@ must already be installed. Defaults to FALSE.}
 Defaults to 0. See \code{\link[=plot]{plot()}} for a more detailed description.}
 
 \item{report_epoch_grouping_var_col}{String name of grouping column to use
-for epoch-by-epoch diagnostic plots in the rendered report. Column name must
-exist (i.e., be a custom grouping variable name set within the metadata
-template of your \code{epoch()} call). Defaults to \code{"matched_event"}, which all
-epoched dataframes have as a valid column name. To disable these epoch-level
-diagnostic plots, set to \code{NULL}.}
+for epoch-by-epoch diagnostic plots in an interactive rendered HTML report.
+Column name must exist (i.e., be a custom grouping variable name set within
+the metadata template of your \code{epoch()} call). Defaults to \code{"matched_event"},
+which all epoched dataframes have as a valid column name. To disable these
+epoch-level diagnostic plots, set to \code{NULL}.}
 }
 \description{
 This method provides a structured way to save out pupil data in a BIDS-like
