@@ -311,6 +311,19 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
             dev.off()
           }
         }
+
+        epochs <- list.files(epochs_out,
+          full.names = FALSE,
+          pattern = "\\.(jpg|jpeg|png|gif)$",
+          ignore.case = TRUE
+        )
+
+        epochs <- file.path("source", "figures",
+                            names(epochs_to_save)[i], epochs)
+
+        make_gallery(eyeris, epochs, report_path, names(epochs_to_save)[i],
+          sub = sub, ses = ses, task = task, run = run
+        )
       }
     }
 
