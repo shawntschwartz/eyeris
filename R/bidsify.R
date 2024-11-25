@@ -293,6 +293,8 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
               y_units <- "(a.u.)"
             }
 
+            colors <- c("black", rainbow(length(pupil_steps) - 1))
+
             y_label <- paste("pupil size", y_units)
 
             file_out <- file.path(epochs_out, paste0(group, "_", pstep, ".png"))
@@ -305,8 +307,9 @@ bidsify <- function(eyeris, save_all = TRUE, epochs_list = NULL,
               pointsize = 6
             )
             plot(group_df$timebin, group_df[[pupil_steps[pstep]]],
-              type = "l", xlab = "time (s)",
-              ylab = y_label, main = paste0(group, "\n", pupil_steps[pstep])
+              type = "l", xlab = "time (s)", ylab = y_label,
+              col = colors[pstep],
+              main = paste0(group, "\n", pupil_steps[pstep])
             )
             dev.off()
           }
