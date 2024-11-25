@@ -72,7 +72,8 @@ metadata you provide.</p>
 <span>  save_raw <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  html_report <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  pdf_report <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  report_seed <span class="op">=</span> <span class="fl">0</span></span>
+<span>  report_seed <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  report_epoch_grouping_var_col <span class="op">=</span> <span class="st">"matched_event"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -138,6 +139,15 @@ must already be installed. Defaults to FALSE.</p></dd>
 <dd><p>Random seed for the plots that will appear in the report.
 Defaults to 0. See <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for a more detailed description.</p></dd>
 
+
+<dt id="arg-report-epoch-grouping-var-col">report_epoch_grouping_var_col<a class="anchor" aria-label="anchor" href="#arg-report-epoch-grouping-var-col"></a></dt>
+<dd><p>String name of grouping column to use
+for epoch-by-epoch diagnostic plots in an interactive rendered HTML report.
+Column name must exist (i.e., be a custom grouping variable name set within
+the metadata template of your <code><a href="epoch.html">epoch()</a></code> call). Defaults to <code>"matched_event"</code>,
+which all epoched dataframes have as a valid column name. To disable these
+epoch-level diagnostic plots, set to <code>NULL</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -161,7 +171,7 @@ approach to organizing the output files for preprocessed pupil data.</p>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="zscore.html">zscore</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu"><a href="epoch.html">epoch</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    events <span class="op">=</span> <span class="st">"PROBE_{type}_{trial}"</span>,</span></span>
-<span class="r-in"><span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>, <span class="co"># grab 2 seconds prior to and 1 second post event</span></span></span>
+<span class="r-in"><span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, <span class="co"># grab 1 second prior to and 1 second post event</span></span></span>
 <span class="r-in"><span>    label <span class="op">=</span> <span class="st">"prePostProbe"</span> <span class="co"># custom epoch label name</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">eyeris</span><span class="fu">::</span><span class="fu">bidsify</span><span class="op">(</span></span></span>
