@@ -40,6 +40,12 @@ make_report <- function(eyeris, out, plots, ...) {
     " - [`eyeris` version](https://github.com/shawntz/eyeris): ",
     package_version, "\n",
 
+    "\n\n<style type='text/css'>\n",
+    "@import url('http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/",
+    "bootstrap.min.css');\n",
+    "@import url('https://cdn.jsdelivr.net/npm/lightbox2/dist/css/",
+    "lightbox.min.css');\n</style>\n",
+
     "\n## Preprocessed Data Preview\n\n",
     print_plots(plots), "\n",
 
